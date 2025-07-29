@@ -1,0 +1,22 @@
+.Sidebar {
+    background-color: #20212A;
+    padding: 12px 20px;
+    color: #EAEAF0;
+    flex: 1;
+    border-radius: 15px;
+    display: flex;           
+    flex-direction: column;  
+    height: 100%;     
+    box-sizing: border-box;
+}
+
+.Sidebar_Content {
+    flex-grow: 1;
+    overflow-y: auto;
+     scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.Sidebar_Content::-webkit-scrollbar {
+  display: none;
+}

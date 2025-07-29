@@ -1,0 +1,6 @@
+.Home_content {
+    display: flex;
+    padding: 0 30px;
+    gap: 1vw;
+    height: calc(100dvh - 120px);
+}

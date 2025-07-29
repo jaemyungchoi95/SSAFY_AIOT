@@ -1,0 +1,8 @@
+[
+    { "id": 1, "x": 150, "y": 200, "status": "critical" },
+    { "id": 2, "x": 300, "y": 250, "status": "warning" },
+    { "id": 3, "x": 400, "y": 100, "status": "normal" },
+    { "id": 4, "x": 200, "y": 250, "status": "warning" },
+    { "id": 5, "x": 350, "y": 300, "status": "critical" },
+    { "id": 6, "x": 450, "y": 150, "status": "normal" }
+]

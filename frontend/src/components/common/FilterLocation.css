@@ -1,0 +1,52 @@
+.FilterLocation {
+  font-family: sans-serif;
+  color: #EAEAF0;
+  position: relative;
+  width: 30vh;
+}
+
+.FilterLocation_Title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.Chevron {
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.LocationUnderline {
+  height: 1px;
+  background-color: #EAEAF0;
+  margin-top: 4px;
+}
+
+.FilterMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background-color: #2a2b35;
+  border: 1px solid #4b4b4b;
+  border-radius: 6px;
+  min-width: 160px;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.FilterItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.FilterItem:hover {
+  background-color: #3a3b45;
+}

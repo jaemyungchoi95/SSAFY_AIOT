@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    # 빌드 이미지의 이름을 명시적으로 지정
+    image: commonspring
+    build:
+      context: ./server
+    container_name: spring-container
+    ports:
+      - "8080:8080"
+    # 사용자가 중지하지 않는 이상 자동 재시작
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  frontend:
+    image: commonreact
+    build:
+      context: ./frontend
+    container_name: react-container
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
