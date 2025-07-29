@@ -333,6 +333,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### gitlab
+.gitlab/
+
 # IDE 설정
 .server/.idea/
 .server/.vscode/
