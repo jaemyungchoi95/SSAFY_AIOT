@@ -339,7 +339,6 @@ build/
 # IDE 설정
 .server/.idea/
 .server/.vscode/
-.server/.mvn/
 
 # 환경변수 파일
 .env
