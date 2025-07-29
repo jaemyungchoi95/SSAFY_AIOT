@@ -6,7 +6,7 @@ services:
     image: areuhotspring
     build:
       context: ./server
-    container_name: spring-container
+    container_name: areuhot-spring-container
     ports:
       - "8080:8080"
     # 사용자가 중지하지 않는 이상 자동 재시작
@@ -18,7 +18,7 @@ services:
     image: areuhotreact
     build:
       context: ./frontend
-    container_name: react-container
+    container_name: areuhot-react-container
     ports:
       - "5173:80"
     depends_on:
