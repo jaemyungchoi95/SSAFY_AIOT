@@ -3,7 +3,7 @@ version: '3.8'
 services:
   backend:
     # 빌드 이미지의 이름을 명시적으로 지정
-    image: commonspring
+    image: areuhotspring
     build:
       context: ./server
     container_name: spring-container
@@ -15,7 +15,7 @@ services:
       - app-network
 
   frontend:
-    image: commonreact
+    image: areuhotreact
     build:
       context: ./frontend
     container_name: react-container
