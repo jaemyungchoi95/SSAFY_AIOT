@@ -1,0 +1,11 @@
+.SidebarHeader_title {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.SidebarHeader_Filter {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+}

@@ -1,0 +1,45 @@
+.MapHeader {
+  background-color: #20212A;
+  padding: 27px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #EAEAF0;
+  border-radius: 15px;
+}
+
+.MapHeader_right{
+    display: flex;
+    gap: 50px;
+}
+
+.MapHeader_caution, 
+.MapHeader_danger {
+  display: flex;
+  align-items: center;
+  gap: 5px;  
+}
+
+.MapHeader_IssueCnt{
+  font-weight: bolder;
+}
+
+.MapHeader_issue {
+  display: flex;
+  gap: 30px;
+}
+
+.MapHeader_ratio {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: #424242 1px solid;
+  padding: 7px 15px;
+  border-radius: 10px;
+}
+
+.MapHeader_ZoomIn,
+.MapHeader_ZoomOut,
+.MapHeader_ZoomOrigin {
+  cursor: pointer;
+}

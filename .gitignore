@@ -301,7 +301,6 @@ $RECYCLE.BIN/
 
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -339,7 +338,6 @@ build/
 # IDE 설정
 .server/.idea/
 .server/.vscode/
-.server/.mvn/
 
 # 환경변수 파일
 .env
