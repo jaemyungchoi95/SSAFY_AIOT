@@ -1,0 +1,17 @@
+.SidebarList {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.SidebarList {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.SidebarList::-webkit-scrollbar {
+  display: none;
+}

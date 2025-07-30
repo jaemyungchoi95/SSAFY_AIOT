@@ -1,40 +1,40 @@
 .SidebarItem {
-    padding: 20px;
-    border-bottom: 3px solid #33333C;
-    cursor: pointer;
-
+  padding: 20px;
+  border-bottom: 3px solid #33333c;
+  cursor: pointer;
 }
 
-.SidebarItem_Header{
-    display: flex;
-    justify-content: space-between;
+.SidebarItem_Header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .SidebarItem_Spot {
-    font-weight: bolder;
-    font-size: 20px;
+  font-weight: bolder;
+  font-size: 20px;
 }
 
-.SidebarItem_Temp{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.SidebarItem_Temp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.SidebarItem_TempValue{
-    color: #C2C2C2;
+.SidebarItem_TempValue {
+  color: #c2c2c2;
 }
 
-.SidebarItem_Message{
-    margin: 15px 0;
+.SidebarItem_Message {
+  margin: 15px 0;
+  text-align: left;
 }
 
 .SidebarItem_Admin,
-.SidebarItem_Date{
-    color: #C2C2C2;
+.SidebarItem_Date {
+  color: #c2c2c2;
 }
 
-.SidebarItem_Footer{
-    display: flex;
-    justify-content: space-between;
+.SidebarItem_Footer {
+  display: flex;
+  justify-content: space-between;
 }
