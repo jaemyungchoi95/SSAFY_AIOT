@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class WarehouseResponseDto {
-    private int id;
+    private int warehouseId;
     private String name;
     private String location;
 }
