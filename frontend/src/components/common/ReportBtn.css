@@ -1,0 +1,16 @@
+.ReportBtn {
+  display: flex;
+  color: #c2c2c2;
+  gap: 7px;
+  padding: 5px;
+  border: 2px solid #575757;
+  border-radius: 10px;
+  cursor: pointer;
+  align-items: center;
+  font-size: 14px;
+}
+
+.ReportBtn img {
+  width: 20px;
+  height: 20px;
+}

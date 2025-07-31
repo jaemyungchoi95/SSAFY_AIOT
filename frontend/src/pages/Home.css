@@ -1,6 +1,29 @@
 .Home_content {
-    display: flex;
-    padding: 0 30px;
-    gap: 1vw;
-    height: calc(100dvh - 120px);
+  display: flex;
+  height: calc(100dvh - 120px);
+  padding: 0 30px;
+  gap: 1vw;
+}
+
+.map_area {
+  flex: 3;
+  transition: flex 0.3s ease;
+  min-width: 0;
+}
+
+.map_area.shrink {
+  flex: 2;
+}
+
+.sidebar_detail_area {
+  flex: 1;
+  min-width: 250px;
+  transition: flex 0.3s ease;
+}
+
+.sidebar_area {
+  flex: 1;
+  min-width: 250px;
+  overflow-y: auto;
+  flex-direction: column;
 }
