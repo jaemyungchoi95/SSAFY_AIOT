@@ -6,6 +6,7 @@ const SidebarItem = ({ issue, report, onClick }) => {
   const isCompleteText = issue.status === 'DONE' ? '처리완료' : '미확인';
   const isCompleteType = issue.status === 'DONE' ? 'Complete' : 'Caution';
 
+  // gemini request : 이 페이지는 전역변수로 전달된 report 정보를 렌더링합니다. 목데이터는 App.jsx에 존재합니다.
   return (
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">

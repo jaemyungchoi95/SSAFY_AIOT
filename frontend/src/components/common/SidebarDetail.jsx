@@ -3,16 +3,10 @@ import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';
 import SidebarDetailReport from './SidebarDetailReport';
-import { useContext, useState, useEffect } from 'react';
-import { ReportStateContext } from '../../utils/AlertContext';
 import ReportBtn from './ReportBtn';
 import DetailWrite from './DetailWrite';
 
-const SidebarDetail = ({ issue, onClose }) => {
-  const reports = useContext(ReportStateContext);
-  const relatedReport = reports.find(
-    (report) => Number(report.alert_id) === Number(issue.id),
-  );
+const SidebarDetail = ({ issue, report, onClose }) => {
 
   // const [isWriting, setIsWriting] = useState(false);
   const [isWritingId, setIsWritingId] = useState(null);
@@ -39,8 +33,8 @@ const SidebarDetail = ({ issue, onClose }) => {
   return (
     <div className="SidebarDetail">
       <SidebarDetailHeader issue={issue} onClose={onClose} />
-      <SidebarDetailContent issue={issue} />
-      {relatedReport ? (
+      <SidebarDetailContent issue={issue} report={report} />
+      {report ? (
         isEditing ? (
           <DetailWrite
             issue={issue}
@@ -49,7 +43,7 @@ const SidebarDetail = ({ issue, onClose }) => {
           />
         ) : (
           <SidebarDetailReport
-            report={relatedReport}
+            report={report}
             onEditClick={handleEditClick}
           />
         )

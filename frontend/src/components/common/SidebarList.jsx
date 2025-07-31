@@ -1,27 +1,15 @@
-import React, { useEffect } from 'react';
 import SidebarItem from './SidebarItem';
 import './SidebarList.css';
-import { useContext } from 'react';
-import {
-  AlertStateContext,
-  ReportStateContext,
-} from '../../utils/AlertContext';
+import { useAppStore } from '../../stores/useAppStore';
 
-const SidebarList = ({
-  selectedWarehouse,
-  selectedStatus,
-  selectedTime,
-  setDangerCnt,
-  setCautionCnt,
-  setSelectedIssue,
-}) => {
-  const issues = useContext(AlertStateContext);
-  const reports = useContext(ReportStateContext);
+const SidebarList = ({ selectedStatus, selectedTime }) => {
+  const { issues, reports, setSelectedIssueId, selectedWarehouseId } =
+    useAppStore();
 
   const getFilteredIssues = () => {
-    let filtered = issues.filter(
-      (issue) => issue.warehouse_id === selectedWarehouse,
-    );
+    let filtered = Array.isArray(issues)
+      ? issues.filter((issue) => issue.warehouse_id === selectedWarehouseId)
+      : [];
 
     if (selectedStatus === '처리완료') {
       filtered = filtered.filter((issue) => issue.status === 'DONE');
@@ -33,29 +21,19 @@ const SidebarList = ({
       filtered = filtered.filter((issue) => issue.is_danger === true);
     }
 
-    filtered.sort((a, b) => {
+    // 원본 배열을 수정하지 않도록 복사본을 만들어서 정렬함
+    const sorted = [...filtered].sort((a, b) => {
       const timeA = new Date(a.created_at).getTime();
       const timeB = new Date(b.created_at).getTime();
       return selectedTime === '최신순' ? timeB - timeA : timeA - timeB;
     });
 
-    return filtered;
+    return sorted;
   };
 
   const filteredIssues = getFilteredIssues();
 
-  useEffect(() => {
-    const danger = filteredIssues.filter(
-      (issue) => issue.is_danger === true,
-    ).length;
-    const caution = filteredIssues.filter(
-      (issue) => issue.status === 'UNCHECKED',
-    ).length;
-
-    setDangerCnt(danger);
-    setCautionCnt(caution);
-  }, [issues, selectedWarehouse, selectedStatus, setDangerCnt, setCautionCnt]);
-
+  // gemini request : 이 컴포넌트는 contextAPI로 관리되는 전역변수인 issue와 alert의 수를 표시하며, SidebarItem의 정보를 리스트업 하여 나열해주는 역할을 합니다.
   return (
     <div className="SidebarList">
       {filteredIssues.map((issue) => {
@@ -67,7 +45,7 @@ const SidebarList = ({
             key={issue.id}
             issue={issue}
             report={relatedReport}
-            onClick={() => setSelectedIssue(issue)}
+            onClick={() => setSelectedIssueId(issue.id)}
           />
         );
       })}

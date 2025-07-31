@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './MapHeader.css';
 import FilterLocation from './FilterLocation';
+import { useAppStore } from '../../stores/useAppStore';
 
-const MapHeader = ({
-  selectedWarehouse,
-  setSelectedWarehouse,
-  dangerCnt,
-  cautionCnt,
-  scale,
-  zoomIn,
-  zoomOut,
-  resetZoom,
-}) => {
-  // console.log("cautionCnt", cautionCnt, "dangerCnt", dangerCnt);
+const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
+  const { issues, selectedWarehouseId } = useAppStore();
   const [currScale, setCurrScale] = useState(scale);
+
+  // useMemo를 활용하여 창고의 이슈가 변경될 때만 카운트를 다시 계산
+  const { cautionCnt, dangerCnt } = useMemo(() => {
+    if (!Array.isArray(issues)) {
+      return { cautionCnt: 0, dangerCnt: 0 };
+    }
+
+    const filtered = issues.filter(
+      (issue) => issue.warehouse_id === selectedWarehouseId,
+    );
+    const danger = filtered.filter((issue) => issue.is_danger === true).length;
+    const caution = filtered.filter(
+      (issue) => issue.status === 'UNCHECKED' && !issue.is_danger,
+    ).length;
+    return { cautionCnt: caution, dangerCnt: danger };
+  }, [issues, selectedWarehouseId]);
 
   useEffect(() => {
     setCurrScale(scale);
@@ -22,10 +30,7 @@ const MapHeader = ({
   return (
     <div className="MapHeader">
       <div className="MapHeader_left">
-        <FilterLocation
-          selectedWarehouse={selectedWarehouse}
-          setSelectedWarehouse={setSelectedWarehouse}
-        />
+        <FilterLocation />
       </div>
       <div className="MapHeader_right">
         <div className="MapHeader_issue">
