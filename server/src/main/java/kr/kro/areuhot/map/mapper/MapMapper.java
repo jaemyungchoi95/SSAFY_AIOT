@@ -1,5 +1,6 @@
 package kr.kro.areuhot.map.mapper;
 
+import kr.kro.areuhot.map.dto.MapResponseDto;
 import kr.kro.areuhot.map.model.WarehouseMap;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,4 +9,6 @@ import org.apache.ibatis.annotations.Param;
 public interface MapMapper {
     void insertMap(WarehouseMap map);
     void deactivateByWarehouseId(@Param("warehouseId") int warehouseId);
+    int findActiveMapIdByWarehouseId(@Param("warehouseId") int warehouseId);
+    MapResponseDto findActiveMapByWarehouseId(@Param("warehouseId") int warehouseId);
 }

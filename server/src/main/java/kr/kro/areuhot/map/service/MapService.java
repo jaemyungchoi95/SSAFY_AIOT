@@ -1,5 +1,6 @@
 package kr.kro.areuhot.map.service;
 
+import kr.kro.areuhot.map.dto.MapResponseDto;
 import kr.kro.areuhot.map.mapper.MapMapper;
 import kr.kro.areuhot.map.model.WarehouseMap;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,9 @@ public class MapService {
 
         mapMapper.insertMap(map);
         return map;
+    }
+
+    public MapResponseDto getActiveMapByWarehouseId(int warehouseId) {
+        return mapMapper.findActiveMapByWarehouseId(warehouseId);
     }
 }

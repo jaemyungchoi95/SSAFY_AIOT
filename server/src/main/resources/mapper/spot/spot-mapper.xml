@@ -14,4 +14,12 @@
         )
     </insert>
 
+    <select id="findByRackId" resultType="kr.kro.areuhot.spot.dto.SpotResponseDto">
+        SELECT
+            id AS spot_id,
+            rack_id, x, y, direction
+        FROM spot
+        WHERE rack_id = #{rackId}
+    </select>
+
 </mapper>

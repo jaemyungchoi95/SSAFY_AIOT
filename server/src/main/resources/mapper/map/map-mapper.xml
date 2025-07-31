@@ -21,4 +21,20 @@
           AND is_active = true;
     </update>
 
+    <select id="findActiveMapIdByWarehouseId">
+        SELECT id
+        FROM map
+        WHERE warehouse_id = #{warehouseId}
+          AND is_active = true
+        LIMIT 1
+    </select>
+
+    <select id="findActiveMapByWarehouseId" resultType="kr.kro.areuhot.map.dto.MapResponseDto">
+        SELECT id, warehouse_id, file_path
+        FROM map
+        WHERE warehouse_id = #{warehouseId}
+          AND is_active = true
+        LIMIT 1
+    </select>
+
 </mapper>
