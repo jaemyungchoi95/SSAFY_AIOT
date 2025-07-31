@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';

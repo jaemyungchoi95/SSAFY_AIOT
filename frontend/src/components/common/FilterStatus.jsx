@@ -10,7 +10,6 @@ const FilterStatus = ({ selectedStatus, setSelectedStatus }) => {
     setSelectedStatus(status);
     setIsOpen(false);
   };
-  // gemini request : 이 페이지는 전달된 props를 바탕으로 정보를 필터하여 보여줍니다 (해당하지 않는 항목은 숨김처리)
   return (
     <div className="FilterStatus">
       <button

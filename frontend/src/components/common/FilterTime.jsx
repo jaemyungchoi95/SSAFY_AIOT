@@ -10,7 +10,6 @@ const FilterTime = ({ selectedTime, setSelectedTime }) => {
     setIsOpen(false);
   };
 
-  // gemini request : 이 컴포넌트는 SidebarHeader 로부터 전달받은 props를 바탕으로 데이터를 정렬합니다.
   return (
     <div className="FilterTime">
       <button

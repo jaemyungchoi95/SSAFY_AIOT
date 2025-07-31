@@ -27,13 +27,12 @@ const SidebarList = ({ selectedStatus, selectedTime }) => {
       const timeB = new Date(b.created_at).getTime();
       return selectedTime === '최신순' ? timeB - timeA : timeA - timeB;
     });
-
+    // 복사하여 정렬한 배열을 반환
     return sorted;
   };
 
   const filteredIssues = getFilteredIssues();
 
-  // gemini request : 이 컴포넌트는 contextAPI로 관리되는 전역변수인 issue와 alert의 수를 표시하며, SidebarItem의 정보를 리스트업 하여 나열해주는 역할을 합니다.
   return (
     <div className="SidebarList">
       {filteredIssues.map((issue) => {
