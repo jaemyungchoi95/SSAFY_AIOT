@@ -18,8 +18,3 @@
 .SidebarDetailReport_Message {
   margin-top: 12px;
 }
-
-.SidebarDetailReport_UpdateBtnWrapper {
-  display: flex;
-  justify-content: flex-end;
-}

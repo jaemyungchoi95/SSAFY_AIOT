@@ -3,7 +3,6 @@ import Map from '../components/common/Map';
 import Sidebar from '../components/common/Sidebar';
 import './Home.css';
 import React from 'react';
-import { useState } from 'react';
 import SidebarDetail from '../components/common/SidebarDetail';
 
 const Home = () => {
