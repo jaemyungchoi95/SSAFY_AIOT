@@ -14,10 +14,11 @@
         )
     </insert>
 
-    <update id="deactivateAllByWarehouseId">
+    <update id="deactivateByWarehouseId">
         UPDATE map
-        SET is_active = FALSE
+        SET is_active = false
         WHERE warehouse_id = #{warehouseId}
+          AND is_active = true;
     </update>
 
 </mapper>

@@ -15,7 +15,7 @@ public class MapService {
     private final MapMapper mapMapper;
 
     public WarehouseMap saveMap(int warehouseId, String url, Date createdAt) {
-        mapMapper.deactiveByWarehouseId(warehouseId);
+        mapMapper.deactivateByWarehouseId(warehouseId);
 
         WarehouseMap map = new WarehouseMap();
         map.setWarehouseId(warehouseId);

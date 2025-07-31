@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.kro.areuhot.spot.mapper.SpotMapper">
 
-    <insert id="insertSpot" parameterType="kr.kro.areuhot.rack.model.Spot" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSpot" parameterType="kr.kro.areuhot.spot.model.Spot" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO spot (
             rack_id, x, y, direction
         )
