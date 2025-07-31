@@ -1,109 +1,69 @@
-import { useMemo, useState, useEffect } from 'react';
-import { Stage, Layer, Image, Circle, Ring } from 'react-konva';
-import axios from 'axios';
+import { useEffect, Fragment } from 'react';
+import { Stage, Layer, Image, Circle, Ring, Line, Text } from 'react-konva';
 
 import { useMapData } from '../hooks/useMapData';
-import { getMarkerColor } from '../utils/MarkerStyles';
+import { useMapCanvas } from '../hooks/useMapCanvas';
+import { getMarkerColor } from '../utils/spotStyles';
 import { useMapStore } from '../stores/useMapStore';
+import { getCenter } from '../utils/calcRackCenter';
 
-const MapViewer = () => {
-  const {
-    pgmData,
-    mapMetadata,
-    loading: mapLoading,
-    error: mapError,
-  } = useMapData();
+const MapViewer = ({ scale, stageRef, onWheel }) => {
+  const { pgmData, loading: mapLoading, error: mapError } = useMapData();
+
+  // pgmData를 바탕으로 Canvas를 그려서 가져온다
+  const mapCanvas = useMapCanvas(pgmData);
+
   // use스토어에 정의된 상태와 액션을 가져온다
-  const { markers, selectedMarkerId, fetchMarkers, setSelectedMarkerId } =
+  const { racks, spots, selectedSpotId, fetchMapData, setSelectedSpotId } =
     useMapStore();
+
   // 선택된 마커를 스토어 상태 기반으로 찾아준다
-  const selectedMarker = markers.find(
-    (marker) => marker.id === selectedMarkerId,
-  );
+  const selectedSpot = spots.find((spots) => spots.spot_id === selectedSpotId);
 
-  // API 호출하여 마커 데이터를 가져온다
-  // useEffect(() => {
-  //   axios.get('/api/map/markers')
-  //        .then((Response) => {
-  //     setMarkers(Response.data);
-  //   })
-  //   .catch((error) => console.error("마커를 불러오는데 실패하였습니다.", error));
-  // }, []);
-
-  console.log('현재 선택된 마커 ID:', selectedMarkerId);
-
+  // spot 데이터를 불러온다
   useEffect(() => {
-    fetchMarkers();
-  }, [fetchMarkers]);
-
-  // pgmData가 변경될 때만 캔버스를 다시 그리는 useMemo 훅
-  const mapCanvas = useMemo(() => {
-    if (!pgmData) return null;
-
-    const { width, height, pixels, maxGray } = pgmData;
-
-    // 1. 메모리에 임시 캔버스를 생성합니다.
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const context = canvas.getContext('2d');
-
-    // 2. 픽셀 데이터를 담을 ImageData 객체를 생성합니다.
-    const imageData = context.createImageData(width, height);
-
-    // 3. PGM 픽셀 데이터를 ImageData에 채워넣습니다.
-    for (let i = 0; i < pixels.length; i++) {
-      // 0~255 범위로 정규화합니다.
-      const grayValue = (pixels[i] / maxGray) * 255;
-      // 각 픽셀은 RGBA 4개의 값으로 이루어짐
-      const dataIndex = i * 4;
-
-      imageData.data[dataIndex] = grayValue; // R
-      imageData.data[dataIndex + 1] = grayValue; // G
-      imageData.data[dataIndex + 2] = grayValue; // B
-      imageData.data[dataIndex + 3] = 255; // A (불투명)
-    }
-
-    // 4. 완성된 이미지 데이터를 캔버스에 그립니다.
-    context.putImageData(imageData, 0, 0);
-
-    return canvas;
-  }, [pgmData]); // pgmData가 바뀔 때만 이 로직이 실행됩니다.
+    fetchMapData();
+  }, [fetchMapData]);
 
   if (mapLoading) return <div>Loading map...</div>;
   if (mapError) return <div>Error loading map data: {mapError.message}</div>;
 
   return (
-    <div>
+    <div className=" p-[20px 10px]">
       {/* Konva의 Image 컴포넌트에 우리가 그린 캔버스를 넘겨줍니다. */}
       <Stage
-        width={pgmData?.width || 500}
-        height={pgmData?.height || 500}
-        style={{ border: '1px solid grey' }}
+        width={pgmData?.width}
+        height={pgmData?.height}
+        // style={{ border: '1px solid grey' }}
+        scaleX={scale}
+        scaleY={scale}
+        draggable={scale > 1}
         // 최초 호출시는 선택된 마커 해제
-        onClick={() => setSelectedMarkerId(null)}
+        onClick={() => setSelectedSpotId(null)}
+        onWheel={onWheel}
+        ref={stageRef}
       >
         <Layer>{mapCanvas && <Image image={mapCanvas} />}</Layer>
         {/* 마커표시 레이어 */}
         <Layer>
-          {markers.map((marker) => (
+          {spots.map((spot) => (
             <Circle
-              key={marker.id}
-              x={marker.x}
-              y={marker.y}
+              key={spot.spot_id}
+              x={spot.x}
+              y={spot.y}
               radius={5}
-              fill={getMarkerColor(marker.status)}
+              fill={getMarkerColor(spot.status)}
               shadowBlur={5}
               onClick={(e) => {
                 e.cancelBubble = true;
-                setSelectedMarkerId(marker.id);
+                setSelectedSpotId(spot.spot_id);
               }}
             />
           ))}
-          {selectedMarker && (
+          {selectedSpot && (
             <Ring
-              x={selectedMarker.x}
-              y={selectedMarker.y}
+              x={selectedSpot.x}
+              y={selectedSpot.y}
               innerRadius={8} // 안쪽 원 반지름
               outerRadius={12} // 바깥쪽 원 반지름
               fill={'#FF7575'} // 채우기 색상
@@ -114,9 +74,46 @@ const MapViewer = () => {
             />
           )}
         </Layer>
+        <Layer>
+          {racks.map((rack) => {
+            const center = getCenter(rack);
+            return (
+              <Fragment key={rack.rack_id}>
+                <Line
+                  key={rack.rack_id}
+                  points={[
+                    rack.x1,
+                    rack.y1,
+                    rack.x2,
+                    rack.y2,
+                    rack.x3,
+                    rack.y3,
+                    rack.x4,
+                    rack.y4,
+                    rack.x1,
+                    rack.y1, // 다시 처음으로 닫기
+                  ]}
+                  stroke="blue"
+                  fill="rgba(0,0,255,0.2)"
+                  closed={true}
+                  strokeWidth={2}
+                />
+                <Text
+                  x={center.x}
+                  y={center.y}
+                  text={`Rack - ${rack.rack_id}`}
+                  fontSize={14}
+                  fill="black"
+                  align="center"
+                  verticalAlign="middle"
+                  offsetX={50} // 텍스트 너비 절반 (적절히 조절 필요)
+                  offsetY={7} // 텍스트 높이 절반 (적절히 조절 필요)
+                />
+              </Fragment>
+            );
+          })}
+        </Layer>
       </Stage>
-      {/* <h3>Map Metadata (from .yaml)</h3>
-      <pre>{JSON.stringify(mapMetadata, null, 2)}</pre> */}
     </div>
   );
 };

@@ -1,30 +1,33 @@
-import React from 'react'
-import './Header.css'
-// import axios from 'axios';
-import { useEffect, useState } from 'react'
-// import useUserStore from '.. /../stores/useUserStore'
+import { useUserStore } from '../../stores/useUserStore';
+import './Header.css';
+import { useNavigate } from 'react-router-dom';
+
+// import useUserStore from '.. /../stores/useUserStore';
 
 const Header = () => {
-
-  const [isLogin, setIsLogin] = useState(false);
-  // const { userId, username } = useUserStore();
-
-  // useEffect(() => {
-  //   axios.get((response) => {
-  //     const data = response.data;
-  //   })
-  // }, [])
+  // const [isLoggedIn, username] = useUserStore();
+  // const nav = useNavigate();
 
   return (
-    <div className='Header'>
-        <div className='Header_Logo'>
-          <img src="../../src/assets/logo.png" alt="Logo" className='logo' />
-        </div>
-        <div className='Header_Login'>
-          로그인
-        </div>
+    <div className="Header">
+      <div className="Header_Logo">
+        <img src="../../src/assets/logo.png" alt="Logo" className="logo" />
+      </div>
+      {/* <div
+        className="Header_Login"
+        onClick={() => {
+          if (isLoggedIn) {
+            // 로그아웃 처리 예시 (간단하게 스토어 상태 변경)
+            useUserStore.getState().logout();
+          } else {
+            nav('/login');
+          }
+        }}
+      >
+        {isLoggedIn ? `${username} 님 (로그아웃)` : '로그인'}
+      </div> */}
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

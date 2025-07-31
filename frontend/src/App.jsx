@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import Home from './pages/Home';
+import Login from './pages/Login';
 import IssuePage from './pages/IssuePage';
 import './App.css';
 import Header from './components/common/Header';
@@ -55,8 +56,8 @@ const alertMockData = [
     x: 12.1,
     y: 6.9,
     temperature: 80.2,
-    image_thermal_url: '../src/assets/RackImg.png',
-    image_normal_url: '../src/assets/TempImg.png',
+    image_thermal_url: './assets/RackImg.png',
+    image_normal_url: './assets/TempImg.png',
     direction: 270.0,
     status: 'UNCHECKED',
     is_danger: false,
@@ -75,8 +76,8 @@ const alertMockData = [
     x: 10.5,
     y: 7.8,
     temperature: 75.3,
-    image_thermal_url: '../src/assets/RackImg.png',
-    image_normal_url: '../src/assets/TempImg.png',
+    image_thermal_url: './assets/RackImg.png',
+    image_normal_url: './assets/TempImg.png',
     direction: 90.0,
     status: 'UNCHECKED',
     is_danger: true,
@@ -134,6 +135,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/issue" element={<IssuePage />} />
+                <Route path="/login" element={<Login />} />
               </Routes>
             </BrowserRouter>
           </div>
