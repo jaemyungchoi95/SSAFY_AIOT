@@ -1,0 +1,20 @@
+.SidebarDetailHeader {
+  display: flex;
+  border-bottom: 3px solid #33333c;
+  padding: 10px 30px;
+  justify-content: space-between;
+}
+
+.SidebarDetailHeader_Spot {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.SidebarDetailHeader_Left {
+  display: flex;
+  gap: 20px;
+}
+
+.SidebarDetailHeader_CloseBtn {
+  cursor: pointer;
+}

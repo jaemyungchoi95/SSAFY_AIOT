@@ -1,0 +1,81 @@
+{
+  "url": "https://are-you-hot.s3.ap-northeast-2.amazonaws.com/maps/JSI_SLAM_map.pgm",
+  "rackList": [
+    {
+      "x1": 274,
+      "y1": 495,
+      "x2": 295,
+      "y2": 320,
+      "x3": 568,
+      "y3": 353,
+      "x4": 547,
+      "y4": 528,
+      "centerX": 421,
+      "centerY": 424,
+      "spotList": [
+        { "x": 244, "y": 491, "direction": 186.8 },
+        { "x": 249, "y": 448, "direction": 186.8 },
+        { "x": 255, "y": 404, "direction": 186.8 },
+        { "x": 260, "y": 360, "direction": 186.8 },
+        { "x": 299, "y": 290, "direction": 276.9 },
+        { "x": 344, "y": 296, "direction": 276.9 },
+        { "x": 390, "y": 301, "direction": 276.9 },
+        { "x": 435, "y": 307, "direction": 276.9 },
+        { "x": 481, "y": 312, "direction": 276.9 },
+        { "x": 526, "y": 318, "direction": 276.9 },
+        { "x": 572, "y": 323, "direction": 276.9 },
+        { "x": 598, "y": 357, "direction": 6.8 },
+        { "x": 593, "y": 400, "direction": 6.8 },
+        { "x": 587, "y": 444, "direction": 6.8 },
+        { "x": 582, "y": 488, "direction": 6.8 },
+        { "x": 577, "y": 532, "direction": 6.8 },
+        { "x": 543, "y": 558, "direction": 96.9 },
+        { "x": 498, "y": 552, "direction": 96.9 },
+        { "x": 452, "y": 547, "direction": 96.9 },
+        { "x": 316, "y": 530, "direction": 96.9 },
+        { "x": 270, "y": 525, "direction": 96.9 }
+      ]
+    },
+    {
+      "x1": 531,
+      "y1": 273,
+      "x2": 550,
+      "y2": 257,
+      "x3": 570,
+      "y3": 281,
+      "x4": 551,
+      "y4": 297,
+      "centerX": 550,
+      "centerY": 277,
+      "spotList": [
+        { "x": 512, "y": 250, "direction": 229.9 },
+        { "x": 589, "y": 304, "direction": 49.9 },
+        { "x": 570, "y": 320, "direction": 49.9 },
+        { "x": 528, "y": 316, "direction": 140.2 },
+        { "x": 508, "y": 292, "direction": 140.2 }
+      ]
+    },
+    {
+      "x1": 491,
+      "y1": 241,
+      "x2": 502,
+      "y2": 241,
+      "x3": 502,
+      "y3": 252,
+      "x4": 491,
+      "y4": 252,
+      "centerX": 496,
+      "centerY": 246,
+      "spotList": [
+        { "x": 491, "y": 211, "direction": 270.0 },
+        { "x": 502, "y": 211, "direction": 270.0 },
+        { "x": 532, "y": 241, "direction": 0.0 },
+        { "x": 532, "y": 252, "direction": 0.0 },
+        { "x": 502, "y": 282, "direction": 90.0 },
+        { "x": 491, "y": 282, "direction": 90.0 },
+        { "x": 461, "y": 252, "direction": 180.0 },
+        { "x": 461, "y": 241, "direction": 180.0 }
+      ]
+    }
+  ]
+}

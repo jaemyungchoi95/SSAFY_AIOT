@@ -10,11 +10,16 @@ export function parsePGM(arrayBuffer) {
   // 헤더를 파싱하기 위해 최대 512바이트까지만 텍스트로 읽습니다.
   const headerText = textDecoder.decode(arrayBuffer.slice(0, 512));
 
-  const lines = headerText.split('\n').filter(line => !line.startsWith('#')).filter(line => line.trim() !== '');
+  const lines = headerText
+    .split('\n')
+    .filter((line) => !line.startsWith('#'))
+    .filter((line) => line.trim() !== '');
 
   const magicNumber = lines.shift().trim();
   if (magicNumber !== 'P2' && magicNumber !== 'P5') {
-    throw new Error(`Unsupported PGM format: ${magicNumber}. Only P2 and P5 aresupported.`);
+    throw new Error(
+      `Unsupported PGM format: ${magicNumber}. Only P2 and P5 aresupported.`,
+    );
   }
 
   const [width, height] = lines.shift().trim().split(/\s+/).map(Number);
@@ -25,7 +30,8 @@ export function parsePGM(arrayBuffer) {
   let headerEndIndex = 0;
   let lineCount = 0;
   for (let i = 0; i < arrayBuffer.byteLength && lineCount < 3; i++) {
-    if (dataView.getUint8(i) === 0x0A) { // 0x0A는 개행문자(\n)
+    if (dataView.getUint8(i) === 0x0a) {
+      // 0x0A는 개행문자(\n)
       lineCount++;
     }
     if (lineCount === 3) {

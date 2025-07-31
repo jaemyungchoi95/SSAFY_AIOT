@@ -1,31 +1,62 @@
 import { create } from 'zustand';
-import axios from 'axios';
 import { devtools } from 'zustand/middleware';
+import axios from 'axios';
 
 export const useMapStore = create(
   devtools((set) => ({
     // 상태(state) 정의
-    markers: [],
-    selectedMarkerId: null,
+    imgUrl: null,
+    racks: [],
+    spots: [],
+    selectedSpotId: null,
     loading: false,
     error: null,
 
     // 액션 (Actions) 정의
-    fetchMarkers: async () => {
-      // fetcMarkers 함수가 호출되면 loading을 true로 바꿔주어 store의 상태변화를 유발
+    fetchMapData: async () => {
       set({ loading: true, error: null });
       try {
-        const response = await axios.get('/api/map/markers');
-        // api 호출이 성공하면 markers에 결과 데이터를 담고 다시 loading 을 false로 전환한다
-        set({ markers: response.data, loading: false });
+        const response = await axios.get('/api/map/rackList');
+        const { url, rackList } = response.data;
+
+        const allSpots = [];
+        const processRacks = rackList.map((rack, rackIdx) => {
+          const rackId = rackIdx + 1;
+
+          const enrichedSpots = rack.spotList.map((spot, spotIdx) => {
+            const spotId = allSpots.length + 1; // 전체 고유 ID
+            const spotWithMeta = {
+              ...spot,
+              spot_id: spotId,
+              rack_id: rackId,
+              status: 'normal', // 기본값
+            };
+            allSpots.push(spotWithMeta);
+            return spotWithMeta;
+          });
+
+          return {
+            ...rack,
+            rack_id: rackId,
+            center_x: rack.centerX,
+            center_y: rack.centerY,
+            spotList: enrichedSpots,
+          };
+        });
+        set({
+          imageUrl: url,
+          racks: processRacks,
+          spots: allSpots,
+          loading: false,
+        });
       } catch (error) {
         set({ error, loading: false });
       }
     },
 
     // 특정 마커를 선택 혹은 선택 해지
-    setSelectedMarkerId: (id) => {
-      set({ selectedMarkerId: id });
+    setSelectedSpotId: (spot_id) => {
+      set({ selectedSpotId: spot_id });
     },
   })),
 );
