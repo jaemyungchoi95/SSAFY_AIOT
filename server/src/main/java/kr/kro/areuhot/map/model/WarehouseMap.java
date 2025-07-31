@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class WarehouseMap {
+    private int id;
     private int warehouseId;
     private String filePath;
     private String version;

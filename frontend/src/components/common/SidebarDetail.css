@@ -8,3 +8,8 @@
 .SidebarDetailWriteBtn {
   padding: 20px 50px;
 }
+.SidebarDetail_ReportBtnWrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 30px;
+}

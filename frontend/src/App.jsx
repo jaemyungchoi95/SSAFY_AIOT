@@ -7,6 +7,7 @@ import './App.css';
 import Header from './components/common/Header';
 import { useAppStore } from './stores/useAppStore';
 
+
 function App() {
   const fetchInitialData = useAppStore((state) => state.fetchInitialData);
 
