@@ -50,26 +50,9 @@ export const useAppStore = create(
             const isXMatch = issue.x === spot.x;
             const isYMatch = issue.y === spot.y;
 
-            // rack_id가 1인 경우만 로그를 출력하여 콘솔이 너무 복잡해지는 것을 방지합니다.
-            if (spot.rack_id === 1 && issue.rack_id === 1) {
-              console.log(
-                `[비교] spot.rack_id: ${spot.rack_id} (type: ${typeof spot.rack_id}) | issue.rack_id: ${issue.rack_id} (type: ${typeof issue.rack_id}) | 일치? ${isRackMatch}`,
-              );
-              console.log(
-                `[비교] spot.x: ${spot.x} (type: ${typeof spot.x}) | issue.x: ${issue.x} (type: ${typeof issue.x}) | 일치? ${isXMatch}`,
-              );
-              console.log(
-                `[비교] spot.y: ${spot.y} (type: ${typeof spot.y}) | issue.y: ${issue.y} (type: ${typeof issue.y}) | 일치? ${isYMatch}`,
-              );
-            }
-
             return isRackMatch && isXMatch && isYMatch;
           });
-          console.log('issueOnThisSpot 하는지? ', issueOnThisSpot);
           if (issueOnThisSpot) {
-            console.log(
-              `[성공] Spot (rack_id: ${spot.rack_id}, x: ${spot.x}) 와 Issue (id: ${issueOnThisSpot.id}) 병합`,
-            );
             return {
               ...spot,
               status: issueOnThisSpot.status,
@@ -78,14 +61,10 @@ export const useAppStore = create(
           }
           return spot;
         });
-        console.log('--- 데이터 병합 완료 ---');
         set({
           imageUrl: url,
-          // racks: processRacks,
           racks: processedRacks,
-          // spots: allSpots,
           spots: mergedSpots,
-
           issues: issuesData,
           reports: reportRes.data,
           warehouses: warehouseRes.data,

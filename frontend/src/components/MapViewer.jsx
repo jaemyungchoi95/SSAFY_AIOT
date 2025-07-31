@@ -6,6 +6,7 @@ import { getMarkerColor } from '../utils/spotStyles';
 import { useAppStore } from '../stores/useAppStore';
 import { getCenter } from '../utils/calcRackCenter';
 import { useStageSize } from '../hooks/useStageSize';
+import DirectionalMarker from './DirectionalMarker';
 
 const MapViewer = ({
   scale,
@@ -52,10 +53,7 @@ const MapViewer = ({
         overflow: 'hidden',
       }}
     >
-      {/* Konva의 Image 컴포넌트에 우리가 그린 캔버스를 넘겨줍니다. */}
       <Stage
-        // width={pgmData?.width}
-        // height={pgmData?.height}
         width={containerSize.width}
         height={containerSize.height}
         scaleX={scale}
@@ -77,13 +75,24 @@ const MapViewer = ({
         <Layer>
           {Array.isArray(spots) &&
             spots.map((spot) => (
-              <Circle
+              // react-konva 내장 Circle 컴포넌트
+              // <Circle
+              //   key={spot.spot_id}
+              //   x={spot.x}
+              //   y={spot.y}
+              //   radius={5 / scale}
+              //   fill={getMarkerColor(spot.status)}
+              //   shadowBlur={5}
+              //   onClick={(e) => {
+              //     e.cancelBubble = true;
+              //     setSelectedIssueId(spot.issue_id || null);
+              //   }}
+              // />
+
+              <DirectionalMarker
                 key={spot.spot_id}
-                x={spot.x}
-                y={spot.y}
-                radius={5 / scale}
-                fill={getMarkerColor(spot.status)}
-                shadowBlur={5}
+                spot={spot}
+                scale={scale}
                 onClick={(e) => {
                   e.cancelBubble = true;
                   setSelectedIssueId(spot.issue_id || null);
