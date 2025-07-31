@@ -9,5 +9,6 @@ import org.apache.ibatis.annotations.Param;
 public interface MapMapper {
     void insertMap(WarehouseMap map);
     void deactivateByWarehouseId(@Param("warehouseId") int warehouseId);
+    int findActiveMapIdByWarehouseId(@Param("warehouseId") int warehouseId);
     MapResponseDto findActiveMapByWarehouseId(@Param("warehouseId") int warehouseId);
 }
