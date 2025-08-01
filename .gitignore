@@ -343,5 +343,22 @@ build/
 .env
 application.properties
 
+# 임베디드 gitignore
+# ROS 2 Workspace Files
+robot_ws/build/
+robot_ws/install/
+robot_ws/log/
+
+# 지도 파일
+robot_ws/maps/
+
+# 파이썬 캐시
+**/__pycache__/
+*.pyc
+
+# 기타
+*~
+*.swp
+.vscode/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,intellij,visualstudiocode,eclipse,java,react

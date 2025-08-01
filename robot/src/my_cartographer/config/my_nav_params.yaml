@@ -1,0 +1,228 @@
+# my_nav_params.yaml
+
+# 전역 파라미터
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: map
+      robot_base_frame: base_link  # URDF와 일치
+      use_sim_time: False
+      robot_radius: 0.22 # 로봇의 반경에 맞게 수정
+      resolution: 0.05
+      track_unknown_space: true
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.0
+          raytrace_min_range: 0.0
+          obstacle_max_range: 2.5
+          obstacle_min_range: 0.0
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.55
+      always_send_full_costmap: True
+
+# 로컬 코스트맵 파라미터
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: odom
+      robot_base_frame: base_link # URDF와 일치
+      use_sim_time: False
+      rolling_window: true
+      width: 3
+      height: 3
+      resolution: 0.05
+      robot_radius: 0.22 # 로봇의 반경에 맞게 수정
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"  # 3D SLAM을 하지 않더라도 VoxelLayer 사용 가능
+        enabled: True
+        publish_voxel_map: True
+        origin_z: 0.0
+        z_resolution: 0.05
+        z_voxels: 16
+        max_obstacle_height: 2.0
+        mark_threshold: 0
+        observation_sources: scan
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0
+        inflation_radius: 0.55
+      always_send_full_costmap: True
+
+# 컨트롤러 서버 파라미터
+controller_server:
+  ros__parameters:
+    use_sim_time: False
+    controller_frequency: 20.0
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.0  # 2D 주행이므로 0.0으로 설정
+    min_theta_velocity_threshold: 0.001
+    
+    # Path smoother
+    path_smoother:
+      smoother_plugin: "nav2_smoother::SimpleSmoother" # 다른 옵션: "nav2_dwb_controller::SmoothPath"
+      w_smooth: 0.3
+      w_data: 0.2
+      tolerance: 1.0e-10
+
+    # Progress checker
+    progress_checker_plugin: "nav2_controller::SimpleProgressChecker"
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
+    
+    # Goal checker
+    goal_checker_plugins: ["general_goal_checker"]
+    general_goal_checker:
+      plugin: "nav2_core::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.25
+      stateful: True
+    
+    # Controller
+    controller_plugins: ["FollowPath"]
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      # plugin: "teb_local_planner/TebLocalPlannerROS"  # TEB 사용 시 주석 해제, 아래 DWB 파라미터 주석 처리
+      debug_trajectory_details: false
+      
+      # DWB Controller (기본값, 차동 구동 방식에 적합)
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      BaseObstacle.scale: 0.02
+      PathAlign.scale: 32.0
+      PathAlign.forward_point_distance: 0.1
+      GoalAlign.scale: 24.0
+      GoalAlign.forward_point_distance: 0.1
+      PathDist.scale: 32.0
+      GoalDist.scale: 24.0
+      RotateToGoal.scale: 32.0
+      RotateToGoal.slowing_factor: 5.0
+      RotateToGoal.lookahead_time: -1.0
+      max_vel_x: 0.22  # 로봇의 최대 속도에 맞게 조정
+      min_vel_x: 0.0
+      max_vel_y: 0.0  # 2D 로봇이므로 0.0
+      min_vel_y: 0.0
+      max_vel_theta: 1.0 # 로봇의 최대 각속도에 맞게 조정
+      min_vel_theta: 0.4 # 제자리 회전을 피하기 위해 0 이상으로 설정
+      acc_lim_x: 2.5
+      acc_lim_y: 0.0
+      acc_lim_theta: 3.2
+      decel_lim_x: -2.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -3.2
+      xy_goal_tolerance: 0.25
+
+# 플래너 서버 파라미터
+planner_server:
+  ros__parameters:
+    use_sim_time: False
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner/NavFnPlanner"
+      tolerance: 0.5
+      use_astar: false
+      allow_unknown: true
+
+# 복구 행동 서버 파라미터
+behavior_server:
+  ros__parameters:
+    use_sim_time: False
+    costmap_topic: local_costmap/costmap_raw
+    footprint_topic: local_costmap/published_footprint
+    cycle_frequency: 10.0
+    behavior_plugins: ["backup", "wait", "clear_costmap_recovery"]
+    
+    backup:
+      plugin: "nav2_behaviors/BackUp"
+      max_vel_x: -0.15      # 후진 속도 (음수 값)
+      max_vel_y: 0.0
+      max_vel_theta: 0.0
+      linear_acc_lim: 0.5
+      linear_vel: -0.15     # 후진 시 선속도
+      backup_dist: 0.15     # 후진 거리
+      min_x_velocity: 0.0
+      
+    wait:
+      plugin: "nav2_behaviors/Wait"
+      duration: 10.0
+      
+    clear_costmap_recovery:
+      plugin: "nav2_recoveries/ClearCostmap"
+      reset_distance: 2.0
+      layer_names: ["obstacle_layer", "voxel_layer"] # global, local costmap의 장애물 레이어 이름
+
+# BT Navigator 파라미터
+bt_navigator:
+  ros__parameters:
+    use_sim_time: False
+    global_frame: map
+    robot_base_frame: base_link
+    odom_topic: /odom
+    bt_loop_duration: 10.0
+    default_server_timeout: 20
+    # 기본 BT XML 사용
+    plugin_lib_names:
+    - nav2_compute_path_to_pose_action_bt_node
+    - nav2_compute_path_through_poses_action_bt_node
+    - nav2_follow_path_action_bt_node
+    - nav2_back_up_action_bt_node
+    - nav2_spin_action_bt_node
+    - nav2_wait_action_bt_node
+    - nav2_clear_costmap_service_bt_node
+    - nav2_is_stuck_condition_bt_node
+    - nav2_goal_reached_condition_bt_node
+    - nav2_goal_updated_condition_bt_node
+    - nav2_initial_pose_received_condition_bt_node
+    - nav2_reinitialize_global_localization_service_bt_node
+    - nav2_rate_controller_bt_node
+    - nav2_distance_controller_bt_node
+    - nav2_speed_controller_bt_node
+    - nav2_truncate_path_action_bt_node
+    - nav2_recovery_node_bt_node
+    - nav2_pipeline_sequence_bt_node
+    - nav2_round_robin_node_bt_node
+    - nav2_transform_available_condition_bt_node
+    - nav2_time_expired_condition_bt_node
+    - nav2_is_path_valid_condition_bt_node
+    - nav2_goal_updater_node_bt_node
+    - nav2_assisted_teleop_action_bt_node
+    - nav2_drive_on_heading_bt_node
+    - nav2_path_longer_on_approach_bt_node
+
+# 자율 탐색 파라미터
+explore_server:
+  ros__parameters:
+    use_sim_time: False
+    planner_name: "GridBased"
+    behavior_tree: "/opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_w_replanning_and_recovery.xml"
+    # 탐색할 경계 영역의 최소 크기 (미터)
+    min_frontier_size: 0.5
+    # 목표 지점까지의 경로를 계획할 때 허용되는 최대 시간
+    planner_patience: 1.0
+    # 목표 지점까지 이동할 때 허용되는 최대 시간
+    controller_patience: 5.0
