@@ -1,0 +1,17 @@
+.SidebarDetailContent {
+  padding: 20px 30px;
+  border-bottom: 3px solid #33333c;
+}
+
+.SidebarDetailContent_Date {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.SidebarDetailContent_Temp {
+  display: flex;
+  gap: 10px;
+  margin-left: -2px;
+  margin-bottom: 10px;
+}

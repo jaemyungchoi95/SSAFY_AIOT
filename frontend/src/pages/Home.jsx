@@ -2,40 +2,44 @@ import Map from '../components/common/Map';
 import Sidebar from '../components/common/Sidebar';
 import './Home.css';
 import React from 'react';
-import { useState } from 'react';
+import SidebarDetail from '../components/common/SidebarDetail';
+import { useAppStore } from '../stores/useAppStore';
 
 const Home = () => {
-  // const [message, setMessage] = useState("서버에서 응답을 기다리는 중...");
+  // contextAPI 대신 useAppStore에서 데이터를 가져옵니다.
+  const { issues, reports, selectedIssueId, setSelectedIssueId } =
+    useAppStore();
 
-  // useEffect(() => {
-  //   axios.get(`${import.meta.env.VITE_REACT_APP_SPRING_BASE_URL}/get`)
-  //     .then(response => {
-  //       setMessage(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('axios 데이터 로딩 에러', error);
-  //       setMessage("데이터 불러오기에 실패하였습니다.");
-  //     });
-  // }, []); // 의존성 배열 꼭 넣기!
+  const selectedIssue = Array.isArray(issues)
+    ? issues.find((issue) => issue.id === selectedIssueId)
+    : null;
 
-  const [selectedWarehouse, setSelectedWarehouse] = useState(1);
-  const [dangerCnt, setDangerCnt] = useState(0);
-  const [cautionCnt, setCautionCnt] = useState(0);
+  const relatedReport =
+    selectedIssue && Array.isArray(reports)
+      ? reports.find((report) => report.alert_id === selectedIssue.id)
+      : null;
 
   return (
     <>
       <div className="Home_content">
-        <Map
-          selectedWarehouse={selectedWarehouse}
-          setSelectedWarehouse={setSelectedWarehouse}
-          dangerCnt={dangerCnt}
-          cautionCnt={cautionCnt}
-        />
-        <Sidebar
-          selectedWarehouse={selectedWarehouse}
-          setDangerCnt={setDangerCnt}
-          setCautionCnt={setCautionCnt}
-        />
+        <div className={`map_area ${selectedIssue ? 'shrink' : ''}`}>
+          {/* Map 컴포넌트 내에서 직접 store에 접근할 것이기 때문에 props 제거 */}
+          <Map />
+        </div>
+
+        {selectedIssue && (
+          <div className="sidebar_detail_area">
+            <SidebarDetail
+              issue={selectedIssue}
+              report={relatedReport}
+              onClose={() => setSelectedIssueId(null)}
+            />
+          </div>
+        )}
+        <div className="sidebar_area">
+          {/* Sidebar 컴포넌트 내에서 직접 store에 접근할 것이기 때문에 props 제거 */}
+          <Sidebar />
+        </div>
       </div>
     </>
   );

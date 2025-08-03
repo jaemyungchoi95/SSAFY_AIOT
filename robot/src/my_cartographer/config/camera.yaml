@@ -1,0 +1,12 @@
+# camera.yaml
+usb_cam:
+  ros__parameters:
+    video_device: "/dev/video1"       # 카메라 장치 경로
+    image_width: 1280                  # 해상도
+    image_height: 720
+    framerate: 30.0                   # 프레임레이트
+    camera_name: "brio"
+    io_method: "mmap"                 # mmap | read | userptr
+    pixel_format: "mjpeg"              # yuyv | mjpeg 등
+    camera_frame_id: "camera_link"    # 발행될 Image 메시지의 frame_id
+

@@ -4,7 +4,7 @@ import SidebarHeader from './SidebarHeader';
 import './Sidebar.css';
 import { useState } from 'react';
 
-const Sidebar = ({ selectedWarehouse, setDangerCnt, setCautionCnt }) => {
+const Sidebar = () => {
   const [selectedStatus, setSelectedStatus] = useState('전체');
   const [selectedTime, setSelectedTime] = useState('최신순');
   return (
@@ -17,11 +17,8 @@ const Sidebar = ({ selectedWarehouse, setDangerCnt, setCautionCnt }) => {
       />
       <div className="Sidebar_Content">
         <SidebarList
-          selectedWarehouse={selectedWarehouse}
           selectedStatus={selectedStatus}
           selectedTime={selectedTime}
-          setDangerCnt={setDangerCnt}
-          setCautionCnt={setCautionCnt}
         />
       </div>
     </div>

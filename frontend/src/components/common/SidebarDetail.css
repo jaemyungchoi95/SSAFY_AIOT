@@ -1,0 +1,15 @@
+.SidebarDetail {
+  background-color: #20212a;
+  border-radius: 15px;
+  height: 100%;
+  color: #eaeaf0;
+}
+
+.SidebarDetailWriteBtn {
+  padding: 20px 50px;
+}
+.SidebarDetail_ReportBtnWrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 30px;
+}

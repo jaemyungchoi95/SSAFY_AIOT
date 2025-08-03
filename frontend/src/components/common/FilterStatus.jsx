@@ -1,22 +1,24 @@
-import React from 'react'
-import './FilterStatus.css'
-import './FilterTime.css'
-import { useState } from 'react'
+import React from 'react';
+import './FilterStatus.css';
+import './FilterTime.css';
+import { useState } from 'react';
 
-const FilterStatus = ({selectedStatus, setSelectedStatus}) => {
+const FilterStatus = ({ selectedStatus, setSelectedStatus }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (status) => {
     setSelectedStatus(status);
     setIsOpen(false);
   };
-
   return (
     <div className="FilterStatus">
-      <button className="Filter_Title" onClick={() => setIsOpen(prev => !prev)}>
+      <button
+        className="Filter_Title"
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         <img src="../../src/assets/FilterStatus.png" className="Icon" alt="" />
         <span className="Label">{selectedStatus}</span>
-        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron"/>
+        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
       </button>
 
       {isOpen && (
@@ -32,11 +34,8 @@ const FilterStatus = ({selectedStatus, setSelectedStatus}) => {
           ))}
         </div>
       )}
-
-      
     </div>
+  );
+};
 
-  )
-}
-
-export default FilterStatus
+export default FilterStatus;
