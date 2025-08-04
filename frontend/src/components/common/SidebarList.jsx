@@ -8,7 +8,7 @@ const SidebarList = ({ selectedStatus, selectedTime }) => {
 
   const getFilteredIssues = () => {
     let filtered = Array.isArray(issues)
-      ? issues.filter((issue) => issue.warehouse_id === selectedWarehouseId)
+      ? issues.filter((issue) => issue.warehouseId === selectedWarehouseId)
       : [];
 
     if (selectedStatus === '처리완료') {
@@ -18,13 +18,13 @@ const SidebarList = ({ selectedStatus, selectedTime }) => {
         ['UNCHECKED', 'Caution'].includes(issue.status),
       );
     } else if (selectedStatus === '위험') {
-      filtered = filtered.filter((issue) => issue.is_danger === true);
+      filtered = filtered.filter((issue) => issue.isDanger === true);
     }
 
     // 원본 배열을 수정하지 않도록 복사본을 만들어서 정렬함
     const sorted = [...filtered].sort((a, b) => {
-      const timeA = new Date(a.created_at).getTime();
-      const timeB = new Date(b.created_at).getTime();
+      const timeA = new Date(a.createdAt).getTime();
+      const timeB = new Date(b.createdAt).getTime();
       return selectedTime === '최신순' ? timeB - timeA : timeA - timeB;
     });
     // 복사하여 정렬한 배열을 반환
@@ -37,14 +37,14 @@ const SidebarList = ({ selectedStatus, selectedTime }) => {
     <div className="SidebarList">
       {filteredIssues.map((issue) => {
         const relatedReport = reports
-          ? reports.find((report) => report.alert_id === issue.id)
+          ? reports.find((report) => report.alertId === issue.alertId)
           : null;
         return (
           <SidebarItem
-            key={issue.id}
+            key={issue.alertId}
             issue={issue}
             report={relatedReport}
-            onClick={() => setSelectedIssueId(issue.id)}
+            onClick={() => setSelectedIssueId(issue.alertId)}
           />
         );
       })}

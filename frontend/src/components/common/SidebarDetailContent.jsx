@@ -14,9 +14,9 @@ const SidebarDetailContent = ({ issue, report }) => {
       <div className="SidebarDetailContent_Date">
         <img src="/src/assets/Date.png" alt="" />
         <span>
-          {report?.handled_at
-            ? FormatDateTime(report.handled_at)
-            : FormatDateTime(issue.created_at)}
+          {report?.handledAt
+            ? FormatDateTime(report.handledAt)
+            : FormatDateTime(issue.createdAt)}
         </span>
       </div>
       <div className="SidebarDetailContent_Temp">

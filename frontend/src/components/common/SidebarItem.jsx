@@ -9,10 +9,10 @@ const SidebarItem = ({ issue, report, onClick }) => {
   return (
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">
-        <div className="SidebarItem_Spot">Rack-{issue.rack_id}</div>
+        <div className="SidebarItem_Spot">Rack-{issue.rackId}</div>
         <Status
-          text={issue.is_danger ? '위험' : isCompleteText}
-          type={issue.is_danger ? 'Danger' : isCompleteType}
+          text={issue.isDanger ? '위험' : isCompleteText}
+          type={issue.isDanger ? 'Danger' : isCompleteType}
         />
       </div>
       <div className="SidebarItem_Temp">
@@ -29,9 +29,7 @@ const SidebarItem = ({ issue, report, onClick }) => {
           {report ? report.handler_name : ''}
         </div>
         <div className="SidebarItem_Date">
-          {report
-            ? new Date(report.handled_at).toLocaleDateString()
-            : new Date(issue.created_at).toLocaleDateString()}
+          {report ? report.handledAt : issue.createdAt}
         </div>
       </div>
     </button>

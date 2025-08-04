@@ -7,18 +7,16 @@ const ReportContent = ({ report }) => {
     <div className="SidebarDetailReport_Content">
       <div className="SidebarDetailReport_Ad">
         <div className="SidebarDetailReport_Ad_Title"> 담당자 </div>
-        <div className="SidebarDetailReport_Ad_Name"> {report.user_id} </div>
+        <div className="SidebarDetailReport_Ad_Name"> {report.userId} </div>
       </div>
       <div className="SidebarDetailReport_Emp">
         <div className="SidebarDetailReport_Emp_Title"> 작업자 </div>
-        <div className="SidebarDetailReport_Emp_Name">
-          {report.handler_name}
-        </div>
+        <div className="SidebarDetailReport_Emp_Name">{report.handlerName}</div>
       </div>
       <div className="SidebarDetailReport_Time">
         <div className="SidebarDetailReport_Time_Title"> 작성 시간 </div>
         <div className="SidebarDetailReport_Time_Value">
-          {formatDateTime(report.handled_at)}
+          {formatDateTime(report.handledAt)}
         </div>
       </div>
       <div className="SidebarDetailReport_Message">

@@ -9,7 +9,7 @@ const DetailWrite = ({ report, onSubmit }) => {
   useEffect(() => {
     if (report) {
       setContent(report.comment || '');
-      setEmpName(report.handler_name || '');
+      setEmpName(report.handlerName || '');
     }
   }, [report]);
 
@@ -23,9 +23,9 @@ const DetailWrite = ({ report, onSubmit }) => {
 
   const handleSubmit = () => {
     onSubmit({
-      handler_name: empName,
+      handlerName: empName,
       comment: content,
-      report_id: report?.id || null,
+      reportId: report?.id || null,
     });
   };
 

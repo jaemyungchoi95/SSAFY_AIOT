@@ -6,17 +6,17 @@ const SidebarDetailHeader = ({ issue, onClose }) => {
   return (
     <div className="SidebarDetailHeader">
       <div className="SidebarDetailHeader_Left">
-        <div className="SidebarDetailHeader_Spot">Rack-{issue.rack_id}</div>
+        <div className="SidebarDetailHeader_Spot">Rack-{issue.rackId}</div>
         <Status
           text={
-            issue.is_danger
+            issue.isDanger
               ? '위험'
               : issue.status === 'DONE'
                 ? '처리완료'
                 : '미확인'
           }
           type={
-            issue.is_danger
+            issue.isDanger
               ? 'Danger'
               : issue.status === 'DONE'
                 ? 'Complete'
