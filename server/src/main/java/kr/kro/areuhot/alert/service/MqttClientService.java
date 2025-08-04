@@ -1,6 +1,7 @@
 package kr.kro.areuhot.alert.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.kro.areuhot.alert.dto.RobotAlertMessage;
 import kr.kro.areuhot.alert.util.PemSocketFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +55,9 @@ public class MqttClientService {
             // 인증서 다운로드
             certificateDownloadService.downloadCertificates();
             
-            // ObjectMapper 초기화
+            // ObjectMapper 초기화 (JSR310 모듈 등록)
             objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
             
             // MQTT 클라이언트 생성 및 연결
             connectToMqttBroker();
@@ -134,6 +136,8 @@ public class MqttClientService {
                         
                     } catch (Exception e) {
                         log.error("MQTT 메시지 처리 실패", e);
+                        log.error("페이로드 내용: {}", new String(message.getPayload()));
+                        log.error("오류 상세: {}", e.getMessage());
                     }
                 }
 
