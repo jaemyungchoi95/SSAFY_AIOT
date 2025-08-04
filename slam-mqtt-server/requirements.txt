@@ -1,0 +1,9 @@
+flask
+boto3
+numpy
+opencv-python-headless
+Pillow
+awscrt
+awsiotsdk
+python-dotenv
+requests

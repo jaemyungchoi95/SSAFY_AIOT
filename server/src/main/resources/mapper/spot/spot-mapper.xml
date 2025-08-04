@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.kro.areuhot.spot.mapper.SpotMapper">
+
+    <insert id="insertSpot" parameterType="kr.kro.areuhot.spot.model.Spot" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO spot (
+            rack_id, x, y, direction
+        )
+        VALUES (
+            #{rackId}, #{x}, #{y}, #{direction}
+        )
+    </insert>
+
+    <select id="findByRackId" resultType="kr.kro.areuhot.spot.dto.SpotResponseDto">
+        SELECT
+            id AS spot_id,
+            rack_id, x, y, direction
+        FROM spot
+        WHERE rack_id = #{rackId}
+    </select>
+
+</mapper>

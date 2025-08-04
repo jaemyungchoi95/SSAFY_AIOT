@@ -1,15 +1,10 @@
 import React from 'react';
 import './SidebarDetailContent.css';
-import { useContext } from 'react';
-import { ReportStateContext } from '../../utils/AlertContext';
 import FormatDateTime from '../../utils/FormatDateTime';
 import BootstrapCarousel from './BootstrapCarousel.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SidebarDetailContent = ({ issue }) => {
-  const reports = useContext(ReportStateContext);
-  const relatedReport = reports.find((report) => report.issue_id === issue.id);
-
+const SidebarDetailContent = ({ issue, report }) => {
   const imagePaths = [issue.image_normal_url, issue.image_thermal_url].filter(
     Boolean,
   );
@@ -19,8 +14,8 @@ const SidebarDetailContent = ({ issue }) => {
       <div className="SidebarDetailContent_Date">
         <img src="/src/assets/Date.png" alt="" />
         <span>
-          {relatedReport?.handled_at
-            ? FormatDateTime(relatedReport.handled_at)
+          {report?.handled_at
+            ? FormatDateTime(report.handled_at)
             : FormatDateTime(issue.created_at)}
         </span>
       </div>

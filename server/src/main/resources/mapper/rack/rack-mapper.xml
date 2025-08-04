@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.kro.areuhot.rack.mapper.RackMapper">
+
+    <insert id="insertRack" parameterType="kr.kro.areuhot.rack.model.Rack" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO rack (
+            warehouse_id, map_id,
+            x1, y1, x2, y2, x3, y3, x4, y4,
+            center_x, center_y
+        )
+        VALUES (
+            #{warehouseId}, #{mapId},
+            #{x1}, #{y1}, #{x2}, #{y2},
+            #{x3}, #{y3}, #{x4}, #{y4},
+            #{centerX}, #{centerY}
+        )
+    </insert>
+
+    <select id="findByMapId" resultType="kr.kro.areuhot.rack.dto.RackResponseDto">
+        SELECT  id AS rack_id,
+                warehouse_id,
+                map_id,
+                x1, x2, x3, x4,
+                y1, y2, y3, y4,
+                center_x, center_y
+        FROM rack
+        WHERE map_id = #{mapId}
+    </select>
+
+</mapper>

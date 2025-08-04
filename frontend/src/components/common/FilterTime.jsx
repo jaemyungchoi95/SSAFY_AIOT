@@ -1,8 +1,8 @@
-import React from 'react'
-import './FilterTime.css'
-import { useState } from 'react'
+import React from 'react';
+import './FilterTime.css';
+import { useState } from 'react';
 
-const FilterTime = ({selectedTime, setSelectedTime}) => {
+const FilterTime = ({ selectedTime, setSelectedTime }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (time) => {
@@ -12,10 +12,13 @@ const FilterTime = ({selectedTime, setSelectedTime}) => {
 
   return (
     <div className="FilterTime">
-      <button className="Filter_Title" onClick={() => setIsOpen(prev => !prev)}>
+      <button
+        className="Filter_Title"
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         <img src="../../src/assets/FilterTime.png" className="Icon" alt="" />
         <span className="Label">{selectedTime}</span>
-        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron"/>
+        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
       </button>
       {isOpen && (
         <div className="Filter_Menu">
@@ -31,9 +34,7 @@ const FilterTime = ({selectedTime, setSelectedTime}) => {
         </div>
       )}
     </div>
+  );
+};
 
-
-  )
-}
-
-export default FilterTime
+export default FilterTime;

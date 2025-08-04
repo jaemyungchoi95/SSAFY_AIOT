@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class MapResponseDto {
-    private int id;
+    private int mapId;
     private int warehouseId;
     private String filePath;
 }
