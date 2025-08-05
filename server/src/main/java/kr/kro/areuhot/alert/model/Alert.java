@@ -24,7 +24,6 @@ public class Alert {
     private String imageNormalUrl;
     private String status; // UNCHECKED, DONE
     
-    @JsonProperty("is_danger")
     private Boolean danger;
     
     private LocalDateTime createdAt;
