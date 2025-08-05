@@ -6,18 +6,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import TempInfo from './TempInfo';
 import DateInfo from './DateInfo.jsx';
 
-const SidebarDetailContent = ({ issue, report }) => {
-  const imagePaths = [issue.image_normal_url, issue.image_thermal_url].filter(
+const SidebarDetailContent = ({ alert }) => {
+  const imagePaths = [alert.imageNormalUrl, alert.imageThermalUrl].filter(
     Boolean,
   );
 
   return (
     <div className="SidebarDetailContent">
       <div className="SidebarDetailContent_Date">
-        <DateInfo createdAt={issue.created_at} handledAt={report?.handled_at} />
+        <DateInfo createdAt={alert.createdAt} handledAt={alert.handledAt} />
       </div>
       <div className="SidebarDetailContent_Temp">
-        <TempInfo temperature={issue.temperature} />
+        <TempInfo temperature={alert.temperature} />
       </div>
       <div className="SidebarDetailContent_Img">
         <BootstrapCarousel images={imagePaths} />

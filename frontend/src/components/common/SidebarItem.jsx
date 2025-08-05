@@ -3,31 +3,27 @@ import './SidebarItem.css';
 import Status from './Status';
 import TempInfo from './TempInfo';
 
-const SidebarItem = ({ issue, report, onClick }) => {
-  const isCompleteText = issue.status === 'DONE' ? '처리완료' : '미확인';
-  const isCompleteType = issue.status === 'DONE' ? 'Complete' : 'Caution';
+const SidebarItem = ({ alert, onClick }) => {
+  const isCompleteText = alert.status === 'DONE' ? '처리완료' : '미확인';
+  const isCompleteType = alert.status === 'DONE' ? 'Complete' : 'Caution';
 
   return (
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">
-        <div className="SidebarItem_Spot">Rack-{issue.rack_id}</div>
+        <div className="SidebarItem_Spot">Rack-{alert.rackId}</div>
         <Status
-          text={issue.is_danger ? '위험' : isCompleteText}
-          type={issue.is_danger ? 'Danger' : isCompleteType}
+          text={alert.danger ? '위험' : isCompleteText}
+          type={alert.danger ? 'Danger' : isCompleteType}
         />
       </div>
       <div className="SidebarItem_Temp">
-        <TempInfo temperature={issue.temperature} />
+        <TempInfo temperature={alert.temperature} />
       </div>
-      <div className="SidebarItem_Message">{report ? report.comment : ''}</div>
+      <div className="SidebarItem_Message">{alert.comment || ''}</div>
       <div className="SidebarItem_Footer">
-        <div className="SidebarItem_Admin">
-          {report ? report.handler_name : ''}
-        </div>
+        <div className="SidebarItem_Admin">{alert.handlerName || ''}</div>
         <div className="SidebarItem_Date">
-          {report
-            ? new Date(report.handled_at).toLocaleDateString()
-            : new Date(issue.created_at).toLocaleDateString()}
+          {alert.status === 'DONE' ? alert.handledAt : alert.createdAt}
         </div>
       </div>
     </button>
