@@ -25,7 +25,7 @@ public class Alert {
     private String status; // UNCHECKED, DONE
     
     @JsonProperty("is_danger")
-    private Boolean Danger;
+    private Boolean danger;
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

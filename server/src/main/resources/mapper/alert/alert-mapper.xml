@@ -11,7 +11,7 @@
         ) VALUES (
             #{robotId}, #{rackId}, #{warehouseId}, #{spotId}, 
             #{temperature}, #{imageThermalUrl}, #{imageNormalUrl}, 
-            #{status}, #{Danger}, #{createdAt}, #{updatedAt}
+            #{status}, #{danger}, #{createdAt}, #{updatedAt}
         )
     </insert>
 
