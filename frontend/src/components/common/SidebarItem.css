@@ -14,16 +14,6 @@
   font-size: 20px;
 }
 
-.SidebarItem_Temp {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.SidebarItem_TempValue {
-  color: #c2c2c2;
-}
-
 .SidebarItem_Message {
   margin: 15px 0;
   text-align: left;

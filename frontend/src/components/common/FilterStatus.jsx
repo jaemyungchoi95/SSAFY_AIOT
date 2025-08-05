@@ -2,12 +2,14 @@ import React from 'react';
 import './FilterStatus.css';
 import './FilterTime.css';
 import { useState } from 'react';
+import { useFilterStore } from '../../stores/useFilterStore';
 
-const FilterStatus = ({ selectedStatus, setSelectedStatus }) => {
+const FilterStatus = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { selectedStatus, setSelectedStatus } = useFilterStore();
 
-  const handleSelect = (status) => {
-    setSelectedStatus(status);
+  const handleSelect = (time) => {
+    setSelectedStatus(time);
     setIsOpen(false);
   };
   return (

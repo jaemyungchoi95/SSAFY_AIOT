@@ -1,6 +1,7 @@
 import React from 'react';
 import './SidebarItem.css';
 import Status from './Status';
+import TempInfo from './TempInfo';
 
 const SidebarItem = ({ alert, onClick }) => {
   const isCompleteText = alert.status === 'DONE' ? '처리완료' : '미확인';
@@ -16,12 +17,7 @@ const SidebarItem = ({ alert, onClick }) => {
         />
       </div>
       <div className="SidebarItem_Temp">
-        <img
-          src="../../src/assets/Temp.png"
-          alt=""
-          className="SidebarItem_TempIcon"
-        />
-        <span className="SidebarItem_TempValue">{alert.temperature}°C</span>
+        <TempInfo temperature={alert.temperature} />
       </div>
       <div className="SidebarItem_Message">{alert.comment || ''}</div>
       <div className="SidebarItem_Footer">

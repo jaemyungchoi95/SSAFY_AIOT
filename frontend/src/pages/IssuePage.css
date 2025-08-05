@@ -1,0 +1,19 @@
+.IssuePage {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 120px);
+  margin: 0px 30px;
+  gap: 10px;
+}
+
+.IssuePage_header {
+  background-color: #20212a;
+  flex: 1.3;
+  border-radius: 15px;
+}
+
+.IssuePage_Content {
+  background-color: #20212a;
+  flex: 3;
+  border-radius: 15px;
+}

@@ -1,8 +1,13 @@
 .Header {
-    background-color: #20212A;
-    margin-bottom: 25px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    color: #EAEAF0;
+  background-color: #20212a;
+  margin-bottom: 25px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: #eaeaf0;
+}
+
+.Header_Issue {
+  font-weight: bolder;
+  cursor: pointer;
 }

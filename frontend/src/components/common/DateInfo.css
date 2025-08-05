@@ -1,0 +1,10 @@
+.DateInfo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+  align-items: center;
+}
+
+.DateInfo img {
+  height: 100%;
+}

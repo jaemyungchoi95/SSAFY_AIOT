@@ -1,10 +1,11 @@
 import SidebarItem from './SidebarItem';
 import './SidebarList.css';
 import { useAppStore } from '../../stores/useAppStore';
-import { useMemo } from 'react';
+import { useFilterStore } from '../../stores/useFilterStore';
 
-const SidebarList = ({ selectedStatus, selectedTime }) => {
+const SidebarList = () => {
   const { alerts, setSelectedAlertId, selectedWarehouseId } = useAppStore();
+  const { selectedStatus, selectedTime } = useFilterStore();
 
   const filteredAlerts = useMemo(() => {
     let filtered = Array.isArray(alerts)
