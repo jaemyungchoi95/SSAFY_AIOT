@@ -1,21 +1,27 @@
 package kr.kro.areuhot.alert.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Alert {
-    private int id;
-    private int robotId;
-    private int rackId;
-    private int warehouseId;
-    private int spotId;
-    private double temperature;
+    private Integer id;
+    private Integer robotId;
+    private Integer rackId;
+    private Integer warehouseId;
+    private Integer spotId;
+    private Double temperature;
     private String imageThermalUrl;
     private String imageNormalUrl;
-    private AlertStatus status;
+    private AlertStatus status; // UNCHECKED, DONE
     private boolean danger;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

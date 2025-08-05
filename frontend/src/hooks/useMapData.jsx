@@ -1,37 +1,40 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import yaml from 'js-yaml';
 import { parsePGM } from '../utils/pgmParser';
+import { useAppStore } from '../stores/useAppStore';
 
 export const useMapData = () => {
-    const [pgmData, setPgmData] = useState(null);
-    const [mapMetadata, setMapMetadata] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const imageUrl = useAppStore((state) => state.imageUrl);
 
-    // 데이터 로딩을 위한 useEffect
-    useEffect(() => {
-      const fetchMapData = async () => {
-        try {
-          const [imageResponse, metadataResponse] = await Promise.all([
-            axios.get('/api/map/image', { responseType: 'arraybuffer' }),
-            axios.get('/api/map/metadata'),
-          ]);
-          
-          const parsedPgm = parsePGM(imageResponse.data);
-          setPgmData(parsedPgm);
+  const [pgmData, setPgmData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-          const parsedMetadata = yaml.load(metadataResponse.data);
-          setMapMetadata(parsedMetadata);
+  // 데이터 로딩을 위한 useEffect
+  useEffect(() => {
+    if (!imageUrl) return;
 
-        } catch (err) {
-          setError(err);
-        } finally {
-          setLoading(false);
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      setPgmData(null);
+
+      try {
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          throw new Error(`Http error! status: ${response.status}`);
         }
-      };
-      fetchMapData();
-    }, []); // 최초 1회만 실행
-  
-    return { pgmData, mapMetadata, loading, error };
+
+        const arrayBuffer = await response.arrayBuffer();
+        const parsedData = parsePGM(arrayBuffer);
+        setPgmData(parsedData);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [imageUrl]);
+
+  return { pgmData, loading, error };
 };

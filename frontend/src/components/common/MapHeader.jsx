@@ -4,24 +4,24 @@ import FilterLocation from './FilterLocation';
 import { useAppStore } from '../../stores/useAppStore';
 
 const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
-  const { issues, selectedWarehouseId } = useAppStore();
+  const { alerts, selectedWarehouseId } = useAppStore();
   const [currScale, setCurrScale] = useState(scale);
 
   // useMemo를 활용하여 창고의 이슈가 변경될 때만 카운트를 다시 계산
   const { cautionCnt, dangerCnt } = useMemo(() => {
-    if (!Array.isArray(issues)) {
+    if (!Array.isArray(alerts)) {
       return { cautionCnt: 0, dangerCnt: 0 };
     }
 
-    const filtered = issues.filter(
-      (issue) => issue.warehouse_id === selectedWarehouseId,
+    const filtered = alerts.filter(
+      (alert) => alert.warehouseId === selectedWarehouseId,
     );
-    const danger = filtered.filter((issue) => issue.is_danger === true).length;
+    const danger = filtered.filter((alert) => alert.danger === true).length;
     const caution = filtered.filter(
-      (issue) => issue.status === 'UNCHECKED' && !issue.is_danger,
+      (alert) => alert.status === 'UNCHECKED' && !alert.danger,
     ).length;
     return { cautionCnt: caution, dangerCnt: danger };
-  }, [issues, selectedWarehouseId]);
+  }, [alerts, selectedWarehouseId]);
 
   useEffect(() => {
     setCurrScale(scale);
