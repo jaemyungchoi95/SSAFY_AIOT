@@ -22,10 +22,10 @@ const MapViewer = ({
   const [containerRef, containerSize] = useStageSize();
 
   // useApp스토어에 정의된 상태와 액션을 가져온다
-  const { racks, spots, selectedIssueId, setSelectedIssueId } = useAppStore();
+  const { racks, spots, selectedAlertId, setSelectedAlertId } = useAppStore();
 
   const selectedSpot = Array.isArray(spots)
-    ? spots.find((spot) => spot.issueId === selectedIssueId)
+    ? spots.find((spot) => spot.alertId === selectedAlertId)
     : null;
 
   useLayoutEffect(() => {
@@ -65,7 +65,7 @@ const MapViewer = ({
         ref={stageRef}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
-            setSelectedIssueId(null);
+            setSelectedAlertId(null);
           }
         }}
       >
@@ -120,7 +120,7 @@ const MapViewer = ({
                 scale={scale}
                 onClick={(e) => {
                   e.cancelBubble = true;
-                  setSelectedIssueId(spot.issueId || null);
+                  setSelectedAlertId(spot.alertId || null);
                 }}
               />
             ))}

@@ -8,62 +8,61 @@ import DetailWrite from './DetailWrite';
 import { useAppStore } from '../../stores/useAppStore';
 
 const SidebarDetail = ({ onClose }) => {
-  const { issues, reports, selectedIssueId } = useAppStore();
+  const { alerts, selectedAlertId, submitAlertReport } = useAppStore();
 
   const [isWritingId, setIsWritingId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editReport, setEditReport] = useState(null);
 
-  // 👇 데이터 계산 로직을 Home에서 여기로 가져옵니다.
-  const selectedIssue = Array.isArray(issues)
-    ? issues.find((issue) => issue.alertId === selectedIssueId)
+  const selectedAlert = Array.isArray(alerts)
+    ? alerts.find((alert) => alert.alertId === selectedAlertId)
     : null;
-
-  const relatedReport =
-    selectedIssue && Array.isArray(reports)
-      ? reports.find((report) => report.alertId === selectedIssue.alertId)
-      : null;
 
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-    setEditReport(null);
-  }, [selectedIssue]);
+  }, [selectedAlert]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-    setIsWritingId(null);
-    setEditReport(relatedReport);
+  const handleSubmit = (reportData) => {
+    if (selectedAlert) {
+      submitAlertReport(selectedAlert.alertId, reportData);
+
+      setIsWritingId(null);
+      setIsEditing(false);
+    }
   };
 
-  const handleWriteClick = () => {
-    setIsWritingId(selectedIssue.alertId);
-    setIsEditing(false);
-  };
+  const handleEditClick = () => setIsEditing(true);
+  const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
+  const handleCancel = () => setIsEditing(false);
+  const handleCancelWrite = () => setIsWritingId(false);
 
-  if (!selectedIssue) {
-    return null;
-  }
+  if (!selectedAlert) return null;
+
+  const isHandled = selectedAlert.status === 'DONE';
 
   return (
     <div className="SidebarDetail">
-      <SidebarDetailHeader issue={selectedIssue} onClose={onClose} />
-      <SidebarDetailContent issue={selectedIssue} report={relatedReport} />
-      {relatedReport ? (
+      <SidebarDetailHeader alert={selectedAlert} onClose={onClose} />
+      <SidebarDetailContent alert={selectedAlert} />
+      {isHandled ? (
         isEditing ? (
           <DetailWrite
-            issue={selectedIssue}
-            report={editReport}
-            onCancel={() => setIsEditing(false)}
+            alert={selectedAlert}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
           />
         ) : (
           <SidebarDetailReport
-            report={relatedReport}
+            alert={selectedAlert}
             onEditClick={handleEditClick}
           />
         )
-      ) : isWritingId === selectedIssue.alertId ? (
-        <DetailWrite issue={selectedIssue} />
+      ) : isWritingId === selectedAlert.alertId ? (
+        <DetailWrite
+          alert={selectedAlert}
+          onSubmit={handleSubmit}
+          onCancel={handleCancelWrite}
+        />
       ) : (
         <div className="SidebarDetail_ReportBtnWrapper">
           <ReportBtn text={'작성하기'} onClick={handleWriteClick} />

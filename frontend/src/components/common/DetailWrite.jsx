@@ -3,15 +3,15 @@ import './DetailWrite.css';
 import ReportBtn from './ReportBtn';
 import { useState, useEffect } from 'react';
 
-const DetailWrite = ({ report, onSubmit }) => {
+const DetailWrite = ({ alert, onSubmit, onCancel }) => {
   const [content, setContent] = useState('');
   const [empName, setEmpName] = useState('');
   useEffect(() => {
-    if (report) {
-      setContent(report.comment || '');
-      setEmpName(report.handlerName || '');
+    if (alert) {
+      setContent(alert.comment || '');
+      setEmpName(alert.handlerName || '');
     }
-  }, [report]);
+  }, [alert]);
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
@@ -25,7 +25,7 @@ const DetailWrite = ({ report, onSubmit }) => {
     onSubmit({
       handlerName: empName,
       comment: content,
-      reportId: report?.id || null,
+      // reportId: alert?.id || null,
     });
   };
 
@@ -57,6 +57,7 @@ const DetailWrite = ({ report, onSubmit }) => {
       </div>
 
       <div className="DetailWrite_BtnWrapper">
+        <ReportBtn text={'취소하기'} onClick={onCancel} />
         <ReportBtn text={'등록하기'} onClick={handleSubmit} />
       </div>
     </div>

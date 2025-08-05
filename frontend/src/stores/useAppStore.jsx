@@ -8,15 +8,16 @@ export const useAppStore = create(
     imageUrl: null,
     racks: [],
     spots: [],
-    issues: [],
-    reports: [],
+    alerts: [],
     warehouses: [],
-    selectedIssueId: null,
+    selectedAlertId: null,
     selectedWarehouseId: null,
     loading: false,
     error: null,
 
-    // 앱 초기화
+    // 액션 (Actions) 정의
+
+    // 앱 초기화 액션
     initializeApp: async () => {
       try {
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
@@ -44,38 +45,35 @@ export const useAppStore = create(
         console.error('[STORE] 앱 초기화 실패!', error);
         set({ error, loading: false });
       }
-    },
-    // 액션 (Actions) 정의
+    }, // initializeApp 액션 끝
+
+    // Home 페이지의 데이터를 받아오는 액션
     fetchInitialData: async (warehouseId) => {
       set({ loading: true, error: null });
       try {
-        const [mapInfoRes, rackListRes, issueRes, reportRes] =
-          await Promise.all([
-            axios.get(`/api/warehouses/${warehouseId}/map`),
-            axios.get(`/api/warehouses/${warehouseId}/racks`),
-            axios.get(`/api/alerts?warehouseId=${warehouseId}`),
-            axios.get(`/api/reports?warehouseId=${warehouseId}`),
-          ]);
+        const [mapInfoRes, rackListRes, alertsRes] = await Promise.all([
+          axios.get(`/api/warehouses/${warehouseId}/map`),
+          axios.get(`/api/warehouses/${warehouseId}/racks`),
+          axios.get(`/api/warehouses/${warehouseId}/alerts`),
+        ]);
 
         // 1. API에서 받아온 원본 데이터를 확인합니다.
         console.log('[STORE] API 원본 데이터:', {
           mapInfo: mapInfoRes.data.data,
           rackList: rackListRes.data.data,
-          issues: issueRes.data.data,
-          reports: reportRes.data.data,
+          alerts: alertsRes.data.data,
         });
 
         const imageUrl = mapInfoRes.data.data.filePath;
         const rackList = rackListRes.data.data;
-        const issuesData = issueRes.data.data;
-        const reportsData = reportRes.data.data;
+        const alertsData = alertsRes.data.data;
 
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
           console.warn('[STORE] rackList 데이터가 비어있습니다!');
         }
-        if (!issuesData || issuesData.length === 0) {
-          console.warn('[STORE] issuesData(alerts) 데이터가 비어있습니다!');
+        if (!alertsData || alertsData.length === 0) {
+          console.warn('[STORE] alertsData(alerts) 데이터가 비어있습니다!');
         }
 
         const allSpots = [];
@@ -100,15 +98,15 @@ export const useAppStore = create(
 
         // 2. 이슈 데이터를 기반으로 spots의 상태를 업데이트(병합)합니다.
         const mergedSpots = allSpots.map((spot) => {
-          const issueOnThisSpot = issuesData.find(
-            (issue) =>
-              issue.rackId === spot.rackId && issue.spotId === spot.spotId,
+          const alertOnThisSpot = alertsData.find(
+            (alert) =>
+              alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
-          if (issueOnThisSpot) {
+          if (alertOnThisSpot) {
             return {
               ...spot,
-              status: issueOnThisSpot.status,
-              issueId: issueOnThisSpot.alertId,
+              status: alertOnThisSpot.status,
+              alertId: alertOnThisSpot.alertId,
             };
           }
           return spot;
@@ -124,24 +122,44 @@ export const useAppStore = create(
           imageUrl: imageUrl,
           racks: processedRacks,
           spots: mergedSpots,
-          issues: issuesData,
-          reports: reportsData,
+          alerts: alertsData,
           loading: false,
         });
       } catch (error) {
         console.error('[STORE] 데이터 로딩 실패! 오류 발생:', error);
         set({ error, loading: false });
       }
-    },
+    }, // fetchInitialData 액션 끝
+
+    // 등록/수정에 대한 액션
+    submitAlertReport: (alertId, reportData) => {
+      // MSW/API에 실제로 데이터를 전송하는 로직 (나중에 추가 가능)
+      // axios.post(`/api/alerts/${alertId}/report`, reportData);
+      set((state) => {
+        const updatedAlerts = state.alerts.map((alert) => {
+          if (alert.alertId === alertId) {
+            return {
+              ...alert,
+              status: 'DONE',
+              handlerName: reportData.handlerName,
+              comment: reportData.comment,
+              handledAt: new Date().toISOString(),
+            };
+          }
+          return alert;
+        });
+        return { alerts: updatedAlerts };
+      });
+    }, // submitAlertReport 액션 끝
 
     // 특정 마커를 선택 혹은 선택 해지
-    setSelectedIssueId: (issueId) => {
-      set({ selectedIssueId: issueId });
+    setSelectedAlertId: (alertId) => {
+      set({ selectedAlertId: alertId });
     },
     // 창고 선택
-    setSelectedWarehouseId: (id) => {
-      set({ selectedWarehouseId: id });
-      get().fetchInitialData(id);
+    setSelectedWarehouseId: (warehouseId) => {
+      set({ selectedWarehouseId: warehouseId });
+      get().fetchInitialData(warehouseId);
     },
   })),
 );

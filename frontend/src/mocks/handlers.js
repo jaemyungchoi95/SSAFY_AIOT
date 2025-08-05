@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { alertMockData, reportMockData, warehouseMockData } from './data';
+import { alertMockData, warehouseMockData } from './data';
 
 export const handlers = [
   // // 1. my_map.yaml 파일을 반환하는 API 핸들러
@@ -65,43 +65,22 @@ export const handlers = [
   }),
 
   // 4. alerts 데이터를 보내주는 API 핸들러
-  http.get('/api/alerts', ({ request }) => {
-    const url = new URL(request.url);
+  http.get('/api/warehouses/:warehouseId/alerts', ({ params }) => {
+    const warehouseId = parseInt(params.warehouseId, 10);
 
-    const warehouseId = url.searchParams.get('warehouseId');
-
-    const filteredData = warehouseId
-      ? alertMockData.filter(
-          (alert) => alert.warehouseId === parseInt(warehouseId, 10),
-        )
-      : alertMockData;
+    // 전체 alertMockData 배열에서 요청된 warehouseId와 일치하는 데이터만 필터링합니다.
+    const filteredAlerts = alertMockData.filter(
+      (alert) => alert.warehouseId === warehouseId,
+    );
 
     return HttpResponse.json({
       success: true,
       message: '요청 성공',
-      data: filteredData,
+      data: filteredAlerts,
     });
   }),
 
-  // 5. reports 데이터를 보내주는 API 핸들러
-  http.get('/api/reports', async ({ request }) => {
-    const url = new URL(request.url);
-    const warehouseId = url.searchParams.get('warehouseId');
-
-    const filteredData = warehouseId
-      ? reportMockData.filter(
-          (report) => report.warehouseId === parseInt(warehouseId, 10),
-        )
-      : reportMockData;
-
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: filteredData,
-    });
-  }),
-
-  // 6. warehouses 데이터를 보내주는 API 핸들러
+  // 5. warehouses 데이터를 보내주는 API 핸들러
   http.get('/api/warehouses', async () => {
     return HttpResponse.json({
       success: true,

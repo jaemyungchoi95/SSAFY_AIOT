@@ -1,24 +1,24 @@
 import SidebarItem from './SidebarItem';
 import './SidebarList.css';
 import { useAppStore } from '../../stores/useAppStore';
+import { useMemo } from 'react';
 
 const SidebarList = ({ selectedStatus, selectedTime }) => {
-  const { issues, reports, setSelectedIssueId, selectedWarehouseId } =
-    useAppStore();
+  const { alerts, setSelectedAlertId, selectedWarehouseId } = useAppStore();
 
-  const getFilteredIssues = () => {
-    let filtered = Array.isArray(issues)
-      ? issues.filter((issue) => issue.warehouseId === selectedWarehouseId)
+  const filteredAlerts = useMemo(() => {
+    let filtered = Array.isArray(alerts)
+      ? alerts.filter((alert) => alert.warehouseId === selectedWarehouseId)
       : [];
 
     if (selectedStatus === '처리완료') {
-      filtered = filtered.filter((issue) => issue.status === 'DONE');
+      filtered = filtered.filter((alert) => alert.status === 'DONE');
     } else if (selectedStatus === '미확인') {
-      filtered = filtered.filter((issue) =>
-        ['UNCHECKED', 'Caution'].includes(issue.status),
+      filtered = filtered.filter((alert) =>
+        ['UNCHECKED', 'Caution'].includes(alert.status),
       );
     } else if (selectedStatus === '위험') {
-      filtered = filtered.filter((issue) => issue.isDanger === true);
+      filtered = filtered.filter((alert) => alert.danger === true);
     }
 
     // 원본 배열을 수정하지 않도록 복사본을 만들어서 정렬함
@@ -29,25 +29,17 @@ const SidebarList = ({ selectedStatus, selectedTime }) => {
     });
     // 복사하여 정렬한 배열을 반환
     return sorted;
-  };
-
-  const filteredIssues = getFilteredIssues();
+  }, [alerts, selectedWarehouseId, selectedStatus, selectedTime]);
 
   return (
     <div className="SidebarList">
-      {filteredIssues.map((issue) => {
-        const relatedReport = reports
-          ? reports.find((report) => report.alertId === issue.alertId)
-          : null;
-        return (
-          <SidebarItem
-            key={issue.alertId}
-            issue={issue}
-            report={relatedReport}
-            onClick={() => setSelectedIssueId(issue.alertId)}
-          />
-        );
-      })}
+      {filteredAlerts.map((alert) => (
+        <SidebarItem
+          key={alert.alertId}
+          alert={alert}
+          onClick={() => setSelectedAlertId(alert.alertId)}
+        />
+      ))}
     </div>
   );
 };

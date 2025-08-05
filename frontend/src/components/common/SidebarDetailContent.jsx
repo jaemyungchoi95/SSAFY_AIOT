@@ -4,8 +4,8 @@ import FormatDateTime from '../../utils/FormatDateTime';
 import BootstrapCarousel from './BootstrapCarousel.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SidebarDetailContent = ({ issue, report }) => {
-  const imagePaths = [issue.image_normal_url, issue.image_thermal_url].filter(
+const SidebarDetailContent = ({ alert }) => {
+  const imagePaths = [alert.imageNormalUrl, alert.imageThermalUrl].filter(
     Boolean,
   );
 
@@ -14,14 +14,14 @@ const SidebarDetailContent = ({ issue, report }) => {
       <div className="SidebarDetailContent_Date">
         <img src="/src/assets/Date.png" alt="" />
         <span>
-          {report?.handledAt
-            ? FormatDateTime(report.handledAt)
-            : FormatDateTime(issue.createdAt)}
+          {alert?.handledAt
+            ? FormatDateTime(alert.handledAt)
+            : FormatDateTime(alert.createdAt)}
         </span>
       </div>
       <div className="SidebarDetailContent_Temp">
         <img src="/src/assets/Temp.png" alt="" />
-        <span>{issue.temperature}°C</span>
+        <span>{alert.temperature}°C</span>
       </div>
       <div className="SidebarDetailContent_Img">
         <BootstrapCarousel images={imagePaths} />
