@@ -5,7 +5,7 @@ import { useFilterStore } from '../../stores/useFilterStore';
 import { useDropdownFilter } from '../../hooks/useDropdownFilter';
 
 const FilterDay = () => {
-  const [isOpen, setIsOpen, dropdownRef] = useDropdownFilter();
+  const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
   const { selectedDay, setSelectedDay } = useFilterStore();
 
   const handleSelect = (day) => {

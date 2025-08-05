@@ -1,24 +1,13 @@
 import { http, HttpResponse } from 'msw';
-import { alertMockData, warehouseMockData } from './data';
+import {
+  warehouseMapMockData,
+  warehouseMockData,
+  rackList,
+  alertMonoMockData,
+} from './data';
 
 export const handlers = [
-  // // 1. my_map.yaml 파일을 반환하는 API 핸들러
-  // // GET /api/map/metadata 요청을 가로챕니다.
-  // http.get('/api/map/metadata', async () => {
-  //   // public 폴더의 my_map.yaml 파일을 fetch로 읽어옵니다.
-  //   const response = await fetch('/my_map.yaml');
-  //   const yamlText = await response.text();
-
-  //   // 읽어온 텍스트를 응답으로 보냅니다.
-  //   return HttpResponse.text(yamlText, {
-  //     headers: {
-  //       'Content-Type': 'text/yaml',
-  //     },
-  //   });
-  // }),
-
-  // 2. 맵 정보 API 핸들러
-  // GET /api/map/image 요청을 가로챕니다.
+  // 1. 맵 정보 API 핸들러
   http.get('/api/warehouses/:warehouseId/map', ({ params }) => {
     const { warehouseId } = params;
 
@@ -40,36 +29,37 @@ export const handlers = [
     });
   }),
 
+  // 2. 창고list api : /api/warehouses
+  // warehouses 데이터를 보내주는 API 핸들러
+  http.get('/api/warehouses', async () => {
+    return HttpResponse.json({
+      success: true,
+      message: '요청 성공',
+      data: warehouseMockData,
+    });
+  }),
+
   // 3. 랙 리스트 API 핸들러
   http.get('/api/warehouses/:warehouseId/racks', async ({ params }) => {
-    const { warehouseId } = params;
+    const warehouseId = parseInt(params.warehouseId, 10);
 
-    const rackListPath =
-      warehouseId === '2' ? '/rackList.json' : '/rackList2.json';
+    const filterRacks = rackList.filter(
+      (rack) => rack.warehouseId === warehouseId,
+    );
 
-    try {
-      const response = await fetch(rackListPath);
-
-      if (!response.ok) {
-        throw new Error(`데이터를 가져오는데 실패하였습니다 ${rackListPath}`);
-      }
-      const rackListData = await response.json();
-      return HttpResponse.json({
-        success: true,
-        message: '요청 성공',
-        data: rackListData.data,
-      });
-    } catch (error) {
-      return new HttpResponse(null, { status: 500, statusText: error.message });
-    }
+    return HttpResponse.json({
+      success: true,
+      message: '요청 성공',
+      data: filterRacks,
+    });
   }),
 
   // 4. alerts 데이터를 보내주는 API 핸들러
   http.get('/api/warehouses/:warehouseId/alerts', ({ params }) => {
     const warehouseId = parseInt(params.warehouseId, 10);
 
-    // 전체 alertMockData 배열에서 요청된 warehouseId와 일치하는 데이터만 필터링합니다.
-    const filteredAlerts = alertMockData.filter(
+    // 전체 alertMonoMockData 배열에서 요청된 warehouseId와 일치하는 데이터만 필터링합니다.
+    const filteredAlerts = alertMonoMockData.filter(
       (alert) => alert.warehouseId === warehouseId,
     );
 
@@ -77,15 +67,6 @@ export const handlers = [
       success: true,
       message: '요청 성공',
       data: filteredAlerts,
-    });
-  }),
-
-  // 5. warehouses 데이터를 보내주는 API 핸들러
-  http.get('/api/warehouses', async () => {
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: warehouseMockData,
     });
   }),
 
