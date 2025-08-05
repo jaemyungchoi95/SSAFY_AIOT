@@ -81,22 +81,6 @@ export const alertMockData = [
   },
 ];
 
-// export const reportMockData = [
-//   {
-//     reportId: 1,
-//     warehouseId: 2,
-//     alertId: 2,
-//     userId: 1,
-//     handledAt: new Date(
-//       new Date().getTime() - 5 * 24 * 60 * 60 * 1000,
-//     ).toISOString(),
-//     handlerName: '김철수',
-//     itemType: 'oil',
-//     rackId: 8,
-//     comment: '온도 변화 이상',
-//   },
-// ];
-
 export const warehouseMockData = [
   {
     warehouseId: 1,
