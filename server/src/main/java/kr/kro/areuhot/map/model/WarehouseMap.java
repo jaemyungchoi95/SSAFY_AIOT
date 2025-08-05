@@ -2,7 +2,7 @@ package kr.kro.areuhot.map.model;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class WarehouseMap {
@@ -12,5 +12,5 @@ public class WarehouseMap {
     private String version;
     private boolean isActive;
     private String type;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 }

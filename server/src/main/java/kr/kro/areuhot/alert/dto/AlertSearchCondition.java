@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertSearchCondition {
-    private Integer warehouseId;
+    private int warehouseId;
     private String sort;
     private String range;
     private String status;

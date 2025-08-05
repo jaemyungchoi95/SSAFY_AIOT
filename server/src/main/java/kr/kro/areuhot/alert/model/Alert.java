@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Alert {
-    private Integer id;
-    private Integer robotId;
-    private Integer rackId;
-    private Integer warehouseId;
-    private Integer spotId;
-    private Double temperature;
+    private int id;
+    private int robotId;
+    private int rackId;
+    private int warehouseId;
+    private int spotId;
+    private double temperature;
     private String imageThermalUrl;
     private String imageNormalUrl;
     private AlertStatus status; // UNCHECKED, DONE

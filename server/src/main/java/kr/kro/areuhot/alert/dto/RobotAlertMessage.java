@@ -12,9 +12,9 @@ public class RobotAlertMessage {
     private String spotUuid;
     
     @JsonProperty("robot_id")
-    private Integer robotId;
+    private int robotId;
     
-    private Double temperature;
+    private double temperature;
     
     @JsonProperty("image_thermal_url")
     private String imageThermalUrl;
