@@ -32,6 +32,33 @@ public class MqttClientService {
     @Value("${mqtt.client.id}")
     private String clientId;
 
+    @Value("${mqtt.connection.timeout}")
+    private int connectionTimeout;
+
+    @Value("${mqtt.keepalive.interval}")
+    private int keepAliveInterval;
+
+    @Value("${mqtt.max.inflight}")
+    private int maxInflight;
+
+    @Value("${mqtt.reconnect.max.attempts}")
+    private int maxReconnectAttempts;
+
+    @Value("${mqtt.reconnect.delay.ms}")
+    private long reconnectDelayMs;
+
+    @Value("${mqtt.certificate.ca}")
+    private String caCertificateName;
+
+    @Value("${mqtt.certificate.client}")
+    private String clientCertificateName;
+
+    @Value("${mqtt.certificate.private}")
+    private String privateKeyName;
+
+    @Value("${mqtt.qos}")
+    private int qos;
+
     @Autowired
     private S3CertificateDownloadService certificateDownloadService;
 
@@ -43,8 +70,6 @@ public class MqttClientService {
     private final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
     private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
-    private static final int MAX_RECONNECT_ATTEMPTS = 5;
-    private static final long RECONNECT_DELAY_MS = 5000; // 5초
 
     @PostConstruct
     @Async("mqttTaskExecutor")
@@ -90,18 +115,18 @@ public class MqttClientService {
             MqttConnectOptions connectOptions = new MqttConnectOptions();
             
             // TLS 인증서 설정
-            String caCertPath = certificateDownloadService.getCertificatePath("AmazonRootCA1.pem");
-            String clientCertPath = certificateDownloadService.getCertificatePath("certificate.pem.crt");
-            String privateKeyPath = certificateDownloadService.getCertificatePath("private.pem.key");
+            String caCertPath = certificateDownloadService.getCertificatePath(caCertificateName);
+            String clientCertPath = certificateDownloadService.getCertificatePath(clientCertificateName);
+            String privateKeyPath = certificateDownloadService.getCertificatePath(privateKeyName);
             
             PemSocketFactory.configureMqttConnectOptions(connectOptions, caCertPath, clientCertPath, privateKeyPath);
             
             // AWS IoT Core 최적화 설정
-            connectOptions.setConnectionTimeout(30);
-            connectOptions.setKeepAliveInterval(60);
+            connectOptions.setConnectionTimeout(connectionTimeout);
+            connectOptions.setKeepAliveInterval(keepAliveInterval);
             connectOptions.setAutomaticReconnect(true);
             connectOptions.setCleanSession(true);
-            connectOptions.setMaxInflight(1000);
+            connectOptions.setMaxInflight(maxInflight);
             
             // 콜백 설정
             mqttClient.setCallback(new MqttCallback() {
@@ -152,7 +177,7 @@ public class MqttClientService {
             log.info("MQTT 브로커 연결 성공");
             
             // 토픽 구독
-            mqttClient.subscribe(mqttTopic, 1);
+            mqttClient.subscribe(mqttTopic, qos);
             log.info("MQTT 토픽 구독 완료: {}", mqttTopic);
             
             // 재연결 시도 카운터 리셋
@@ -166,18 +191,18 @@ public class MqttClientService {
     private void scheduleReconnect() {
         int attempts = reconnectAttempts.incrementAndGet();
         
-        if (attempts <= MAX_RECONNECT_ATTEMPTS) {
-            log.info("MQTT 재연결 시도 {} / {}", attempts, MAX_RECONNECT_ATTEMPTS);
+        if (attempts <= maxReconnectAttempts) {
+            log.info("MQTT 재연결 시도 {} / {}", attempts, maxReconnectAttempts);
             
             new Thread(() -> {
                 try {
-                    Thread.sleep(RECONNECT_DELAY_MS * attempts); // 지수 백오프
+                    Thread.sleep(reconnectDelayMs * attempts); // 지수 백오프
                     if (!isConnected()) {
                         connectToMqttBroker();
                     }
                 } catch (Exception e) {
                     log.error("MQTT 재연결 시도 실패", e);
-                    if (attempts < MAX_RECONNECT_ATTEMPTS) {
+                    if (attempts < maxReconnectAttempts) {
                         scheduleReconnect();
                     }
                 }
