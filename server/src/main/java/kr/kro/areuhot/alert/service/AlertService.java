@@ -1,9 +1,6 @@
 package kr.kro.areuhot.alert.service;
 
-import kr.kro.areuhot.alert.dto.AlertPageResponseDto;
-import kr.kro.areuhot.alert.dto.AlertResponseDto;
-import kr.kro.areuhot.alert.dto.AlertSearchCondition;
-import kr.kro.areuhot.alert.dto.RobotAlertMessage;
+import kr.kro.areuhot.alert.dto.*;
 import kr.kro.areuhot.alert.mapper.AlertMapper;
 import kr.kro.areuhot.alert.model.Alert;
 import kr.kro.areuhot.alert.model.AlertStatus;
@@ -44,6 +41,10 @@ public class AlertService {
                 .totalPages(totalPages)
                 .last(last)
                 .build();
+    }
+
+    public AlertDetailResponseDto getAlertDetail(int alertId) {
+        return alertMapper.getAlertDetailByAlertId(alertId);
     }
 
     public long countAlerts(AlertSearchCondition condition) {
