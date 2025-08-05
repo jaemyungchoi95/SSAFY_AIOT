@@ -48,7 +48,7 @@ public class AlertService {
             }
 
             // 4. 위험도 판단
-            boolean isDanger = determineDangerLevel(spotId, warehouseId);
+            boolean Danger = determineDangerLevel(spotId, warehouseId);
 
             // 5. Alert 엔티티 생성
             LocalDateTime now = LocalDateTime.now();
@@ -61,7 +61,7 @@ public class AlertService {
                     .imageThermalUrl(mqttMessage.getImageThermalUrl())
                     .imageNormalUrl(mqttMessage.getImageNormalUrl())
                     .status("UNCHECKED")
-                    .isDanger(isDanger)
+                    .Danger(Danger)
                     .createdAt(mqttMessage.getCreatedAt() != null ? mqttMessage.getCreatedAt() : now)
                     .updatedAt(now)
                     .build();
@@ -71,7 +71,7 @@ public class AlertService {
             
             if (result > 0) {
                 log.info("Alert 저장 성공: id={}, spot_id={}, robot_id={}, is_danger={}", 
-                        alert.getId(), spotId, mqttMessage.getRobotId(), isDanger);
+                        alert.getId(), spotId, mqttMessage.getRobotId(), Danger);
             } else {
                 log.error("Alert 저장 실패: spot_uuid={}, robot_id={}", 
                         mqttMessage.getSpotUuid(), mqttMessage.getRobotId());

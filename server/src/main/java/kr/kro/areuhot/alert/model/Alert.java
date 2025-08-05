@@ -1,5 +1,6 @@
 package kr.kro.areuhot.alert.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,10 @@ public class Alert {
     private String imageThermalUrl;
     private String imageNormalUrl;
     private String status; // UNCHECKED, DONE
-    private Boolean isDanger;
+    
+    @JsonProperty("is_danger")
+    private Boolean Danger;
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 } 
