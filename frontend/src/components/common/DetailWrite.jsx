@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 const DetailWrite = ({ alert, onSubmit, onCancel }) => {
   const [content, setContent] = useState('');
   const [empName, setEmpName] = useState('');
+  const [itemName, setItemName] = useState('');
+
   useEffect(() => {
     if (alert) {
       setContent(alert.comment || '');
@@ -21,11 +23,16 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
     setEmpName(e.target.value);
   };
 
+  // 아이템 타입 입력 추가
+  const handleItemNameChange = (e) => {
+    setItemName(e.target.value);
+  };
+
   const handleSubmit = () => {
     onSubmit({
       handlerName: empName,
       comment: content,
-      // reportId: alert?.id || null,
+      itemType: itemName,
     });
   };
 
@@ -41,6 +48,17 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
             className="DetailWrite_Input DetailWrite_EmpInput"
             value={empName}
             onChange={handleEmpNameChange}
+          ></textarea>
+        </div>
+        <div className="DetailWrite_Item">
+          <div className="DetailWrite_ItemTitle">물건명</div>
+          <textarea
+            name=""
+            id=""
+            placeholder="물건 종류를 입력해 주세요"
+            className="DetailWrite_Input DetailWrite_ItemInput"
+            value={itemName}
+            onChange={handleItemNameChange}
           ></textarea>
         </div>
         <div className="DetailWrite_Message">

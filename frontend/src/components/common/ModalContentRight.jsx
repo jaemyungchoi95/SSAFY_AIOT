@@ -1,5 +1,5 @@
 import React from 'react';
-import './ModalContentRIght.css';
+import './ModalContentRight.css';
 import DetailWrite from './DetailWrite';
 
 const Modal_Content_Right = () => {
