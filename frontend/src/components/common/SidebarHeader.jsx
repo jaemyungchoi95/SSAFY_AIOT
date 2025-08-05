@@ -3,24 +3,13 @@ import './SidebarHeader.css';
 import FilterTime from './FilterTime';
 import FilterStatus from './FilterStatus';
 
-const SidebarHeader = ({
-  selectedStatus,
-  setSelectedStatus,
-  selectedTime,
-  setSelectedTime,
-}) => {
+const SidebarHeader = () => {
   return (
     <div className="SidebarHeader">
       <div className="SidebarHeader_title">이슈 목록</div>
       <div className="SidebarHeader_Filter">
-        <FilterTime
-          selectedTime={selectedTime}
-          setSelectedTime={setSelectedTime}
-        />
-        <FilterStatus
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-        />
+        <FilterTime />
+        <FilterStatus />
       </div>
     </div>
   );

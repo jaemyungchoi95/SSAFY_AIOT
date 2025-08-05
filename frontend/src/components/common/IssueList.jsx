@@ -1,12 +1,21 @@
-import SidebarItem from './SidebarItem';
-import './SidebarList.css';
+import React from 'react';
+import './IssueContent.css';
 import { useAppStore } from '../../stores/useAppStore';
 import { useFilterStore } from '../../stores/useFilterStore';
+import { useIssueStore } from '../../stores/useIssueStore';
+import IssueItem from './IssueItem';
+import IssueModal from './IssueModal';
 
-const SidebarList = () => {
-  const { issues, reports, setSelectedIssueId, selectedWarehouseId } =
-    useAppStore();
+const IssueList = () => {
+  const { issues, reports, selectedWarehouseId } = useAppStore();
   const { selectedStatus, selectedTime } = useFilterStore();
+  const {
+    setSelectedIssue,
+    setSelectedReport,
+    clearModal,
+    selectedIssue,
+    selectedReport,
+  } = useIssueStore();
 
   const getFilteredIssues = () => {
     let filtered = Array.isArray(issues)
@@ -23,35 +32,31 @@ const SidebarList = () => {
       filtered = filtered.filter((issue) => issue.is_danger === true);
     }
 
-    // 원본 배열을 수정하지 않도록 복사본을 만들어서 정렬함
     const sorted = [...filtered].sort((a, b) => {
       const timeA = new Date(a.created_at).getTime();
       const timeB = new Date(b.created_at).getTime();
       return selectedTime === '최신순' ? timeB - timeA : timeA - timeB;
     });
-    // 복사하여 정렬한 배열을 반환
+
     return sorted;
   };
 
   const filteredIssues = getFilteredIssues();
 
   return (
-    <div className="SidebarList">
-      {filteredIssues.map((issue) => {
-        const relatedReport = reports
-          ? reports.find((report) => report.alert_id === issue.id)
-          : null;
-        return (
-          <SidebarItem
-            key={issue.id}
-            issue={issue}
-            report={relatedReport}
-            onClick={() => setSelectedIssueId(issue.id)}
-          />
-        );
-      })}
+    <div className="IssueContent">
+      <div className="IssueGridWrapper">
+        {filteredIssues.map((issue) => (
+          <IssueItem key={issue.id} issueId={issue.id} />
+        ))}
+      </div>
+      <IssueModal
+        issue={selectedIssue}
+        report={selectedReport}
+        onClose={clearModal}
+      />
     </div>
   );
 };
 
-export default SidebarList;
+export default IssueList;

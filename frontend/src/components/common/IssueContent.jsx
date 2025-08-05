@@ -1,9 +1,13 @@
 import React from 'react';
 import './IssueContent.css';
-import SidebarList from './SidebarList';
+import IssueList from './IssueList';
 
 const IssueContent = () => {
-  return <div className="IssueContent"></div>;
+  return (
+    <div className="IssueContent">
+      <IssueList />
+    </div>
+  );
 };
 
 export default IssueContent;

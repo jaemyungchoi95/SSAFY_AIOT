@@ -1,0 +1,14 @@
+.IssueContent {
+  padding: 10px;
+  height: 100%;
+}
+
+.IssueGridWrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 가로 4개 */
+  gap: 16px;
+}
+
+.IssueGridWrapper .SidebarItem {
+  width: 100%;
+}

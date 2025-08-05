@@ -2,7 +2,7 @@
   padding: 12px 30px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 15px;
 }
 
 .IssueFilter_Title {
@@ -14,7 +14,6 @@
 
 .Dropdown_Filter {
   display: flex;
-  height: 30px;
   flex: 1;
   gap: 20px;
 }
@@ -22,11 +21,13 @@
 .Dropdown_Filter_Left {
   display: flex;
   gap: 10px;
+  width: 25%;
 }
 
 .Dropdown_Filter_Right {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .Searh_Filter {
@@ -57,4 +58,12 @@
   display: flex;
   gap: 25px;
   align-items: center;
+}
+
+.Search_Filter_Right input {
+  accent-color: #787980;
+}
+
+.Search_Filter_Checkbox {
+  cursor: pointer;
 }

@@ -1,36 +1,38 @@
 import React from 'react';
+import './FilterDay.css';
 import './FilterTime.css';
 import { useState } from 'react';
 import { useFilterStore } from '../../stores/useFilterStore';
 
-const FilterTime = () => {
+const FilterDay = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { selectedTime, setSelectedTime } = useFilterStore();
+  const { selectedDay, setSelectedDay } = useFilterStore();
 
-  const handleSelect = (time) => {
-    setSelectedTime(time);
+  const handleSelect = (day) => {
+    setSelectedDay(day);
     setIsOpen(false);
   };
 
   return (
-    <div className="FilterTime">
+    <div className="FilterStatus">
       <button
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img src="../../src/assets/FilterTime.png" className="Icon" alt="" />
-        <span className="Label">{selectedTime}</span>
+        <img src="../../src/assets/Calender.png" className="Icon" alt="" />
+        <span className="Label">{selectedDay}</span>
         <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
       </button>
+
       {isOpen && (
         <div className="Filter_Menu">
-          {['최신순', '오래된순'].map((time) => (
+          {['전체', '하루', '일주일', '한달'].map((day) => (
             <button
-              key={time}
+              key={day}
               className="Filter_Item"
-              onClick={() => handleSelect(time)}
+              onClick={() => handleSelect(day)}
             >
-              {time}
+              {day}
             </button>
           ))}
         </div>
@@ -39,4 +41,4 @@ const FilterTime = () => {
   );
 };
 
-export default FilterTime;
+export default FilterDay;
