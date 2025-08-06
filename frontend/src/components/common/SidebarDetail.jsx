@@ -46,23 +46,29 @@ const SidebarDetail = ({ onClose }) => {
       <SidebarDetailContent alert={selectedAlert} />
       {isHandled ? (
         isEditing ? (
+          <div className="SidebarDetail_Write">
+            <DetailWrite
+              alert={selectedAlert}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+            />
+          </div>
+        ) : (
+          <div className="SidebarDetail_Report">
+            <SidebarDetailReport
+              alert={selectedAlert}
+              onEditClick={handleEditClick}
+            />
+          </div>
+        )
+      ) : isWritingId === selectedAlert.alertId ? (
+        <div className="SidebarDetail_Write">
           <DetailWrite
             alert={selectedAlert}
             onSubmit={handleSubmit}
-            onCancel={handleCancel}
+            onCancel={handleCancelWrite}
           />
-        ) : (
-          <SidebarDetailReport
-            alert={selectedAlert}
-            onEditClick={handleEditClick}
-          />
-        )
-      ) : isWritingId === selectedAlert.alertId ? (
-        <DetailWrite
-          alert={selectedAlert}
-          onSubmit={handleSubmit}
-          onCancel={handleCancelWrite}
-        />
+        </div>
       ) : (
         <div className="SidebarDetail_ReportBtnWrapper">
           <ReportBtn text={'작성하기'} onClick={handleWriteClick} />

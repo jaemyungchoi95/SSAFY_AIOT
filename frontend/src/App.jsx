@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -9,6 +9,7 @@ import { useAppStore } from './stores/useAppStore';
 
 function App() {
   const initializeApp = useAppStore((state) => state.initializeApp);
+  const location = useLocation();
 
   useEffect(() => {
     initializeApp();
@@ -16,16 +17,22 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/issue" element={<IssuePage />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      {/* 로그인 경로면 Header 안 보여줌 */}
+      {location.pathname !== '/login' && <Header />}
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/issue" element={<IssuePage />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </div>
   );
 }
 
-export default App;
+export default function WrappedApp() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}

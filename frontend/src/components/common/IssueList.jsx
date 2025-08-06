@@ -1,60 +1,60 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './IssueContent.css';
 import { useAppStore } from '../../stores/useAppStore';
 import { useFilterStore } from '../../stores/useFilterStore';
-import { useIssueStore } from '../../stores/useIssueStore';
 import IssueItem from './IssueItem';
 import IssueModal from './IssueModal';
 
 const IssueList = () => {
-  const { issues, reports, selectedWarehouseId } = useAppStore();
-  const { selectedStatus, selectedTime } = useFilterStore();
-  const {
-    setSelectedIssue,
-    setSelectedReport,
-    clearModal,
-    selectedIssue,
-    selectedReport,
-  } = useIssueStore();
+  const { alerts, selectedWarehouseId, selectedAlertId, setSelectedAlertId } =
+    useAppStore();
+  const selectedAlert = alerts.find((a) => a.alertId === selectedAlertId);
 
-  const getFilteredIssues = () => {
-    let filtered = Array.isArray(issues)
-      ? issues.filter((issue) => issue.warehouse_id === selectedWarehouseId)
+  const { selectedStatus, selectedTime } = useFilterStore();
+
+  useEffect(() => {
+    setSelectedAlertId(null);
+  }, [setSelectedAlertId]);
+
+  const getFilteredAlerts = () => {
+    let filtered = Array.isArray(alerts)
+      ? alerts.filter((alert) => alert.warehouseId === selectedWarehouseId)
       : [];
 
     if (selectedStatus === '처리완료') {
-      filtered = filtered.filter((issue) => issue.status === 'DONE');
+      filtered = filtered.filter((alert) => alert.status === 'DONE');
     } else if (selectedStatus === '미확인') {
-      filtered = filtered.filter((issue) =>
-        ['UNCHECKED', 'Caution'].includes(issue.status),
+      filtered = filtered.filter((alert) =>
+        ['UNCHECKED', 'Caution'].includes(alert.status),
       );
     } else if (selectedStatus === '위험') {
-      filtered = filtered.filter((issue) => issue.is_danger === true);
+      filtered = filtered.filter((alert) => alert.danger === true);
     }
 
     const sorted = [...filtered].sort((a, b) => {
-      const timeA = new Date(a.created_at).getTime();
-      const timeB = new Date(b.created_at).getTime();
+      const timeA = new Date(a.createdAt).getTime();
+      const timeB = new Date(b.createdAt).getTime();
       return selectedTime === '최신순' ? timeB - timeA : timeA - timeB;
     });
 
     return sorted;
   };
 
-  const filteredIssues = getFilteredIssues();
+  const filteredAlerts = getFilteredAlerts();
 
   return (
     <div className="IssueContent">
       <div className="IssueGridWrapper">
-        {filteredIssues.map((issue) => (
-          <IssueItem key={issue.id} issueId={issue.id} />
+        {filteredAlerts.map((alert) => (
+          <IssueItem key={alert.alertId} alert={alert} />
         ))}
       </div>
-      <IssueModal
-        issue={selectedIssue}
-        report={selectedReport}
-        onClose={clearModal}
-      />
+      {selectedAlert && (
+        <IssueModal
+          alert={selectedAlert}
+          onClose={() => setSelectedAlertId(null)}
+        />
+      )}
     </div>
   );
 };

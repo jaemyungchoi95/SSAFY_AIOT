@@ -1,6 +1,5 @@
 import React from 'react';
 import './SidebarDetailContent.css';
-import FormatDateTime from '../../utils/FormatDateTime';
 import BootstrapCarousel from './BootstrapCarousel.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TempInfo from './TempInfo';
