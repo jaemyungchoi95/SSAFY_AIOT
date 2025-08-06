@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.kro.areuhot.alert.dto.RobotAlertMessage;
 import kr.kro.areuhot.alert.util.PemSocketFactory;
+import kr.kro.areuhot.robot.service.RobotService;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class MqttClientService {
     private AlertService alertService;
 
     @Autowired
-    private kr.kro.areuhot.robot.service.RobotService robotService;
+    private RobotService robotService;
 
     private MqttClient mqttClient;
     private ObjectMapper objectMapper;
