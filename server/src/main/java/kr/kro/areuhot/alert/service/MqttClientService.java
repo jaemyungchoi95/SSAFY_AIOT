@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.kro.areuhot.alert.dto.RobotAlertMessage;
 import kr.kro.areuhot.alert.util.PemSocketFactory;
+import kr.kro.areuhot.common.util.S3Util;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,8 @@ public class MqttClientService {
     private final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
     private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
+    @Autowired
+    private S3Util s3Util;
 
     @PostConstruct
     @Async("mqttTaskExecutor")
@@ -145,7 +148,9 @@ public class MqttClientService {
                         
                         // JSON 파싱
                         RobotAlertMessage robotAlert = objectMapper.readValue(payload, RobotAlertMessage.class);
-                        
+                        robotAlert.setImageNormalUrl(s3Util.extractKeyFromUrl(robotAlert.getImageNormalUrl()));
+                        robotAlert.setImageThermalUrl(s3Util.extractKeyFromUrl(robotAlert.getImageThermalUrl()));
+
                         // 로그 출력
                         log.info("=== 로봇 알림 메시지 ===");
                         log.info("Spot UUID: {}", robotAlert.getSpotUuid());
