@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class AlertPageResponseDto {
     private List<AlertResponseDto> content;
-    private int offset;
-    private int limit;
-    private long totalElements;
-    private int totalPages;
-    private boolean last;
+    private Integer offset;
+    private Integer limit;
+    private Long totalElements;
+    private Integer totalPages;
+    private Boolean last;
 }

@@ -17,7 +17,7 @@ public class MapController {
     private final MapService mapService;
 
     @GetMapping("/{warehouseId}/map")
-    public ResponseEntity<ApiResponse<MapResponseDto>> getActiveMap(@PathVariable int warehouseId) {
+    public ResponseEntity<ApiResponse<MapResponseDto>> getActiveMap(@PathVariable Integer warehouseId) {
         MapResponseDto map = mapService.getActiveMapByWarehouseId(warehouseId);
         return ResponseEntity.ok(ApiResponse.success(map));
     }

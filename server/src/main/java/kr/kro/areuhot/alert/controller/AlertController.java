@@ -18,8 +18,8 @@ public class AlertController {
 
     @GetMapping("/warehouses/{warehouseId}/alerts/{alertId}")
     public ResponseEntity<ApiResponse<AlertResponseDto>> getAlert(
-            @PathVariable int alertId,
-            @PathVariable int warehouseId
+            @PathVariable Integer alertId,
+            @PathVariable Integer warehouseId
     ) {
         AlertResponseDto dto = alertService.getAlertsById(warehouseId, alertId);
         return ResponseEntity.ok(ApiResponse.success(dto));
@@ -27,9 +27,9 @@ public class AlertController {
 
     @GetMapping("/warehouses/{warehouseId}/alerts")
     public ResponseEntity<ApiResponse<AlertPageResponseDto>> getPagedAlertsByWarehouseId(
-            @PathVariable int warehouseId,
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "30") int limit,
+            @PathVariable Integer warehouseId,
+            @RequestParam(required = false, defaultValue = "0") Integer offset,
+            @RequestParam(required = false, defaultValue = "30") Integer limit,
             @ModelAttribute AlertSearchCondition condition
     ) {
         condition.setWarehouseId(warehouseId);
@@ -39,8 +39,8 @@ public class AlertController {
 
     @GetMapping("/alerts")
     public ResponseEntity<ApiResponse<AlertPageResponseDto>> getPagedAllAlerts(
-            @RequestParam(required = false, defaultValue = "0") int offset,
-            @RequestParam(required = false, defaultValue = "30") int limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset,
+            @RequestParam(required = false, defaultValue = "30") Integer limit,
             @ModelAttribute AlertSearchCondition condition
     ) {
         AlertPageResponseDto result = alertService.getPagedAlerts(condition, limit, offset);
@@ -49,7 +49,7 @@ public class AlertController {
 
     @GetMapping("/alerts/{alertId}")
     public ResponseEntity<ApiResponse<AlertDetailResponseDto>> getAlertDetail(
-            @PathVariable int alertId
+            @PathVariable Integer alertId
     ) {
         AlertDetailResponseDto dto = alertService.getAlertDetail(alertId);
         return ResponseEntity.ok(ApiResponse.success(dto));

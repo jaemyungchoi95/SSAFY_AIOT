@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlertResponseDto {
-    private int alertId;
-    private int warehouseId;
-    private int rackId;
-    private int spotId;
-    private double temperature;
+    private Integer alertId;
+    private Integer warehouseId;
+    private Integer rackId;
+    private Integer spotId;
+    private Double temperature;
     private AlertStatus status;
-    private boolean danger;
+    private Boolean danger;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int processingId;
+    private Integer processingId;
     private String comment;
     private String userName;
     private String warehouseName;

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class RobotService {
     private final RobotMapper robotMapper;
 
-    public int findWarehouseIdByRobotId(int robotId) {
+    public int findWarehouseIdByRobotId(Integer robotId) {
         return robotMapper.findWarehouseIdByRobotId(robotId);
     }
 

@@ -21,7 +21,7 @@ public class Alert {
     private String imageThermalUrl;
     private String imageNormalUrl;
     private AlertStatus status; // UNCHECKED, DONE
-    private boolean danger;
+    private Boolean danger;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

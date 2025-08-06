@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.kro.areuhot.alert.dto.RobotAlertMessage;
 import kr.kro.areuhot.alert.util.PemSocketFactory;
 import kr.kro.areuhot.robot.service.RobotService;
+import kr.kro.areuhot.common.util.S3Util;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -78,6 +79,8 @@ public class MqttClientService {
     private final AtomicBoolean isInitialized = new AtomicBoolean(false);
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
     private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
+    @Autowired
+    private S3Util s3Util;
 
     @PostConstruct
     @Async("mqttTaskExecutor")
@@ -155,7 +158,9 @@ public class MqttClientService {
                         if (topic.equals(mqttTopic)) {
                             // 알림 메시지 처리
                             RobotAlertMessage robotAlert = objectMapper.readValue(payload, RobotAlertMessage.class);
-                            
+                            robotAlert.setImageNormalUrl(s3Util.extractKeyFromUrl(robotAlert.getImageNormalUrl()));
+                            robotAlert.setImageThermalUrl(s3Util.extractKeyFromUrl(robotAlert.getImageThermalUrl()));
+
                             // 로그 출력
                             log.info("=== 로봇 알림 메시지 ===");
                             log.info("Spot UUID: {}", robotAlert.getSpotUuid());
@@ -165,15 +170,15 @@ public class MqttClientService {
                             log.info("Normal Image URL: {}", robotAlert.getImageNormalUrl());
                             log.info("Created At: {}", robotAlert.getCreatedAt());
                             log.info("========================");
-                            
+
                             // Alert 테이블에 저장
                             alertService.saveAlertFromMqtt(robotAlert);
-                            
+
                         } else if (topic.equals(mqttLocationTopic)) {
                             // 위치 메시지 처리
-                            kr.kro.areuhot.robot.dto.RobotLocationMessageDto robotLocation = 
+                            kr.kro.areuhot.robot.dto.RobotLocationMessageDto robotLocation =
                                 objectMapper.readValue(payload, kr.kro.areuhot.robot.dto.RobotLocationMessageDto.class);
-                            
+
                             // 로그 출력
                             log.info("=== 로봇 로그 메시지 ===");
                             log.info("Robot ID: {}", robotLocation.getRobotId());
@@ -181,11 +186,11 @@ public class MqttClientService {
                             log.info("Direction: {}", robotLocation.getDirection());
                             log.info("Created At: {}", robotLocation.getCreatedAt());
                             log.info("========================");
-                            
+
                             // Robot 로그 테이블에 저장
                             robotService.saveRobotLogFromMqtt(robotLocation);
                         }
-                        
+
                     } catch (Exception e) {
                         log.error("MQTT 메시지 처리 실패", e);
                         log.error("페이로드 내용: {}", new String(message.getPayload()));

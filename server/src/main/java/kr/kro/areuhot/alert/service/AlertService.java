@@ -4,6 +4,7 @@ import kr.kro.areuhot.alert.dto.*;
 import kr.kro.areuhot.alert.mapper.AlertMapper;
 import kr.kro.areuhot.alert.model.Alert;
 import kr.kro.areuhot.alert.model.AlertStatus;
+import kr.kro.areuhot.common.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlertService {
     private final AlertMapper alertMapper;
+    private final S3Util s3Util;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
     private static final int DANGER_THRESHOLD_COUNT = 2;  // 2번 이상
 
-    public AlertResponseDto getAlertsById(int warehouseId, int alertId) {
+    public AlertResponseDto getAlertsById(Integer warehouseId, Integer alertId) {
         return alertMapper.getAlertByAlertId(warehouseId, alertId);
     }
 
-    public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, int limit, int offset) {
+    public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, Integer limit, Integer offset) {
         long totalElements = countAlerts(condition);
         int totalPages = (int) Math.ceil((double) totalElements / limit);
         int sqlOffset = offset * limit;
@@ -43,8 +45,21 @@ public class AlertService {
                 .build();
     }
 
-    public AlertDetailResponseDto getAlertDetail(int alertId) {
-        return alertMapper.getAlertDetailByAlertId(alertId);
+    public AlertDetailResponseDto getAlertDetail(Integer alertId) {
+        AlertDetailResponseDto dto = alertMapper.getAlertDetailByAlertId(alertId);
+
+        if(dto != null) {
+            if(dto.getImageThermalUrl() != null) {
+                String presignedUrl = s3Util.generatePresignedUrl(dto.getImageThermalUrl());
+                dto.setImageThermalUrl(presignedUrl);
+            }
+            if(dto.getImageNormalUrl() != null) {
+                String presignedUrl = s3Util.generatePresignedUrl(dto.getImageNormalUrl());
+                dto.setImageNormalUrl(presignedUrl);
+            }
+        }
+
+        return dto;
     }
 
     public long countAlerts(AlertSearchCondition condition) {
@@ -83,14 +98,16 @@ public class AlertService {
 
             // 5. Alert 엔티티 생성
             LocalDateTime now = LocalDateTime.now();
+            String thermalUrl = s3Util.extractKeyFromUrl(mqttMessage.getImageThermalUrl());
+            String normalUrl = s3Util.extractKeyFromUrl(mqttMessage.getImageNormalUrl());
             Alert alert = Alert.builder()
                     .robotId(mqttMessage.getRobotId())
                     .rackId(rackId)
                     .warehouseId(warehouseId)
                     .spotId(spotId)
                     .temperature(mqttMessage.getTemperature())
-                    .imageThermalUrl(mqttMessage.getImageThermalUrl())
-                    .imageNormalUrl(mqttMessage.getImageNormalUrl())
+                    .imageThermalUrl(thermalUrl)
+                    .imageNormalUrl(normalUrl)
                     .status(AlertStatus.UNCHECKED)
                     .danger(danger)
                     .createdAt(mqttMessage.getCreatedAt() != null ? mqttMessage.getCreatedAt() : now)
