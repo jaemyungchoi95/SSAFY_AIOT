@@ -7,6 +7,7 @@ import kr.kro.areuhot.alert.util.PemSocketFactory;
 import kr.kro.areuhot.robot.service.RobotService;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -115,8 +116,9 @@ public class MqttClientService {
             String serverUri = "ssl://" + mqttEndpoint + ":" + mqttPort;
             log.info("MQTT 브로커 연결 시도: {}", serverUri);
             
-            // MQTT 클라이언트 생성
-            mqttClient = new MqttClient(serverUri, clientId + "-" + System.currentTimeMillis());
+            // MQTT 클라이언트 생성 (메모리 기반 저장소 사용으로 .lck 파일 생성 방지)
+            MemoryPersistence persistence = new MemoryPersistence();
+            mqttClient = new MqttClient(serverUri, clientId + "-" + System.currentTimeMillis(), persistence);
             
             // 연결 옵션 설정
             MqttConnectOptions connectOptions = new MqttConnectOptions();
