@@ -1,0 +1,44 @@
+.LoginInput_Input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.LoginInput_Title {
+  font-weight: bold;
+  margin: 10px 0px;
+  text-align: left;
+}
+
+.LoginInput_Input input {
+  background-color: #2b2d37;
+  border: 1px solid #3b3d4c;
+  color: #c2c2c2;
+  padding: 8px 10px;
+  border-radius: 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.login-input:focus {
+  border-color: #396df0;
+}
+
+.password-input:focus {
+  border-color: #ff7575;
+}
+
+.LoginInput_Input button img {
+  margin-right: 10px;
+}
+
+.ToggleButton {
+  position: absolute;
+  right: 8px;
+  background: none;
+  color: #ccc;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

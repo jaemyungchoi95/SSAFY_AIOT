@@ -11,15 +11,20 @@ const SidebarItem = ({ alert, onClick }) => {
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">
         <div className="SidebarItem_Spot">Rack-{alert.rackId}</div>
-        <Status
-          text={alert.danger ? '위험' : isCompleteText}
-          type={alert.danger ? 'Danger' : isCompleteType}
-        />
+
+        {/* ✅ 상태 표시 영역 */}
+        <div className="SidebarItem_StatusGroup">
+          {alert.danger && <Status text="위험" type="Danger" />}
+          <Status text={isCompleteText} type={isCompleteType} />
+        </div>
       </div>
+
       <div className="SidebarItem_Temp">
         <TempInfo temperature={alert.temperature} />
       </div>
+
       <div className="SidebarItem_Message">{alert.comment || ''}</div>
+
       <div className="SidebarItem_Footer">
         <div className="SidebarItem_Admin">{alert.handlerName || ''}</div>
         <div className="SidebarItem_Date">

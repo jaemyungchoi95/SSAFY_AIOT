@@ -15,9 +15,14 @@ const Header = () => {
       <button className="Header_Logo" onClick={() => nav('/')}>
         <img src="../../src/assets/logo.png" alt="Logo" className="logo" />
       </button>
-      <button className="Header_Issue" onClick={() => nav('/issue')}>
-        이슈페이지
-      </button>
+      <div className="Header_Right">
+        <button className="Header_Issue" onClick={() => nav('/issue')}>
+          이슈페이지
+        </button>
+        <button className="Header_Login" onClick={() => nav('/login')}>
+          로그인
+        </button>
+      </div>
 
       {/* <div
         className="Header_Login"

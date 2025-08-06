@@ -1,29 +1,38 @@
 import React from 'react';
 import './ModalHeader.css';
-import Status from './Status'; // ✅ 꼭 import 필요
-import { useIssueStore } from '../../stores/useIssueStore';
+import Status from './Status';
+import { useAppStore } from '../../stores/useAppStore';
 
 const ModalHeader = () => {
-  const { selectedIssue } = useIssueStore();
+  const { alerts, selectedAlertId, setSelectedAlertId } = useAppStore();
+  const selectedAlert = alerts.find(
+    (alert) => alert.alertId === selectedAlertId,
+  );
 
-  if (!selectedIssue) return null;
+  if (!selectedAlert) return null;
 
   const isCompleteText =
-    selectedIssue.status === 'DONE' ? '처리완료' : '미확인';
+    selectedAlert.status === 'DONE' ? '처리완료' : '미확인';
   const isCompleteType =
-    selectedIssue.status === 'DONE' ? 'Complete' : 'Caution';
+    selectedAlert.status === 'DONE' ? 'Complete' : 'Caution';
+
+  const handleClose = () => {
+    setSelectedAlertId(null);
+  };
 
   return (
     <div className="ModalHeader">
       <div className="ModalHeader_Left">
-        <div className="Modal_Spot">Rack-{selectedIssue.rack_id}</div>
+        <div className="Modal_Spot">Rack-{selectedAlert.rackId}</div>
         <Status
-          text={selectedIssue.is_danger ? '위험' : isCompleteText}
-          type={selectedIssue.is_danger ? 'Danger' : isCompleteType}
+          text={selectedAlert.danger ? '위험' : isCompleteText}
+          type={selectedAlert.danger ? 'Danger' : isCompleteType}
         />
       </div>
 
-      <img src="../../src/assets/CloseBtn.png" alt="" />
+      <button className="Modal_CloseBtn" onClick={handleClose}>
+        <img src="../../src/assets/CloseBtn.png" alt="닫기 버튼" />
+      </button>
     </div>
   );
 };

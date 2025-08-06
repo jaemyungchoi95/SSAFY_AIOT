@@ -2,6 +2,7 @@ import SidebarItem from './SidebarItem';
 import './SidebarList.css';
 import { useAppStore } from '../../stores/useAppStore';
 import { useFilterStore } from '../../stores/useFilterStore';
+import { useMemo } from 'react';
 
 const SidebarList = () => {
   const { alerts, setSelectedAlertId, selectedWarehouseId } = useAppStore();
