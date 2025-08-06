@@ -1,46 +1,38 @@
 import React from 'react';
 import './IssueItem.css';
 import Status from './Status';
-import { useIssueStore } from '../../stores/useIssueStore';
-import { useAppStore } from '../../stores/useAppStore';
 import TempInfo from './TempInfo';
+import { useAppStore } from '../../stores/useAppStore';
 
-const IssueItem = ({ issueId }) => {
-  const { issues, reports } = useAppStore();
-  const { setSelectedIssue, setSelectedReport } = useIssueStore();
+const IssueItem = ({ alert }) => {
+  const { setSelectedAlertId } = useAppStore();
 
-  const issue = issues?.find((i) => i.id === issueId);
-  const report = reports?.find((r) => r.alert_id === issueId);
-
-  if (!issue) return null;
-
-  const isCompleteText = issue.status === 'DONE' ? '처리완료' : '미확인';
-  const isCompleteType = issue.status === 'DONE' ? 'Complete' : 'Caution';
+  const isCompleteText = alert.status === 'DONE' ? '처리완료' : '미확인';
+  const isCompleteType = alert.status === 'DONE' ? 'Complete' : 'Caution';
 
   const handleClick = () => {
-    setSelectedIssue(issue);
-    setSelectedReport(report);
+    setSelectedAlertId(alert.alertId);
   };
 
   return (
     <button className="IssueItem" onClick={handleClick}>
       <div className="IssueItem_Header">
-        <span className="IssueItem_Spot">Rack-{issue.rack_id}</span>
-        <Status
-          text={issue.is_danger ? '위험' : isCompleteText}
-          type={issue.is_danger ? 'Danger' : isCompleteType}
-        />
+        <span className="IssueItem_Spot">Rack-{alert.rackId}</span>
+
+        {/* danger가 true면 두 개의 Status를 보여줌 */}
+        <div className="IssueItem_StatusGroup">
+          {alert.danger && <Status text="위험" type="Danger" />}
+          <Status text={isCompleteText} type={isCompleteType} />
+        </div>
       </div>
       <div className="IssueItem_Temp">
-        <TempInfo temperature={issue.temperature} />
+        <TempInfo temperature={alert.temperature} />
       </div>
-      <div className="IssueItem_Message">{report?.comment || <br />}</div>
+      <div className="IssueItem_Message">{alert?.comment || <br />}</div>
       <div className="IssueItem_Footer">
-        <div className="IssueItem_Admin">{report?.handler_name || ''}</div>
+        <div className="IssueItem_Admin">{alert?.handlerName || ''}</div>
         <div className="IssueItem_Date">
-          {new Date(
-            report?.handled_at || issue.created_at,
-          ).toLocaleDateString()}
+          {new Date(alert.handledAt || alert.createdAt).toLocaleDateString()}
         </div>
       </div>
     </button>

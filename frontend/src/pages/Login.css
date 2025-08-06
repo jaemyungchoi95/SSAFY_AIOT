@@ -1,0 +1,17 @@
+.Login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  flex-direction: column;
+  background-color: #20212a;
+}
+
+.Login_Logo {
+  margin-bottom: 30px;
+}
+
+.Login_form {
+  width: 35%;
+}
