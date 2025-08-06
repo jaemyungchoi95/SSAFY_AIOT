@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlertDetailResponseDto {
-    private int alertId;
-    private int warehouseId;
-    private int rackId;
-    private int spotId;
-    private double temperature;
+    private Integer alertId;
+    private Integer warehouseId;
+    private Integer rackId;
+    private Integer spotId;
+    private Double temperature;
     private String imageThermalUrl;
     private String imageNormalUrl;
     private AlertStatus status;
-    private boolean danger;
+    private Boolean danger;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int processingId;
+    private Integer processingId;
     private String handlerName;
     private String comment;
     private String userName;

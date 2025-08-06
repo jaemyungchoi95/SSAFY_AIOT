@@ -17,14 +17,14 @@ public class MapService {
     private final MapMapper mapMapper;
     private final S3Util s3Util;
 
-    public WarehouseMap saveMap(int warehouseId, String url, LocalDateTime createdAt) {
+    public WarehouseMap saveMap(Integer warehouseId, String url, LocalDateTime createdAt) {
         mapMapper.deactivateByWarehouseId(warehouseId);
 
         WarehouseMap map = new WarehouseMap();
         map.setWarehouseId(warehouseId);
         map.setFilePath(s3Util.extractKeyFromUrl(url));
         map.setVersion(generate(warehouseId, createdAt));
-        map.setActive(true);
+        map.setIsActive(true);
         map.setType("raw");
         map.setCreatedAt(createdAt);
 
@@ -33,7 +33,7 @@ public class MapService {
         return map;
     }
 
-    public MapResponseDto getActiveMapByWarehouseId(int warehouseId) {
+    public MapResponseDto getActiveMapByWarehouseId(Integer warehouseId) {
         MapResponseDto dto = mapMapper.findActiveMapByWarehouseId(warehouseId);
 
         if(dto != null && dto.getFilePath() != null) {

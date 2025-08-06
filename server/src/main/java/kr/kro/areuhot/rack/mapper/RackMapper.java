@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface RackMapper {
     void insertRack(Rack rack);
-    List<RackResponseDto> findByMapId(int mapId);
+    List<RackResponseDto> findByMapId(Integer mapId);
 }

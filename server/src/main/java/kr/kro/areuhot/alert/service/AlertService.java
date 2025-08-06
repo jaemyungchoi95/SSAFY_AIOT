@@ -23,11 +23,11 @@ public class AlertService {
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
     private static final int DANGER_THRESHOLD_COUNT = 2;  // 2번 이상
 
-    public AlertResponseDto getAlertsById(int warehouseId, int alertId) {
+    public AlertResponseDto getAlertsById(Integer warehouseId, Integer alertId) {
         return alertMapper.getAlertByAlertId(warehouseId, alertId);
     }
 
-    public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, int limit, int offset) {
+    public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, Integer limit, Integer offset) {
         long totalElements = countAlerts(condition);
         int totalPages = (int) Math.ceil((double) totalElements / limit);
         int sqlOffset = offset * limit;
@@ -45,7 +45,7 @@ public class AlertService {
                 .build();
     }
 
-    public AlertDetailResponseDto getAlertDetail(int alertId) {
+    public AlertDetailResponseDto getAlertDetail(Integer alertId) {
         AlertDetailResponseDto dto = alertMapper.getAlertDetailByAlertId(alertId);
 
         if(dto != null) {

@@ -19,18 +19,18 @@ import static kr.kro.areuhot.map.util.MapVersionGenerator.generate;
 
 @UtilityClass
 public class FullMapHelper {
-    public WarehouseMap toMap(int warehouseId, FullMapUploadRequestDto dto) {
+    public WarehouseMap toMap(Integer warehouseId, FullMapUploadRequestDto dto) {
         WarehouseMap map = new WarehouseMap();
         map.setWarehouseId(warehouseId);
         map.setFilePath(dto.getUrl());
         map.setVersion(generate(warehouseId, dto.getCreatedAt()));
-        map.setActive(true);
+        map.setIsActive(true);
         map.setType("raw");
         map.setCreatedAt(dto.getCreatedAt());
         return map;
     }
 
-    public List<Rack> toRackList(List<RackUploadDto> rackDtos, int warehouseId, int mapId) {
+    public List<Rack> toRackList(List<RackUploadDto> rackDtos, Integer warehouseId, int mapId) {
         List<Rack> result = new ArrayList<>();
         for(RackUploadDto dto: rackDtos) {
             Rack rack = new Rack();

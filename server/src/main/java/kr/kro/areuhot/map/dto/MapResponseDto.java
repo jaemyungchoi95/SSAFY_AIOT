@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class MapResponseDto {
-    private int mapId;
-    private int warehouseId;
+    private Integer mapId;
+    private Integer warehouseId;
     private String filePath;
 }

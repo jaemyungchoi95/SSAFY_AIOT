@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RackResponseDto {
-    private int rackId;
-    private int warehouseId;
-    private int mapId;
-    private int x1, y1, x2, y2, x3, y3, x4, y4;
-    private double centerX, centerY;
+    private Integer rackId;
+    private Integer warehouseId;
+    private Integer mapId;
+    private Double x1, y1, x2, y2, x3, y3, x4, y4;
+    private Double centerX, centerY;
     private List<SpotResponseDto> spotList;
 }

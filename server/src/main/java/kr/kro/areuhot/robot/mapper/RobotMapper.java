@@ -4,5 +4,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface RobotMapper {
-    int findWarehouseIdByRobotId(int robotId);
+    int findWarehouseIdByRobotId(Integer robotId);
 }

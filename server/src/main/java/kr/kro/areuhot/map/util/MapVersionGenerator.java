@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MapVersionGenerator {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmmss");
-    public static String generate(int warehouseId, LocalDateTime date) {
+    public static String generate(Integer warehouseId, LocalDateTime date) {
         return "v_" + warehouseId + "_" + date.format(formatter);
     }
 }

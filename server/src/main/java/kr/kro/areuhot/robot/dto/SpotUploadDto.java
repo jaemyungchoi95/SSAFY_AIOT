@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class SpotUploadDto {
-    private double x, y;
-    private float direction;
+    private Double x, y;
+    private Float direction;
     private UUID uuid;
 }

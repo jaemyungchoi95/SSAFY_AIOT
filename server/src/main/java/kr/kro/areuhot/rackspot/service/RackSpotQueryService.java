@@ -18,7 +18,7 @@ public class RackSpotQueryService {
     private final SpotMapper spotMapper;
     private final MapMapper mapMapper;
 
-    public List<RackWithSpotsResponseDto> findRacksWithSpotsByWarehouseId(int warehouseId) {
+    public List<RackWithSpotsResponseDto> findRacksWithSpotsByWarehouseId(Integer warehouseId) {
         int mapId = mapMapper.findActiveMapIdByWarehouseId(warehouseId);
         List<RackResponseDto> racks = rackMapper.findByMapId(mapId);
 

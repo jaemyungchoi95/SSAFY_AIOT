@@ -14,20 +14,20 @@ import java.util.List;
 public interface AlertMapper {
     /* 단건 조회 */
     AlertResponseDto getAlertByAlertId(
-            @Param("warehouseId") int warehouseId,
-            @Param("alertId") int alertId
+            @Param("warehouseId") Integer warehouseId,
+            @Param("alertId") Integer alertId
     );
 
     /* 조건 페이징 조회 */
     List<AlertResponseDto> selectPagedAlerts(
             @Param("condition") AlertSearchCondition condition,
-            @Param("offset") int offset,
-            @Param("limit") int limit
+            @Param("offset") Integer offset,
+            @Param("limit") Integer limit
     );
 
     /* alert detail 조회 */
     AlertDetailResponseDto getAlertDetailByAlertId(
-           @Param("alertId") int alertId
+           @Param("alertId") Integer alertId
     );
 
     /* 총 개수 조회 */
@@ -47,11 +47,11 @@ public interface AlertMapper {
     
     // 특정 spot에서 12시간 이내 알림 개수 조회 (위험도 판단용)
     int countRecentAlertsBySpotId(@Param("spotId") Integer spotId, 
-                                  @Param("hours") int hours, 
+                                  @Param("hours") Integer hours,
                                   @Param("currentTime") LocalDateTime currentTime);
     
     // 특정 warehouse에서 12시간 이내 알림 개수 조회 (위험도 판단용)
     int countRecentAlertsByWarehouseId(@Param("warehouseId") Integer warehouseId, 
-                                      @Param("hours") int hours, 
+                                      @Param("hours") Integer hours,
                                       @Param("currentTime") LocalDateTime currentTime);
 }
