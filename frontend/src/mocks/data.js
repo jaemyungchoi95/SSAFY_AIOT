@@ -315,39 +315,7 @@ export const rackList = [
 
 // 4. 맵, 랙, 촬영스팟 전송 / POST 요청
 // : /api/robots/{robot_id}/full-map
-export const robotSpotMockData = {
-  url: 'url_value',
-  createdAt: '2025-07-31T00:14:54',
-  rackList: [
-    {
-      x1: 1,
-      y1: 1,
-      x2: 1,
-      y2: 1,
-      x3: 1,
-      y3: 1,
-      x4: 1,
-      y4: 1,
-      centerX: 1,
-      centerY: 1,
-      spotList: [
-        {
-          uuid: '550e8400-e29b-41d4-a716-446655440000',
-          x: 1,
-          y: 1,
-          direction: 1,
-        },
-        {
-          uuid: 'e3b0c442-98fc-1c14-9af7-4c898f9b44e4',
-          x: 1,
-          y: 1,
-          direction: 1,
-        },
-      ], // spotList
-    },
-  ], // rackList
-};
-// ** createdAt은 ISO 8601 형식으로 날짜
+// 이 항목은 백엔드-로봇간 통신
 
 // 5. 창고 내부 위험 리포트 (단일) → 실시간 알림시 가져오는 용 (리스트 추가) / GET 요청
 // : /api/warehouses/{warehouseId}/alerts/{alertId}

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -11,6 +11,8 @@ services:
       - "8080:8080"
     # 사용자가 중지하지 않는 이상 자동 재시작
     restart: unless-stopped
+    volumes:
+      - backend_data:/app/data # .lck 파일 저장 경로
     networks:
       - app-network
 
