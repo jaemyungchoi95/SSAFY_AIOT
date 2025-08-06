@@ -1,5 +1,6 @@
 package kr.kro.areuhot.robot.helper;
 
+import kr.kro.areuhot.common.util.UuidUtil;
 import kr.kro.areuhot.map.model.WarehouseMap;
 import kr.kro.areuhot.rack.model.Rack;
 import kr.kro.areuhot.robot.dto.FullMapUploadRequestDto;
@@ -8,8 +9,11 @@ import kr.kro.areuhot.robot.dto.SpotUploadDto;
 import kr.kro.areuhot.spot.model.Spot;
 import lombok.experimental.UtilityClass;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static kr.kro.areuhot.map.util.MapVersionGenerator.generate;
 
@@ -57,6 +61,13 @@ public class FullMapHelper {
                 spot.setX(spotDto.getX());
                 spot.setY(spotDto.getY());
                 spot.setDirection(spotDto.getDirection());
+                UUID uuid = spotDto.getUuid();
+                if(uuid != null) {
+                    spot.setUuid(UuidUtil.toBytes(uuid));
+                } else {
+                    throw new IllegalArgumentException("Spot UUID가 존재하지 않습니다.");
+                }
+
                 result.add(spot);
             }
         }
