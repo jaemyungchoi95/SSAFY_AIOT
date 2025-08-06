@@ -1,8 +1,13 @@
 package kr.kro.areuhot.robot.mapper;
 
+import kr.kro.areuhot.robot.model.RobotLog;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface RobotMapper {
     int findWarehouseIdByRobotId(int robotId);
+    
+    int insertRobotLog(RobotLog robotLog);
+    
+
 }

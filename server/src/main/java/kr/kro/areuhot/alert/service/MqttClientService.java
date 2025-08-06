@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.kro.areuhot.alert.dto.RobotAlertMessage;
 import kr.kro.areuhot.alert.util.PemSocketFactory;
+import kr.kro.areuhot.robot.service.RobotService;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class MqttClientService {
 
     @Value("${mqtt.topic}")
     private String mqttTopic;
+
+    @Value("${mqtt.topic.location}")
+    private String mqttLocationTopic;
 
     @Value("${mqtt.client.id}")
     private String clientId;
@@ -64,6 +68,9 @@ public class MqttClientService {
 
     @Autowired
     private AlertService alertService;
+
+    @Autowired
+    private RobotService robotService;
 
     private MqttClient mqttClient;
     private ObjectMapper objectMapper;
@@ -143,21 +150,39 @@ public class MqttClientService {
                         String payload = new String(message.getPayload());
                         log.info("MQTT 메시지 수신 - 토픽: {}, 페이로드: {}", topic, payload);
                         
-                        // JSON 파싱
-                        RobotAlertMessage robotAlert = objectMapper.readValue(payload, RobotAlertMessage.class);
-                        
-                        // 로그 출력
-                        log.info("=== 로봇 알림 메시지 ===");
-                        log.info("Spot UUID: {}", robotAlert.getSpotUuid());
-                        log.info("Robot ID: {}", robotAlert.getRobotId());
-                        log.info("Temperature: {}°C", robotAlert.getTemperature());
-                        log.info("Thermal Image URL: {}", robotAlert.getImageThermalUrl());
-                        log.info("Normal Image URL: {}", robotAlert.getImageNormalUrl());
-                        log.info("Created At: {}", robotAlert.getCreatedAt());
-                        log.info("========================");
-                        
-                        // Alert 테이블에 저장
-                        alertService.saveAlertFromMqtt(robotAlert);
+                        if (topic.equals(mqttTopic)) {
+                            // 알림 메시지 처리
+                            RobotAlertMessage robotAlert = objectMapper.readValue(payload, RobotAlertMessage.class);
+                            
+                            // 로그 출력
+                            log.info("=== 로봇 알림 메시지 ===");
+                            log.info("Spot UUID: {}", robotAlert.getSpotUuid());
+                            log.info("Robot ID: {}", robotAlert.getRobotId());
+                            log.info("Temperature: {}°C", robotAlert.getTemperature());
+                            log.info("Thermal Image URL: {}", robotAlert.getImageThermalUrl());
+                            log.info("Normal Image URL: {}", robotAlert.getImageNormalUrl());
+                            log.info("Created At: {}", robotAlert.getCreatedAt());
+                            log.info("========================");
+                            
+                            // Alert 테이블에 저장
+                            alertService.saveAlertFromMqtt(robotAlert);
+                            
+                        } else if (topic.equals(mqttLocationTopic)) {
+                            // 위치 메시지 처리
+                            kr.kro.areuhot.robot.dto.RobotLocationMessageDto robotLocation = 
+                                objectMapper.readValue(payload, kr.kro.areuhot.robot.dto.RobotLocationMessageDto.class);
+                            
+                            // 로그 출력
+                            log.info("=== 로봇 로그 메시지 ===");
+                            log.info("Robot ID: {}", robotLocation.getRobotId());
+                            log.info("X: {}, Y: {}", robotLocation.getX(), robotLocation.getY());
+                            log.info("Direction: {}", robotLocation.getDirection());
+                            log.info("Created At: {}", robotLocation.getCreatedAt());
+                            log.info("========================");
+                            
+                            // Robot 로그 테이블에 저장
+                            robotService.saveRobotLogFromMqtt(robotLocation);
+                        }
                         
                     } catch (Exception e) {
                         log.error("MQTT 메시지 처리 실패", e);
@@ -178,7 +203,8 @@ public class MqttClientService {
             
             // 토픽 구독
             mqttClient.subscribe(mqttTopic, qos);
-            log.info("MQTT 토픽 구독 완료: {}", mqttTopic);
+            mqttClient.subscribe(mqttLocationTopic, qos);
+            log.info("MQTT 토픽 구독 완료: {} {}", mqttTopic, mqttLocationTopic);
             
             // 재연결 시도 카운터 리셋
             reconnectAttempts.set(0);
