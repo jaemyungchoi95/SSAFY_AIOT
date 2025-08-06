@@ -6,8 +6,15 @@ import IssueItem from './IssueItem';
 import IssueModal from './IssueModal';
 
 const IssueList = () => {
-  const { alerts, selectedWarehouseId, selectedAlertId, setSelectedAlertId } =
-    useAppStore();
+  const {
+    alerts,
+    selectedWarehouseId,
+    selectedAlertId,
+    setSelectedAlertId,
+    searchKeyword,
+    showDangerOnly,
+    selectedStatusFilter,
+  } = useAppStore();
   const selectedAlert = alerts.find((a) => a.alertId === selectedAlertId);
 
   const { selectedStatus, selectedTime } = useFilterStore();
@@ -21,14 +28,23 @@ const IssueList = () => {
       ? alerts.filter((alert) => alert.warehouseId === selectedWarehouseId)
       : [];
 
-    if (selectedStatus === '처리완료') {
+    if (selectedStatusFilter === '미확인') {
+      filtered = filtered.filter((alert) => alert.status === 'UNCHECKED');
+    } else if (selectedStatusFilter === '처리 완료') {
       filtered = filtered.filter((alert) => alert.status === 'DONE');
-    } else if (selectedStatus === '미확인') {
-      filtered = filtered.filter((alert) =>
-        ['UNCHECKED', 'Caution'].includes(alert.status),
-      );
-    } else if (selectedStatus === '위험') {
+    }
+
+    if (showDangerOnly) {
       filtered = filtered.filter((alert) => alert.danger === true);
+    }
+
+    if (searchKeyword.trim() !== '') {
+      const keyword = searchKeyword.toLowerCase();
+      filtered = filtered.filter((alert) => {
+        const comment = alert.comment?.toLowerCase() || '';
+        const handler = alert.handlerName?.toLowerCase() || '';
+        return comment.includes(keyword) || handler.includes(keyword);
+      });
     }
 
     const sorted = [...filtered].sort((a, b) => {

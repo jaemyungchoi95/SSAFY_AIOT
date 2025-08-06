@@ -161,5 +161,16 @@ export const useAppStore = create(
       set({ selectedWarehouseId: warehouseId });
       get().fetchInitialData(warehouseId);
     },
+
+    searchKeyword: '',
+    setSearchKeyword: (keyword) => {
+      set({ searchKeyword: keyword });
+    },
+
+    showDangerOnly: false,
+    setShowDangerOnly: (value) => set({ showDangerOnly: value }),
+
+    selectedStatusFilter: '전체',
+    setSelectedStatusFilter: (value) => set({ selectedStatusFilter: value }),
   })),
 );
