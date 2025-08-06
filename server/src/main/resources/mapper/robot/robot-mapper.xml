@@ -11,4 +11,14 @@
         WHERE id = #{robotID}
     </select>
 
+    <insert id="insertRobotLog" parameterType="kr.kro.areuhot.robot.model.RobotLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO robot_log (
+            robot_id, x, y, direction, created_at
+        ) VALUES (
+            #{robotId}, #{x}, #{y}, #{direction}, #{createdAt}
+        )
+    </insert>
+
+
+
 </mapper>
