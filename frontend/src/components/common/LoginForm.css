@@ -1,4 +1,45 @@
+.LoginForm {
+  color: #c2c2c2;
+  border: 2px solid #3b3d4c;
+  border-radius: 15px;
+  padding: 25px 40px;
+  width: 100%;
+}
+
+.LoginForm_Header {
+  margin-bottom: 20px;
+}
+
 .LoginForm_Header_Title {
   display: flex;
   gap: 10px;
+  font-weight: bolder;
+  color: #eaeaf0;
+}
+
+.LoginForm_Header_Des {
+  color: #9c9fb1;
+  font-size: 14px;
+  text-align: left;
+  margin-top: 7px;
+}
+
+.LoginForm_Input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.LoginForm_Btn {
+  background-color: #396df0;
+  color: #c2c2c2;
+  font-weight: bolder;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 25px 0px 25px 0px;
+  cursor: pointer;
+}
+
+.LoginForm_Footer {
+  color: #5b5c67;
+  font-size: 12px;
 }

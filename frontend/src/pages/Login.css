@@ -7,3 +7,11 @@
   flex-direction: column;
   background-color: #20212a;
 }
+
+.Login_Logo {
+  margin-bottom: 30px;
+}
+
+.Login_form {
+  width: 35%;
+}
