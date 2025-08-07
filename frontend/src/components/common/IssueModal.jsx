@@ -3,9 +3,8 @@ import './IssueModal.css';
 import ModalHeader from './ModalHeader';
 import Modal_Content_Left from './ModalContentLeft';
 import Modal_Content_Right from './ModalContentRight';
-import { useEffect } from 'react';
 
-const IssueModal = ({ alert, onClose }) => {
+const IssueModal = ({ onClose }) => {
   return (
     <div className="IssueModal_Backdrop" onClick={onClose}>
       <div className="IssueModal" onClick={(e) => e.stopPropagation()}>
