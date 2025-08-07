@@ -1,6 +1,7 @@
 .SidebarDetailReport_Ad,
 .SidebarDetailReport_Emp,
-.SidebarDetailReport_Time {
+.SidebarDetailReport_Time,
+.SidebarDetailReport_Item {
   display: flex;
   gap: 10px;
   color: #c2c2c2;
@@ -8,7 +9,8 @@
 
 .SidebarDetailReport_Ad_Title,
 .SidebarDetailReport_Emp_Title,
-.SidebarDetailReport_Time_Title {
+.SidebarDetailReport_Time_Title,
+.SidebarDetailReport_Item_Title {
   font-weight: bold;
 }
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import './FilterDay.css';
 import './FilterTime.css';
-import { useState } from 'react';
 import { useFilterStore } from '../../stores/useFilterStore';
+import { useDropdownFilter } from '../../hooks/useDropdownFilter';
 
 const FilterDay = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
   const { selectedDay, setSelectedDay } = useFilterStore();
 
   const handleSelect = (day) => {
@@ -14,7 +14,7 @@ const FilterDay = () => {
   };
 
   return (
-    <div className="FilterStatus">
+    <div className="FilterStatus" ref={dropdownRef}>
       <button
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}

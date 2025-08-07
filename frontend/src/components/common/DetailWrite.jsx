@@ -21,9 +21,15 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
     }
   }, [alert, setReportHandlerName, setReportComment, resetReportFields]);
 
+  // 아이템 타입 입력 추가
+  const handleItemNameChange = (e) => {
+    setItemName(e.target.value);
+  };
+
   const handleSubmit = () => {
     onSubmit({
       handlerName: reportHandlerName.trim(),
+      itemType: reportItemName.trim(),
       comment: reportComment.trim(),
     });
   };
@@ -40,7 +46,17 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
             onChange={(e) => setReportHandlerName(e.target.value)}
           />
         </div>
-
+        <div className="DetailWrite_Item">
+          <div className="DetailWrite_ItemTitle">물건명</div>
+          <textarea
+            name=""
+            id=""
+            placeholder="물건 종류를 입력해 주세요"
+            className="DetailWrite_Input DetailWrite_ItemInput"
+            value={reportItemName}
+            onChange={handleItemNameChange}
+          ></textarea>
+        </div>
         <div className="DetailWrite_Message">
           <div className="DetailWrite_MessageTitle">메시지</div>
           <textarea

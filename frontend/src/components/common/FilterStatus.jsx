@@ -1,11 +1,11 @@
 import React from 'react';
 import './FilterStatus.css';
 import './FilterTime.css';
-import { useState } from 'react';
 import { useFilterStore } from '../../stores/useFilterStore';
+import { useDropdownFilter } from '../../hooks/useDropdownFilter';
 
 const FilterStatus = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
   const { selectedStatus, setSelectedStatus } = useFilterStore();
 
   const handleSelect = (time) => {
@@ -13,7 +13,7 @@ const FilterStatus = () => {
     setIsOpen(false);
   };
   return (
-    <div className="FilterStatus">
+    <div className="FilterStatus" ref={dropdownRef}>
       <button
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}

@@ -18,10 +18,6 @@ const SidebarDetail = ({ onClose }) => {
     submitAlertReport,
   } = useAppStore();
 
-  const selectedAlert = Array.isArray(alerts)
-    ? alerts.find((alert) => alert.alertId === selectedAlertId)
-    : null;
-
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
@@ -36,18 +32,18 @@ const SidebarDetail = ({ onClose }) => {
   };
 
   const handleEditClick = () => setIsEditing(true);
-  const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
+  const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
   const handleCancel = () => setIsEditing(false);
   const handleCancelWrite = () => setIsWritingId(null);
 
-  if (!selectedAlert) return null;
+  if (!alertDetail) return null;
 
-  const isHandled = selectedAlert.status === 'DONE';
+  const isHandled = alertDetail.status === 'DONE';
 
   return (
     <div className="SidebarDetail">
-      <SidebarDetailHeader alert={selectedAlert} onClose={onClose} />
-      <SidebarDetailContent alert={selectedAlert} />
+      <SidebarDetailHeader alert={alertDetail} onClose={onClose} />
+      <SidebarDetailContent alert={alertDetail} />
       {isHandled ? (
         isEditing ? (
           <div className="SidebarDetail_Write">
@@ -68,11 +64,22 @@ const SidebarDetail = ({ onClose }) => {
       ) : isWritingId === selectedAlert.alertId ? (
         <div className="SidebarDetail_Write">
           <DetailWrite
-            alert={selectedAlert}
+            alert={alertDetail}
             onSubmit={handleSubmit}
             onCancel={handleCancelWrite}
           />
-        </div>
+        ) : (
+          <SidebarDetailReport
+            alert={alertDetail}
+            onEditClick={handleEditClick}
+          />
+        )
+      ) : isWritingId === alertDetail.alertId ? (
+        <DetailWrite
+          alert={alertDetail}
+          onSubmit={handleSubmit}
+          onCancel={handleCancelWrite}
+        />
       ) : (
         <div className="SidebarDetail_ReportBtnWrapper">
           <ReportBtn text={'작성하기'} onClick={handleWriteClick} />

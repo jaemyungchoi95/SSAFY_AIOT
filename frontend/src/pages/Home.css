@@ -19,6 +19,15 @@
   flex: 1;
   min-width: 250px;
   transition: flex 0.3s ease;
+  overflow: hidden;
+}
+/* 'collapsed' 클래스가 적용되면, 이 영역은 보이지 않고 공간도 차지하지 않게 됩니다. */
+.sidebar_detail_area.collapsed {
+  flex: 0;
+  min-width: 0;
+  padding: 0;
+  opacity: 0;
+  border: none; /* 혹시 모를 border 제거 */
 }
 
 .sidebar_area {
@@ -26,4 +35,5 @@
   min-width: 250px;
   overflow-y: auto;
   flex-direction: column;
+  display: flex;
 }
