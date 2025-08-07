@@ -23,16 +23,22 @@ const MapViewer = ({
   const [containerRef, containerSize] = useStageSize();
 
   // useApp스토어에 정의된 상태와 액션을 가져온다
-  const { racks, spots, alertDetail, fetchDetailAlert, setSelectedAlertId } =
-    useAppStore();
+  const {
+    racks,
+    spots,
+    // alertDetail,
+    fetchDetailAlert,
+    selectedAlertId,
+    setSelectedAlertId,
+  } = useAppStore();
 
   const selectedSpot = useMemo(() => {
-    if (!alertDetail || !Array.isArray(spots)) {
+    if (!selectedAlertId || !Array.isArray(spots)) {
       return null;
     }
     // alertDetail의 ID와 일치하는 spot을 spots 배열에서 찾습니다.
-    return spots.find((spot) => spot.alertId === alertDetail.alertId);
-  }, [alertDetail, spots]);
+    return spots.find((spot) => spot.alertId === selectedAlertId);
+  }, [selectedAlertId, spots]);
 
   const debouncedRecalculate = useDebouncedCallback((size, data) => {
     if (!data || size.width === 0 || size.height === 0) {
