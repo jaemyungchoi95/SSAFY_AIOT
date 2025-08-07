@@ -11,6 +11,8 @@ import kr.kro.areuhot.spot.service.SpotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -20,7 +22,7 @@ public class FullMapService {
     private final RackService rackService;
     private final SpotService spotService;
 
-    public void saveFullMap(int warehouseId, FullMapUploadRequestDto dto) {
+    public void saveFullMap(Integer warehouseId, FullMapUploadRequestDto dto) {
         WarehouseMap savedMap = mapService.saveMap(warehouseId, dto.getUrl(), dto.getCreatedAt());
 
         List<Rack> racks = FullMapHelper.toRackList(dto.getRackList(), warehouseId, savedMap.getId());

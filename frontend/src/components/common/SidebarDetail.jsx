@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';
@@ -8,20 +8,24 @@ import DetailWrite from './DetailWrite';
 import { useAppStore } from '../../stores/useAppStore';
 
 const SidebarDetail = ({ onClose }) => {
-  const { alertDetail, submitAlertReport } = useAppStore();
-
-  const [isWritingId, setIsWritingId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const {
+    alerts,
+    selectedAlertId,
+    isEditing,
+    isWritingId,
+    setIsEditing,
+    setIsWritingId,
+    submitAlertReport,
+  } = useAppStore();
 
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [alertDetail]);
+  }, [selectedAlert, setIsWritingId, setIsEditing]);
 
   const handleSubmit = (reportData) => {
-    if (alertDetail) {
-      submitAlertReport(alertDetail.alertId, reportData);
-
+    if (selectedAlert) {
+      submitAlertReport(selectedAlert.alertId, reportData);
       setIsWritingId(null);
       setIsEditing(false);
     }
@@ -30,7 +34,7 @@ const SidebarDetail = ({ onClose }) => {
   const handleEditClick = () => setIsEditing(true);
   const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
   const handleCancel = () => setIsEditing(false);
-  const handleCancelWrite = () => setIsWritingId(false);
+  const handleCancelWrite = () => setIsWritingId(null);
 
   if (!alertDetail) return null;
 
@@ -42,10 +46,27 @@ const SidebarDetail = ({ onClose }) => {
       <SidebarDetailContent alert={alertDetail} />
       {isHandled ? (
         isEditing ? (
+          <div className="SidebarDetail_Write">
+            <DetailWrite
+              alert={selectedAlert}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+            />
+          </div>
+        ) : (
+          <div className="SidebarDetail_Report">
+            <SidebarDetailReport
+              alert={selectedAlert}
+              onEditClick={handleEditClick}
+            />
+          </div>
+        )
+      ) : isWritingId === selectedAlert.alertId ? (
+        <div className="SidebarDetail_Write">
           <DetailWrite
             alert={alertDetail}
             onSubmit={handleSubmit}
-            onCancel={handleCancel}
+            onCancel={handleCancelWrite}
           />
         ) : (
           <SidebarDetailReport
@@ -67,4 +88,5 @@ const SidebarDetail = ({ onClose }) => {
     </div>
   );
 };
+
 export default SidebarDetail;

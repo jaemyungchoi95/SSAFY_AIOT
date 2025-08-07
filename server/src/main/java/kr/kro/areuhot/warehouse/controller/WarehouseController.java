@@ -29,7 +29,7 @@ public class WarehouseController {
 
     @GetMapping("/{warehouseId}/racks")
     public ResponseEntity<ApiResponse<List<RackWithSpotsResponseDto>>> getRackWithSpots(
-            @PathVariable int warehouseId
+            @PathVariable Integer warehouseId
     ) {
         List<RackWithSpotsResponseDto> response = rackSpotQueryService.findRacksWithSpotsByWarehouseId(warehouseId);
         return ResponseEntity.ok(ApiResponse.success(response));

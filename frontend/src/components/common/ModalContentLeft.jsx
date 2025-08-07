@@ -1,28 +1,29 @@
 import React from 'react';
 import './ModalContentLeft.css';
 import TempInfo from './TempInfo';
-import { useIssueStore } from '../../stores/useIssueStore';
 import DateInfo from './DateInfo';
+import { useAppStore } from '../../stores/useAppStore';
 
 const Modal_Content_Left = () => {
-  const { selectedIssue, selectedReport } = useIssueStore();
+  const { alerts, selectedAlertId } = useAppStore();
+  const selectedAlert = alerts.find((a) => a.alertId === selectedAlertId);
 
   return (
     <div className="Modal_Content_Left">
       <div className="Modal_Content_Left_Title">리포트 내용</div>
       <div className="Modal_Content_Left_Date">
         <DateInfo
-          createdAt={selectedIssue.created_at}
-          handledAt={selectedReport?.handled_at}
+          createdAt={selectedAlert.createdAt}
+          handledAt={selectedAlert?.handledAt}
         />
       </div>
       <div className="Modal_Content_Left_Temp">
-        <TempInfo temperature={selectedIssue.temperature} />
+        <TempInfo temperature={selectedAlert.temperature} />
       </div>
 
       <div className="Modal_Content_Left_Images"></div>
-      <img src={selectedIssue.image_normal_url} alt="" />
-      <img src={selectedIssue.image_thermal_url} alt="" />
+      <img src={selectedAlert.imageThermalUrl} alt="" />
+      <img src={selectedAlert.imageNormalUrl} alt="" />
     </div>
   );
 };

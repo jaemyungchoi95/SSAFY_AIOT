@@ -6,6 +6,7 @@
   display: inline-block;
   border-radius: 50px;
   height: 35px;
+  margin-left: 10px;
 }
 
 .Status_Complete {

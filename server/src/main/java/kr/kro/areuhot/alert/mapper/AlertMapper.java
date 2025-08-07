@@ -1,5 +1,8 @@
 package kr.kro.areuhot.alert.mapper;
 
+import kr.kro.areuhot.alert.dto.AlertDetailResponseDto;
+import kr.kro.areuhot.alert.dto.AlertResponseDto;
+import kr.kro.areuhot.alert.dto.AlertSearchCondition;
 import kr.kro.areuhot.alert.model.Alert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,7 +12,27 @@ import java.util.List;
 
 @Mapper
 public interface AlertMapper {
-    
+    /* 단건 조회 */
+    AlertResponseDto getAlertByAlertId(
+            @Param("warehouseId") Integer warehouseId,
+            @Param("alertId") Integer alertId
+    );
+
+    /* 조건 페이징 조회 */
+    List<AlertResponseDto> selectPagedAlerts(
+            @Param("condition") AlertSearchCondition condition,
+            @Param("offset") Integer offset,
+            @Param("limit") Integer limit
+    );
+
+    /* alert detail 조회 */
+    AlertDetailResponseDto getAlertDetailByAlertId(
+           @Param("alertId") Integer alertId
+    );
+
+    /* 총 개수 조회 */
+    long countAlerts(@Param("condition") AlertSearchCondition condition);
+
     // Alert 저장
     int insertAlert(Alert alert);
     
@@ -24,11 +47,11 @@ public interface AlertMapper {
     
     // 특정 spot에서 12시간 이내 알림 개수 조회 (위험도 판단용)
     int countRecentAlertsBySpotId(@Param("spotId") Integer spotId, 
-                                  @Param("hours") int hours, 
+                                  @Param("hours") Integer hours,
                                   @Param("currentTime") LocalDateTime currentTime);
     
     // 특정 warehouse에서 12시간 이내 알림 개수 조회 (위험도 판단용)
     int countRecentAlertsByWarehouseId(@Param("warehouseId") Integer warehouseId, 
-                                      @Param("hours") int hours, 
+                                      @Param("hours") Integer hours,
                                       @Param("currentTime") LocalDateTime currentTime);
-} 
+}

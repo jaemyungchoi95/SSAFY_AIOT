@@ -7,10 +7,10 @@
 
     <insert id="insertSpot" parameterType="kr.kro.areuhot.spot.model.Spot" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO spot (
-            rack_id, x, y, direction
+            rack_id, x, y, direction, uuid
         )
         VALUES (
-            #{rackId}, #{x}, #{y}, #{direction}
+            #{rackId}, #{x}, #{y}, #{direction}, #{uuid}
         )
     </insert>
 

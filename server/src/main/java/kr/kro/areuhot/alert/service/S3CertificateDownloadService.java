@@ -3,7 +3,8 @@ package kr.kro.areuhot.alert.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -25,6 +26,12 @@ public class S3CertificateDownloadService {
     @Value("${aws.bucket.prefix}")
     private String bucketPrefix;
 
+    @Value("${aws.accessKey}")
+    private String accessKey;
+
+    @Value("${aws.secretKey}")
+    private String secretKey;
+
     private static final List<String> CERTIFICATE_FILES = Arrays.asList(
             "AmazonRootCA1.pem",
             "certificate.pem.crt",
@@ -41,10 +48,11 @@ public class S3CertificateDownloadService {
         log.info("S3 버킷: {}, 접두사: {}", bucketName, bucketPrefix);
         log.info("임시 디렉토리: {}", TEMP_DIR);
 
-        // S3 클라이언트 생성 - 기본 자격 증명 체인 사용
+        // S3 클라이언트 생성 - application.properties의 자격 증명 사용
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
         S3Client s3Client = S3Client.builder()
                 .region(Region.AP_NORTHEAST_2)
-                .credentialsProvider(DefaultCredentialsProvider.create())
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .build();
 
         try {

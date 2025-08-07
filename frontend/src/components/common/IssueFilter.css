@@ -47,6 +47,9 @@
 
 .Search_Filter_Left input {
   font-size: 14px;
+  width: 100%;
+  border: none;
+  outline: none;
 }
 
 .Search_Filter_Left img {

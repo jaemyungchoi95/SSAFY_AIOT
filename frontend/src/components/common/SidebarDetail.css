@@ -3,6 +3,14 @@
   border-radius: 15px;
   height: 100%;
   color: #eaeaf0;
+
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.SidebarDetail::-webkit-scrollbar {
+  display: none;
 }
 
 .SidebarDetailWriteBtn {
@@ -12,4 +20,12 @@
   display: flex;
   justify-content: flex-end;
   padding: 20px 30px;
+}
+
+.SidebarDetail_Report {
+  padding: 20px 30px 20px 30px;
+}
+
+.SidebarDetail_Write {
+  padding: 12px 30px 20px 30px;
 }
