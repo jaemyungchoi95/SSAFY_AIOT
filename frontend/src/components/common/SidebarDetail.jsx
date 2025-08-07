@@ -8,23 +8,19 @@ import DetailWrite from './DetailWrite';
 import { useAppStore } from '../../stores/useAppStore';
 
 const SidebarDetail = ({ onClose }) => {
-  const { alerts, selectedAlertId, submitAlertReport } = useAppStore();
+  const { alertDetail, submitAlertReport } = useAppStore();
 
   const [isWritingId, setIsWritingId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const selectedAlert = Array.isArray(alerts)
-    ? alerts.find((alert) => alert.alertId === selectedAlertId)
-    : null;
-
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [selectedAlert]);
+  }, [alertDetail]);
 
   const handleSubmit = (reportData) => {
-    if (selectedAlert) {
-      submitAlertReport(selectedAlert.alertId, reportData);
+    if (alertDetail) {
+      submitAlertReport(alertDetail.alertId, reportData);
 
       setIsWritingId(null);
       setIsEditing(false);
@@ -32,34 +28,34 @@ const SidebarDetail = ({ onClose }) => {
   };
 
   const handleEditClick = () => setIsEditing(true);
-  const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
+  const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
   const handleCancel = () => setIsEditing(false);
   const handleCancelWrite = () => setIsWritingId(false);
 
-  if (!selectedAlert) return null;
+  if (!alertDetail) return null;
 
-  const isHandled = selectedAlert.status === 'DONE';
+  const isHandled = alertDetail.status === 'DONE';
 
   return (
     <div className="SidebarDetail">
-      <SidebarDetailHeader alert={selectedAlert} onClose={onClose} />
-      <SidebarDetailContent alert={selectedAlert} />
+      <SidebarDetailHeader alert={alertDetail} onClose={onClose} />
+      <SidebarDetailContent alert={alertDetail} />
       {isHandled ? (
         isEditing ? (
           <DetailWrite
-            alert={selectedAlert}
+            alert={alertDetail}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
           />
         ) : (
           <SidebarDetailReport
-            alert={selectedAlert}
+            alert={alertDetail}
             onEditClick={handleEditClick}
           />
         )
-      ) : isWritingId === selectedAlert.alertId ? (
+      ) : isWritingId === alertDetail.alertId ? (
         <DetailWrite
-          alert={selectedAlert}
+          alert={alertDetail}
           onSubmit={handleSubmit}
           onCancel={handleCancelWrite}
         />

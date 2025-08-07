@@ -5,7 +5,7 @@ import { useFilterStore } from '../../stores/useFilterStore';
 import { useMemo } from 'react';
 
 const SidebarList = () => {
-  const { alerts, setSelectedAlertId, selectedWarehouseId } = useAppStore();
+  const { alerts, selectedWarehouseId, fetchDetailAlert } = useAppStore();
   const { selectedStatus, selectedTime } = useFilterStore();
 
   const filteredAlerts = useMemo(() => {
@@ -39,7 +39,7 @@ const SidebarList = () => {
         <SidebarItem
           key={alert.alertId}
           alert={alert}
-          onClick={() => setSelectedAlertId(alert.alertId)}
+          onClick={() => fetchDetailAlert(alert.alertId)}
         />
       ))}
     </div>

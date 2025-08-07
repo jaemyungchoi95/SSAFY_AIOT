@@ -1,117 +1,14 @@
 import { http, HttpResponse } from 'msw';
-// import {
-//   warehouseMapMockData,
-//   warehouseMockData,
-//   rackList,
-//   alertMonoMockData,
-//   alertMonoDetailMockData,
-//   monoWarehouseAlertListMockData,
-//   wholeWarehouseAlertListMockData,
-// } from './data';
 import {
   warehouseMapMockData,
   warehouseMockData,
   rackList,
   alertMonoMockData,
+  alertMonoDetailMockData,
+  monoWarehouseAlertListMockData,
+  wholeWarehouseAlertListMockData,
 } from './data';
 
-export const handlers = [
-  // 1. 맵 정보 API 핸들러
-  http.get('/api/warehouses/:warehouseId/map', ({ params }) => {
-    const { warehouseId } = params;
-
-    const mapFilePath =
-      warehouseId === '2' ? '/JSI_SLAM_map.pgm' : '/my_world.pgm';
-
-    // const response = await fetch(
-    //   'https://are-you-hot.s3.ap-northeast-2.amazonaws.com/maps/JSI_SLAM_map.pgm',
-    // );
-
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: {
-        mapId: warehouseId === '2' ? 99 : 6, // 임의의 mapId
-        warehouseId: parseInt(warehouseId, 10),
-        filePath: mapFilePath,
-      },
-    });
-  }),
-
-  // 2. 창고list api : /api/warehouses
-  // warehouses 데이터를 보내주는 API 핸들러
-  http.get('/api/warehouses', async () => {
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: warehouseMockData,
-    });
-  }),
-
-  // 3. 랙 리스트 API 핸들러
-  http.get('/api/warehouses/:warehouseId/racks', async ({ params }) => {
-    const warehouseId = parseInt(params.warehouseId, 10);
-
-    const filterRacks = rackList.filter(
-      (rack) => rack.warehouseId === warehouseId,
-    );
-
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: filterRacks,
-    });
-  }),
-
-  // 4. alerts 데이터를 보내주는 API 핸들러
-  http.get('/api/warehouses/:warehouseId/alerts', ({ params }) => {
-    const warehouseId = parseInt(params.warehouseId, 10);
-
-    // 전체 alertMonoMockData 배열에서 요청된 warehouseId와 일치하는 데이터만 필터링합니다.
-    const filteredAlerts = alertMonoMockData.filter(
-      (alert) => alert.warehouseId === warehouseId,
-    );
-
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: filteredAlerts,
-    });
-  }),
-
-  // 시연용 맵 핸들러
-  http.get('/my_world.pgm', async () => {
-    try {
-      const response = await fetch('/mock_my_world.pgm');
-      if (!response.ok) throw new Error('File not found: /mock_my_world.pgm');
-      const imageBuffer = await response.arrayBuffer();
-      return new HttpResponse(imageBuffer, {
-        headers: { 'Content-Type': 'image/x-portable-graymap' },
-      });
-    } catch (error) {
-      console.error('MSW PGM handler error:', error);
-      return new HttpResponse(null, { status: 404, statusText: 'Not Found' });
-    }
-  }),
-
-  // 시험 개발용 맵 핸들러
-  http.get('/JSI_SLAM_map.pgm', async () => {
-    try {
-      const response = await fetch('/mock_JSI_SLAM_map.pgm');
-      if (!response.ok)
-        throw new Error('File not found: /mock_JSI_SLAM_map.pgm');
-      const imageBuffer = await response.arrayBuffer();
-      return new HttpResponse(imageBuffer, {
-        headers: { 'Content-Type': 'image/x-portable-graymap' },
-      });
-    } catch (error) {
-      console.error('MSW PGM handler error:', error);
-      return new HttpResponse(null, { status: 404, statusText: 'Not Found' });
-    }
-  }),
-];
-
-/*
 export const handlers = [
   // 1. 맵 정보 API 핸들러
   http.get('/api/warehouses/:warehouseId/map', ({ params }) => {
@@ -123,9 +20,7 @@ export const handlers = [
     return HttpResponse.json({
       success: true,
       message: '요청 성공',
-      data: {
-        mapData,
-      },
+      data: mapData,
     });
   }),
 
@@ -154,7 +49,6 @@ export const handlers = [
   }),
 
   // 5. 창고 내부 위험 리포트 (단일) → 실시간 알림시 가져오는 API 핸들러
-  // gemini question : 여기는 동적 변수가 warehouseId 도 있는데 왜 warehouseId는 없어졌는지?
   http.get('/api/warehouses/:warehouseId/alerts/:alertId', ({ params }) => {
     const warehouseId = parseInt(params.warehouseId, 10);
     const alertId = parseInt(params.alertId, 10);
@@ -167,14 +61,34 @@ export const handlers = [
   // 6. 위험 리포트(단일) 디테일 (모달, 클릭) API 핸들러
   http.get('/api/alerts/:alertId', ({ params }) => {
     const alertId = parseInt(params.alertId, 10);
-    const detail = {
-      ...alertMonoDetailMockData,
-      alertId,
-    };
+
+    if (alertId === alertMonoDetailMockData.alertId) {
+      console.log(`[MSW] ID ${alertId}: 특별 케이스 상세 데이터를 반환합니다.`);
+      return HttpResponse.json({
+        success: true,
+        message: '요청 성공',
+        data: alertMonoDetailMockData,
+      });
+    }
+
+    const foundAlertInList = wholeWarehouseAlertListMockData.content.find(
+      (a) => a.alertId === alertId,
+    );
+
+    if (!foundAlertInList) {
+      return new HttpResponse(
+        JSON.stringify({
+          success: false,
+          message: '해당 ID의 알림을 찾을 수 없습니다',
+        }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+
     return HttpResponse.json({
       success: true,
       message: '요청 성공',
-      data: detail,
+      data: foundAlertInList,
     });
   }),
 
@@ -204,6 +118,56 @@ export const handlers = [
     });
   }),
 
+  // 전송 요청 1. 알림 리포트를 제출(등록/수정)합니다.
+  http.post('/api/alerts/:alertId', async ({ request, params }) => {
+    const alertId = parseInt(params.alertId, 10);
+    const reportData = await request.json();
+
+    let updatedAlert = null;
+
+    const updateInList = (list) => {
+      const alertIndex = list.findIndex((a) => a.alertId === alertId);
+      if (alertIndex !== -1) {
+        const originalAlert = list[alertIndex];
+        const newAlertData = {
+          ...originalAlert,
+          ...reportData,
+          status: 'DONE',
+          updatedAt: new Date()
+            .toISOString()
+            .replace('T', ' ')
+            .substring(0, 19),
+        };
+        list[alertIndex] = newAlertData;
+        updatedAlert = newAlertData;
+        return true;
+      }
+      return false;
+    };
+    updateInList(wholeWarehouseAlertListMockData.content);
+    updateInList(monoWarehouseAlertListMockData.content);
+
+    if (updatedAlert) {
+      return HttpResponse.json({
+        success: true,
+        message: '리포트가 성공적으로 제출되었습니다.',
+        data: updatedAlert,
+      });
+    } else {
+      return new HttpResponse(
+        JSON.stringify({
+          success: false,
+          message: '해당 ID의 알림을 찾을 수 없습니다.',
+          data: null,
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+  }),
+
   // 시연용 맵 핸들러
   http.get('/my_world.pgm', async () => {
     try {
@@ -235,4 +199,3 @@ export const handlers = [
     }
   }),
 ];
-*/

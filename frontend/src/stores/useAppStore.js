@@ -1,17 +1,22 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import axios from 'axios';
+import * as api from '../api/index';
 
 export const useAppStore = create(
   devtools((set, get) => ({
     // 상태(state) 정의
-    imageUrl: null,
-    racks: [],
-    spots: [],
-    alerts: [],
-    warehouses: [],
-    selectedAlertId: null,
-    selectedWarehouseId: null,
+    imageUrl: null, // AWS S3에 있는 url 정보를 받아준다
+    racks: [], // 전체 랙에 대한 상태를 관리한다
+    spots: [], // 창고별 - 랙별의 촬영 스팟을 관리한다
+    alerts: [], // 전체 리포트 알림에 대한 상태를 관리한다
+    alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다
+    // gemini question : 왜 alertDetail 초기 상태를 배열이 아닌 null로 가져가는지?
+    // 혹시 아직 선택되지 않았을 때 빈 배열인 상태면 문제가 되는 부분이 있는건지?
+    // 만약 typescript라면 타입이 고정되어있을텐데 그런 관점에서 고려했을때는?
+
+    warehouses: [], // 창고별 아이디와 이름 그리고 가지고 있는 지도에 대한 정보를 가진다
+    selectedAlertId: null, // 현재 선택된 리포트 알림의 아이디를 관리한다
+    selectedWarehouseId: null, // 현재 선택된 창고 아이디의 상태를 관리한다
     loading: false,
     error: null,
 
@@ -21,8 +26,8 @@ export const useAppStore = create(
     initializeApp: async () => {
       try {
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
-        const warehouseRes = await axios.get('/api/warehouses');
-        const warehousesData = warehouseRes.data.data.map((w) => ({
+        const warehouseRes = await api.fetchWarehouses();
+        const warehousesData = warehouseRes.map((w) => ({
           ...w,
           id: w.warehouseId,
         }));
@@ -47,26 +52,41 @@ export const useAppStore = create(
       }
     }, // initializeApp 액션 끝
 
+    // 특정 이슈에 대한 상세정보를 가져옴
+    fetchDetailAlert: async (alertId) => {
+      set({ loading: true, error: null, selectedAlertId: alertId });
+      try {
+        const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
+        set({
+          alertDetail: alertDetailRes,
+          loading: false,
+        });
+      } catch (error) {
+        set({ error, loading: false });
+      }
+    },
+
     // Home 페이지의 데이터를 받아오는 액션
     fetchInitialData: async (warehouseId) => {
       set({ loading: true, error: null });
       try {
         const [mapInfoRes, rackListRes, alertsRes] = await Promise.all([
-          axios.get(`/api/warehouses/${warehouseId}/map`),
-          axios.get(`/api/warehouses/${warehouseId}/racks`),
-          axios.get(`/api/warehouses/${warehouseId}/alerts`),
+          api.fetchMapInfo(warehouseId), // 1번
+          api.fetchRacks(warehouseId), // 3번
+          api.fetchAlertsForWarehouse(warehouseId), // 7번
         ]);
 
         // 1. API에서 받아온 원본 데이터를 확인합니다.
         console.log('[STORE] API 원본 데이터:', {
-          mapInfo: mapInfoRes.data.data,
-          rackList: rackListRes.data.data,
-          alerts: alertsRes.data.data,
+          mapInfo: mapInfoRes,
+          rackList: rackListRes,
+          alerts: alertsRes,
         });
 
-        const imageUrl = mapInfoRes.data.data.filePath;
-        const rackList = rackListRes.data.data;
-        const alertsData = alertsRes.data.data;
+        const imageUrl = mapInfoRes.filePath;
+        const rackList = rackListRes;
+        const alertsData = alertsRes;
+        console.log('alertsData : ', alertsData);
 
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
@@ -81,7 +101,6 @@ export const useAppStore = create(
           rack.spotList.forEach((spot) => {
             allSpots.push({
               ...spot,
-              // spotId: spot.spotId,
               rackId: rack.rackId,
               status: 'normal',
             });
@@ -98,7 +117,7 @@ export const useAppStore = create(
 
         // 2. 이슈 데이터를 기반으로 spots의 상태를 업데이트(병합)합니다.
         const mergedSpots = allSpots.map((spot) => {
-          const alertOnThisSpot = alertsData.find(
+          const alertOnThisSpot = alertsData.content.find(
             (alert) =>
               alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
@@ -122,7 +141,7 @@ export const useAppStore = create(
           imageUrl: imageUrl,
           racks: processedRacks,
           spots: mergedSpots,
-          alerts: alertsData,
+          alerts: alertsData.content,
           loading: false,
         });
       } catch (error) {

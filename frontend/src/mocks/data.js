@@ -385,24 +385,24 @@ export const alertMonoMockData = [
 // 6. 위험 리포트(단일) 디테일 (모달, 클릭) / POST 요청
 // : /api/alerts/{alertId}
 export const alertMonoDetailMockData = {
-  alertId: 3,
+  alertId: 2,
   warehouseId: 2,
   warehouseName: '경기 - 2창고',
   userName: '남관리자',
-  rackId: 9,
-  spotId: 30,
+  rackId: 8,
+  spotId: 9,
   temperature: 80.2,
   imageThermalUrl: null,
   imageNormalUrl: null,
-  status: 'UNCHECKED',
+  status: 'DONE',
   danger: false,
   createdAt: '2025-07-25 09:00:00',
-  updatedAt: '2025-07-26 09:00:00',
+  updatedAt: '2025-07-26 19:00:00',
   processingId: null,
-  handlerName: null,
-  comment: null,
-  itemType: null,
-  handledAt: null,
+  handlerName: '최재명',
+  comment: '현장 근처가 뜨거움',
+  itemType: '배터리',
+  handledAt: '2025-07-26 19:00:00',
 };
 
 // 7. 창고 내부 위험 리포트 list / GET 요청

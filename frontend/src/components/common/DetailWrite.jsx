@@ -12,6 +12,7 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
     if (alert) {
       setContent(alert.comment || '');
       setEmpName(alert.handlerName || '');
+      setItemName(alert.itemType || '');
     }
   }, [alert]);
 
@@ -66,7 +67,7 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
           <textarea
             name=""
             id=""
-            placeholder="이슈 상황 및 처리 내용을 입력해 주세요"
+            placeholder="처리 내용을 입력해 주세요"
             className="DetailWrite_Input DetailWrite_MessageInput"
             value={content}
             onChange={handleContentChange}

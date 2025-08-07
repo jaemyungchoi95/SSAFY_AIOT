@@ -1,5 +1,5 @@
 import { useDebouncedCallback } from 'use-debounce';
-import { Fragment, useLayoutEffect } from 'react';
+import { Fragment, useLayoutEffect, useMemo } from 'react';
 import { Stage, Layer, Image, Ring, Line, Text } from 'react-konva';
 import { useMapData } from '../hooks/useMapData';
 import { useMapCanvas } from '../hooks/useMapCanvas';
@@ -23,11 +23,16 @@ const MapViewer = ({
   const [containerRef, containerSize] = useStageSize();
 
   // useApp스토어에 정의된 상태와 액션을 가져온다
-  const { racks, spots, selectedAlertId, setSelectedAlertId } = useAppStore();
+  const { racks, spots, alertDetail, fetchDetailAlert, setSelectedAlertId } =
+    useAppStore();
 
-  const selectedSpot = Array.isArray(spots)
-    ? spots.find((spot) => spot.alertId === selectedAlertId)
-    : null;
+  const selectedSpot = useMemo(() => {
+    if (!alertDetail || !Array.isArray(spots)) {
+      return null;
+    }
+    // alertDetail의 ID와 일치하는 spot을 spots 배열에서 찾습니다.
+    return spots.find((spot) => spot.alertId === alertDetail.alertId);
+  }, [alertDetail, spots]);
 
   const debouncedRecalculate = useDebouncedCallback((size, data) => {
     if (!data || size.width === 0 || size.height === 0) {
@@ -135,7 +140,7 @@ const MapViewer = ({
                   scale={scale}
                   onClick={(e) => {
                     e.cancelBubble = true;
-                    setSelectedAlertId(spot.alertId || null);
+                    fetchDetailAlert(spot.alertId);
                   }}
                 />
               ))}
