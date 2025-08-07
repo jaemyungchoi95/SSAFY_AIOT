@@ -1,31 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './DetailWrite.css';
 import ReportBtn from './ReportBtn';
-import { useState, useEffect } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
 
 const DetailWrite = ({ alert, onSubmit, onCancel }) => {
-  const [content, setContent] = useState('');
-  const [empName, setEmpName] = useState('');
+  const {
+    reportHandlerName,
+    reportComment,
+    setReportHandlerName,
+    setReportComment,
+    resetReportFields,
+  } = useAppStore();
+
   useEffect(() => {
     if (alert) {
-      setContent(alert.comment || '');
-      setEmpName(alert.handlerName || '');
+      setReportHandlerName(alert.handlerName || '');
+      setReportComment(alert.comment || '');
+    } else {
+      resetReportFields();
     }
-  }, [alert]);
-
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
-  };
-
-  const handleEmpNameChange = (e) => {
-    setEmpName(e.target.value);
-  };
+  }, [alert, setReportHandlerName, setReportComment, resetReportFields]);
 
   const handleSubmit = () => {
     onSubmit({
-      handlerName: empName,
-      comment: content,
-      // reportId: alert?.id || null,
+      handlerName: reportHandlerName.trim(),
+      comment: reportComment.trim(),
     });
   };
 
@@ -35,30 +34,33 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
         <div className="DetailWrite_Emp">
           <div className="DetailWrite_EmpTitle">작업자</div>
           <textarea
-            name=""
-            id=""
             placeholder="작업자 이름을 입력해 주세요"
             className="DetailWrite_Input DetailWrite_EmpInput"
-            value={empName}
-            onChange={handleEmpNameChange}
-          ></textarea>
+            value={reportHandlerName}
+            onChange={(e) => setReportHandlerName(e.target.value)}
+          />
         </div>
+
         <div className="DetailWrite_Message">
           <div className="DetailWrite_MessageTitle">메시지</div>
           <textarea
-            name=""
-            id=""
             placeholder="이슈 상황 및 처리 내용을 입력해 주세요"
             className="DetailWrite_Input DetailWrite_MessageInput"
-            value={content}
-            onChange={handleContentChange}
-          ></textarea>
+            value={reportComment}
+            onChange={(e) => setReportComment(e.target.value)}
+          />
         </div>
       </div>
 
       <div className="DetailWrite_BtnWrapper">
-        <ReportBtn text={'취소하기'} onClick={onCancel} />
-        <ReportBtn text={'등록하기'} onClick={handleSubmit} />
+        <ReportBtn
+          text="취소하기"
+          onClick={() => {
+            resetReportFields();
+            onCancel();
+          }}
+        />
+        <ReportBtn text="등록하기" onClick={handleSubmit} />
       </div>
     </div>
   );

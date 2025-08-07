@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';
@@ -8,10 +8,15 @@ import DetailWrite from './DetailWrite';
 import { useAppStore } from '../../stores/useAppStore';
 
 const SidebarDetail = ({ onClose }) => {
-  const { alerts, selectedAlertId, submitAlertReport } = useAppStore();
-
-  const [isWritingId, setIsWritingId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const {
+    alerts,
+    selectedAlertId,
+    isEditing,
+    isWritingId,
+    setIsEditing,
+    setIsWritingId,
+    submitAlertReport,
+  } = useAppStore();
 
   const selectedAlert = Array.isArray(alerts)
     ? alerts.find((alert) => alert.alertId === selectedAlertId)
@@ -20,12 +25,11 @@ const SidebarDetail = ({ onClose }) => {
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [selectedAlert]);
+  }, [selectedAlert, setIsWritingId, setIsEditing]);
 
   const handleSubmit = (reportData) => {
     if (selectedAlert) {
       submitAlertReport(selectedAlert.alertId, reportData);
-
       setIsWritingId(null);
       setIsEditing(false);
     }
@@ -34,7 +38,7 @@ const SidebarDetail = ({ onClose }) => {
   const handleEditClick = () => setIsEditing(true);
   const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
   const handleCancel = () => setIsEditing(false);
-  const handleCancelWrite = () => setIsWritingId(false);
+  const handleCancelWrite = () => setIsWritingId(null);
 
   if (!selectedAlert) return null;
 
@@ -77,4 +81,5 @@ const SidebarDetail = ({ onClose }) => {
     </div>
   );
 };
+
 export default SidebarDetail;

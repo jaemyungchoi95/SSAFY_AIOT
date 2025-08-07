@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './ModalContentRight.css';
 import DetailWrite from './DetailWrite';
 import SidebarDetailReport from './SidebarDetailReport';
@@ -6,10 +6,15 @@ import ReportBtn from './ReportBtn';
 import { useAppStore } from '../../stores/useAppStore';
 
 const ModalContentRight = () => {
-  const { alerts, selectedAlertId, submitAlertReport } = useAppStore();
-
-  const [isWritingId, setIsWritingId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const {
+    alerts,
+    selectedAlertId,
+    submitAlertReport,
+    isWritingId,
+    setIsWritingId,
+    isEditing,
+    setIsEditing,
+  } = useAppStore();
 
   const selectedAlert = Array.isArray(alerts)
     ? alerts.find((alert) => alert.alertId === selectedAlertId)
@@ -18,7 +23,7 @@ const ModalContentRight = () => {
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [selectedAlert]);
+  }, [selectedAlert, setIsWritingId, setIsEditing]);
 
   const handleSubmit = (reportData) => {
     if (selectedAlert) {
@@ -31,7 +36,7 @@ const ModalContentRight = () => {
   const handleEditClick = () => setIsEditing(true);
   const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
   const handleCancel = () => setIsEditing(false);
-  const handleCancelWrite = () => setIsWritingId(false);
+  const handleCancelWrite = () => setIsWritingId(null);
 
   if (!selectedAlert) return null;
 
@@ -44,7 +49,7 @@ const ModalContentRight = () => {
         {isHandled ? (
           isEditing ? (
             <DetailWrite
-              alert={selectedAlert} //
+              alert={selectedAlert}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />
@@ -62,7 +67,7 @@ const ModalContentRight = () => {
           />
         ) : (
           <div className="Modal_ReportBtnWrapper">
-            <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
+            <ReportBtn text="작성하기" onClick={handleWriteClick} />
           </div>
         )}
       </div>

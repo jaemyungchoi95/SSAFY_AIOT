@@ -162,15 +162,34 @@ export const useAppStore = create(
       get().fetchInitialData(warehouseId);
     },
 
+    // 키워드 검색
     searchKeyword: '',
     setSearchKeyword: (keyword) => {
       set({ searchKeyword: keyword });
     },
 
+    //위험 필터
     showDangerOnly: false,
     setShowDangerOnly: (value) => set({ showDangerOnly: value }),
 
+    //이슈페이지 버튼 필터
     selectedStatusFilter: '전체',
     setSelectedStatusFilter: (value) => set({ selectedStatusFilter: value }),
+
+    //편집
+    isEditing: false,
+    setIsEditing: (value) => set({ isEditing: value }),
+
+    //글쓰기
+    isWritingId: null,
+    setIsWritingId: (value) => set({ isWritingId: value }),
+
+    //리포트 작성관련
+    reportHandlerName: '',
+    reportComment: '',
+
+    setReportHandlerName: (name) => set({ reportHandlerName: name }),
+    setReportComment: (comment) => set({ reportComment: comment }),
+    resetReportFields: () => set({ reportHandlerName: '', reportComment: '' }),
   })),
 );
