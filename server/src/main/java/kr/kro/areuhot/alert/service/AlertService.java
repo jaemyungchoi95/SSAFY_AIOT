@@ -5,6 +5,8 @@ import kr.kro.areuhot.alert.mapper.AlertMapper;
 import kr.kro.areuhot.alert.model.Alert;
 import kr.kro.areuhot.alert.model.AlertStatus;
 import kr.kro.areuhot.common.util.S3Util;
+import kr.kro.areuhot.common.websocket.WebSocketPublisher;
+import kr.kro.areuhot.common.websocket.WebSocketTopic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AlertService {
     private final AlertMapper alertMapper;
     private final S3Util s3Util;
+    private final WebSocketPublisher publisher;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
     private static final int DANGER_THRESHOLD_COUNT = 2;  // 2번 이상
@@ -120,6 +123,7 @@ public class AlertService {
             if (result > 0) {
                 log.info("Alert 저장 성공: id={}, spot_id={}, robot_id={}, is_danger={}",
                         alert.getId(), spotId, mqttMessage.getRobotId(), danger);
+                publishAlert(alert);
             } else {
                 log.error("Alert 저장 실패: spot_uuid={}, robot_id={}",
                         mqttMessage.getSpotUuid(), mqttMessage.getRobotId());
@@ -163,5 +167,18 @@ public class AlertService {
             log.error("위험도 판단 중 오류 발생: spot_id={}, warehouse_id={}", spotId, warehouseId, e);
             return false; // 오류 발생 시 안전하게 false 반환
         }
+    }
+
+    public void publishAlert(Alert dto) {
+        AlertMessageDto message = AlertMessageDto.builder()
+                .alertID(dto.getId())
+                .spotId(dto.getSpotId())
+                .rackId(dto.getRackId())
+                .temperature(dto.getTemperature())
+                .danger(dto.getDanger())
+                .createdAt(dto.getCreatedAt())
+                .build();
+
+            publisher.send(dto.getWarehouseId(), WebSocketTopic.ALERT, message);
     }
 }
