@@ -1,19 +1,25 @@
 import { create } from 'zustand';
 
-// 1. 필터들의 초기 상태를 객체로 정의합니다.
 const initialState = {
   selectedTime: '최신순',
   selectedDay: '전체',
+  selectedDayRange: null,
   selectedStatus: '전체',
 };
 
 export const useFilterStore = create((set) => ({
-  // 2. 초기 상태를 spread 문법으로 가져옵니다.
   ...initialState,
 
-  // 필터 상태변경 액션
   setSelectedTime: (time) => set({ selectedTime: time }),
-  setSelectedDay: (day) => set({ selectedDay: day }),
+  setSelectedDay: (day) => {
+    const now = new Date();
+    let range = null;
+    if (day === '하루') range = new Date(now.setDate(now.getDate() - 1));
+    else if (day === '일주일') range = new Date(now.setDate(now.getDate() - 7));
+    else if (day === '한달') range = new Date(now.setMonth(now.getMonth() - 1));
+
+    set({ selectedDay: day, selectedDayRange: range });
+  },
   setSelectedStatus: (status) => set({ selectedStatus: status }),
 
   resetFilters: () => set(initialState),
