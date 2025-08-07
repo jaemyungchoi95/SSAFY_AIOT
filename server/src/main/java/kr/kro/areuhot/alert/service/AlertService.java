@@ -230,7 +230,7 @@ public class AlertService {
     @Transactional
     public void updateAlertProcessing(Integer alertId, AlertProcessingRequestDto requestDto) {
         try {
-            log.info("Alert Processing 수정 시작: alert_id={}, handler_name={}", 
+            log.info("Alert Processing 수정 시작: alert_id={}, handler_name={}",
                     alertId, requestDto.getHandlerName());
 
             // 1. Alert 존재 여부 확인
@@ -251,7 +251,7 @@ public class AlertService {
             Integer rackId = alert.getRackId();
 
             // 4. 업데이트 시간 설정
-            LocalDateTime updatedAt = requestDto.getUpdatedAt() != null ? 
+            LocalDateTime updatedAt = requestDto.getUpdatedAt() != null ?
                 requestDto.getUpdatedAt() : LocalDateTime.now();
 
             // 5. AlertProcessing 전체 업데이트
@@ -272,7 +272,7 @@ public class AlertService {
             int alertResult = alertMapper.updateAlertUpdatedAt(alertId, updatedAt);
 
             if (processingResult > 0 && alertResult > 0) {
-                log.info("Alert Processing 수정 성공: alert_id={}, processing_id={}", 
+                log.info("Alert Processing 수정 성공: alert_id={}, processing_id={}",
                         alertId, existingProcessing.getId());
             } else {
                 log.error("Alert Processing 수정 실패: alert_id={}", alertId);
@@ -283,8 +283,9 @@ public class AlertService {
             log.error("Alert Processing 수정 중 오류 발생: alert_id={}", alertId, e);
             throw e;
         }
+    }
 
-    public void publishAlert(Alert dto) {
+    private void publishAlert(Alert dto) {
         AlertMessageDto message = AlertMessageDto.builder()
                 .alertID(dto.getId())
                 .spotId(dto.getSpotId())
@@ -294,6 +295,6 @@ public class AlertService {
                 .createdAt(dto.getCreatedAt())
                 .build();
 
-            publisher.send(dto.getWarehouseId(), WebSocketTopic.ALERT, message);
+        publisher.send(dto.getWarehouseId(), WebSocketTopic.ALERT, message);
     }
 }
