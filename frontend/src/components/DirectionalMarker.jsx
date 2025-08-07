@@ -1,9 +1,9 @@
 import { Group, Circle, Line } from 'react-konva';
-import { getMarkerColor } from '../utils/spotStyles';
+import useMarkerColor from '../hooks/useMarkerColor';
 
 const DirectionalMarker = ({ spot, scale, onClick }) => {
-  const { x, y, status, direction } = spot;
-  const markerColor = getMarkerColor(status);
+  const { x, y, direction = 0, alertId } = spot;
+  const markerColor = useMarkerColor(spot);
   const radius = 6 / scale; // 원의 크기를 스케일에 맞춰 조정
   const pointerSize = (radius + 40) / scale; // 포인터 크기 조정
   const pointerOffset = radius - 1 / scale; // 포인터 오프셋 조정
@@ -11,7 +11,7 @@ const DirectionalMarker = ({ spot, scale, onClick }) => {
   return (
     <Group x={x} y={y} rotation={direction} onClick={onClick} onTap={onClick}>
       <Circle radius={radius} fill={markerColor} shadowBlur={5} />
-      {typeof direction === 'number' && (
+      {alertId && typeof direction === 'number' && (
         <Line
           points={[
             // direction 정방향시 코드
@@ -31,7 +31,7 @@ const DirectionalMarker = ({ spot, scale, onClick }) => {
           fill={markerColor}
           closed={true}
           shadowBlur={5}
-          opacity={0.7}
+          opacity={0.5}
         />
       )}
     </Group>

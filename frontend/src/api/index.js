@@ -33,6 +33,7 @@ export const fetchMonoAlert = (warehouseId, alertId) =>
 
 // 6. 위험 리포트(단일) 디테일 (모달, 클릭) / GET 요청
 // : /api/alerts/{alertId}
+// useAppStore.js 의 fetchDetailAlert에 사용됨
 export const fetchMonoAlertDetail = (alertId) =>
   axios.get(`/api/alerts/${alertId}`).then(getResponseData);
 
@@ -47,8 +48,15 @@ export const fetchAlertsForWarehouse = (warehouseId) =>
 export const fetchAlertsForWholeWarehouse = () =>
   axios.get('/api/alerts').then(getResponseData);
 
-// 전송 요청 1. 알림 리포트를 제출(등록/수정)합니다.
+// 9. 빈칸
+// 10. 창고 내부 로봇 list
+// 빈칸
+
+// 11. 리포트 처리 등록 / POST 요청
+// /api/alerts/{alertId}/processing
 export const submitAlertReport = (alertId, reportData) => {
   // 이 예제에서는 POST를 사용하지만, 실제로는 등록(POST)과 수정(PATCH)을 구분해야 할 수 있습니다.
-  return axios.post(`/api/alerts/${alertId}`, reportData).then(getResponseData);
+  return axios
+    .post(`/api/alerts/${alertId}/processing`, reportData)
+    .then(getResponseData);
 };
