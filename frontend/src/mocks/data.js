@@ -15,7 +15,7 @@ export const warehouseMapMockData = [
   },
 ];
 
-// 2. 창고list / GET 요청
+// 2. 창고list / GET 요청 / 백엔드 API 테스트 완료
 // : /api/warehouses
 export const warehouseMockData = [
   {
@@ -30,7 +30,7 @@ export const warehouseMockData = [
   },
 ];
 
-// 3. 랙 List / GET 요청
+// 3. 랙 List / GET 요청 / 백엔드 API 테스트 완료
 // : /api/warehouses/{warehouse_id}/racks
 export const rackList = [
   {
@@ -382,7 +382,7 @@ export const alertMonoMockData = [
   },
 ];
 
-// 6. 위험 리포트(단일) 디테일 (모달, 클릭) / POST 요청
+// 6. 위험 리포트(단일) 디테일 (모달, 클릭) / POST 요청 / 백엔드 API 테스트 완료
 // : /api/alerts/{alertId}
 export const alertMonoDetailMockData = {
   alertId: 2,
