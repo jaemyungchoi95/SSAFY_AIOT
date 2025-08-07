@@ -9,8 +9,7 @@ import { useAppStore } from '../../stores/useAppStore';
 
 const SidebarDetail = ({ onClose }) => {
   const {
-    alerts,
-    selectedAlertId,
+    alertDetail,
     isEditing,
     isWritingId,
     setIsEditing,
@@ -21,11 +20,11 @@ const SidebarDetail = ({ onClose }) => {
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [selectedAlert, setIsWritingId, setIsEditing]);
+  }, [alertDetail, setIsWritingId, setIsEditing]);
 
   const handleSubmit = (reportData) => {
-    if (selectedAlert) {
-      submitAlertReport(selectedAlert.alertId, reportData);
+    if (alertDetail) {
+      submitAlertReport(alertDetail.alertId, reportData);
       setIsWritingId(null);
       setIsEditing(false);
     }
@@ -48,7 +47,7 @@ const SidebarDetail = ({ onClose }) => {
         isEditing ? (
           <div className="SidebarDetail_Write">
             <DetailWrite
-              alert={selectedAlert}
+              alert={alertDetail}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />
@@ -56,30 +55,19 @@ const SidebarDetail = ({ onClose }) => {
         ) : (
           <div className="SidebarDetail_Report">
             <SidebarDetailReport
-              alert={selectedAlert}
+              alert={alertDetail}
               onEditClick={handleEditClick}
             />
           </div>
         )
-      ) : isWritingId === selectedAlert.alertId ? (
+      ) : isWritingId === alertDetail.alertId ? (
         <div className="SidebarDetail_Write">
           <DetailWrite
             alert={alertDetail}
             onSubmit={handleSubmit}
             onCancel={handleCancelWrite}
           />
-        ) : (
-          <SidebarDetailReport
-            alert={alertDetail}
-            onEditClick={handleEditClick}
-          />
-        )
-      ) : isWritingId === alertDetail.alertId ? (
-        <DetailWrite
-          alert={alertDetail}
-          onSubmit={handleSubmit}
-          onCancel={handleCancelWrite}
-        />
+        </div>
       ) : (
         <div className="SidebarDetail_ReportBtnWrapper">
           <ReportBtn text={'작성하기'} onClick={handleWriteClick} />

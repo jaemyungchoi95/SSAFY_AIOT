@@ -65,12 +65,7 @@ const IssueList = () => {
           <IssueItem key={alert.alertId} alert={alert} />
         ))}
       </div>
-      {selectedAlert && (
-        <IssueModal
-          alert={selectedAlert}
-          onClose={() => setSelectedAlertId(null)}
-        />
-      )}
+      {selectedAlert && <IssueModal onClose={() => setSelectedAlertId(null)} />}
     </div>
   );
 };
