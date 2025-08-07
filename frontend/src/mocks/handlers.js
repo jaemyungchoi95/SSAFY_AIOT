@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import {
   warehouseMapMockData,
-  warehouseMockData,
+  // warehouseMockData,
   rackList,
   alertMonoMockData,
   alertMonoDetailMockData,
@@ -24,29 +24,29 @@ export const handlers = [
     });
   }),
 
-  // 2. 창고list API 핸들러
-  http.get('/api/warehouses', () => {
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: warehouseMockData,
-    });
-  }),
+  // 2. 창고list API 핸들러 / 백엔드 API 테스트 완료
+  // http.get('/api/warehouses', () => {
+  //   return HttpResponse.json({
+  //     success: true,
+  //     message: '요청 성공',
+  //     data: warehouseMockData,
+  //   });
+  // }),
 
-  // 3. 랙 List API 핸들러
-  http.get('/api/warehouses/:warehouseId/racks', async ({ params }) => {
-    const warehouseId = parseInt(params.warehouseId, 10);
+  // 3. 랙 List API 핸들러 / 백엔드 API 테스트 완료
+  // http.get('/api/warehouses/:warehouseId/racks', async ({ params }) => {
+  //   const warehouseId = parseInt(params.warehouseId, 10);
 
-    const filterRacks = rackList.filter(
-      (rack) => rack.warehouseId === warehouseId,
-    );
+  //   const filterRacks = rackList.filter(
+  //     (rack) => rack.warehouseId === warehouseId,
+  //   );
 
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: filterRacks,
-    });
-  }),
+  //   return HttpResponse.json({
+  //     success: true,
+  //     message: '요청 성공',
+  //     data: filterRacks,
+  //   });
+  // }),
 
   // 5. 창고 내부 위험 리포트 (단일) → 실시간 알림시 가져오는 API 핸들러
   http.get('/api/warehouses/:warehouseId/alerts/:alertId', ({ params }) => {
@@ -58,65 +58,65 @@ export const handlers = [
     return HttpResponse.json({ success: true, message: '성공', data: alert });
   }),
 
-  // 6. 위험 리포트(단일) 디테일 (모달, 클릭) API 핸들러
-  http.get('/api/alerts/:alertId', ({ params }) => {
-    const alertId = parseInt(params.alertId, 10);
+  // 6. 위험 리포트(단일) 디테일 (모달, 클릭) API 핸들러 / 백엔드 API 테스트 완료
+  // http.get('/api/alerts/:alertId', ({ params }) => {
+  //   const alertId = parseInt(params.alertId, 10);
 
-    if (alertId === alertMonoDetailMockData.alertId) {
-      console.log(`[MSW] ID ${alertId}: 특별 케이스 상세 데이터를 반환합니다.`);
-      return HttpResponse.json({
-        success: true,
-        message: '요청 성공',
-        data: alertMonoDetailMockData,
-      });
-    }
+  //   if (alertId === alertMonoDetailMockData.alertId) {
+  //     console.log(`[MSW] ID ${alertId}: 특별 케이스 상세 데이터를 반환합니다.`);
+  //     return HttpResponse.json({
+  //       success: true,
+  //       message: '요청 성공',
+  //       data: alertMonoDetailMockData,
+  //     });
+  //   }
 
-    const foundAlertInList = wholeWarehouseAlertListMockData.content.find(
-      (a) => a.alertId === alertId,
-    );
+  //   const foundAlertInList = wholeWarehouseAlertListMockData.content.find(
+  //     (a) => a.alertId === alertId,
+  //   );
 
-    if (!foundAlertInList) {
-      return new HttpResponse(
-        JSON.stringify({
-          success: false,
-          message: '해당 ID의 알림을 찾을 수 없습니다',
-        }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } },
-      );
-    }
+  //   if (!foundAlertInList) {
+  //     return new HttpResponse(
+  //       JSON.stringify({
+  //         success: false,
+  //         message: '해당 ID의 알림을 찾을 수 없습니다',
+  //       }),
+  //       { status: 404, headers: { 'Content-Type': 'application/json' } },
+  //     );
+  //   }
 
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: foundAlertInList,
-    });
-  }),
+  //   return HttpResponse.json({
+  //     success: true,
+  //     message: '요청 성공',
+  //     data: foundAlertInList,
+  //   });
+  // }),
 
-  // 7. 창고 내부 위험 리포트 list API 핸들러
-  http.get('/api/warehouses/:warehouseId/alerts', ({ params }) => {
-    const warehouseId = parseInt(params.warehouseId, 10);
-    const filteredContent = monoWarehouseAlertListMockData.content.filter(
-      (alert) => alert.warehouseId === warehouseId,
-    );
-    const responseData = {
-      ...monoWarehouseAlertListMockData,
-      content: filteredContent,
-    };
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: responseData,
-    });
-  }),
+  // 7. 창고 내부 위험 리포트 list API 핸들러 / 백엔드 API 테스트 완료
+  // http.get('/api/warehouses/:warehouseId/alerts', ({ params }) => {
+  //   const warehouseId = parseInt(params.warehouseId, 10);
+  //   const filteredContent = monoWarehouseAlertListMockData.content.filter(
+  //     (alert) => alert.warehouseId === warehouseId,
+  //   );
+  //   const responseData = {
+  //     ...monoWarehouseAlertListMockData,
+  //     content: filteredContent,
+  //   };
+  //   return HttpResponse.json({
+  //     success: true,
+  //     message: '요청 성공',
+  //     data: responseData,
+  //   });
+  // }),
 
-  // 8. 전체 창고 위험 리포트 list API 핸들러
-  http.get('/api/alerts', () => {
-    return HttpResponse.json({
-      success: true,
-      message: '요청 성공',
-      data: wholeWarehouseAlertListMockData,
-    });
-  }),
+  // 8. 전체 창고 위험 리포트 list API 핸들러 / 백엔드 API 테스트 완료
+  // http.get('/api/alerts', () => {
+  //   return HttpResponse.json({
+  //     success: true,
+  //     message: '요청 성공',
+  //     data: wholeWarehouseAlertListMockData,
+  //   });
+  // }),
 
   // 전송 요청 1. 알림 리포트를 제출(등록/수정)합니다.
   http.post('/api/alerts/:alertId', async ({ request, params }) => {

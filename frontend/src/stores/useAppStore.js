@@ -10,10 +10,6 @@ export const useAppStore = create(
     spots: [], // 창고별 - 랙별의 촬영 스팟을 관리한다
     alerts: [], // 전체 리포트 알림에 대한 상태를 관리한다
     alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다
-    // gemini question : 왜 alertDetail 초기 상태를 배열이 아닌 null로 가져가는지?
-    // 혹시 아직 선택되지 않았을 때 빈 배열인 상태면 문제가 되는 부분이 있는건지?
-    // 만약 typescript라면 타입이 고정되어있을텐데 그런 관점에서 고려했을때는?
-
     warehouses: [], // 창고별 아이디와 이름 그리고 가지고 있는 지도에 대한 정보를 가진다
     selectedAlertId: null, // 현재 선택된 리포트 알림의 아이디를 관리한다
     selectedWarehouseId: null, // 현재 선택된 창고 아이디의 상태를 관리한다
@@ -151,24 +147,35 @@ export const useAppStore = create(
     }, // fetchInitialData 액션 끝
 
     // 등록/수정에 대한 액션
-    submitAlertReport: (alertId, reportData) => {
-      // MSW/API에 실제로 데이터를 전송하는 로직 (나중에 추가 가능)
-      // axios.post(`/api/alerts/${alertId}/report`, reportData);
-      set((state) => {
-        const updatedAlerts = state.alerts.map((alert) => {
-          if (alert.alertId === alertId) {
-            return {
-              ...alert,
-              status: 'DONE',
-              handlerName: reportData.handlerName,
-              comment: reportData.comment,
-              handledAt: new Date().toISOString(),
-            };
-          }
-          return alert;
-        });
-        return { alerts: updatedAlerts };
-      });
+    submitAlertReport: async (alertId, reportData) => {
+      // userId가 1로 가정하고 테스트, 실제 구현 시 실제 ID로 교체
+      const userId = 1;
+
+      const submitBody = {
+        userId: userId,
+        handlerName: reportData.handlerName,
+        itemType: reportData.itemType,
+        comment: reportData.comment,
+        updatedAt: new Date().toISOString(), // 현재 생성된 시간을 넣어준다
+      };
+
+      try {
+        await api.submitAlertReport(alertId, submitBody);
+
+        set((state) => ({
+          alertDetail: {
+            ...state.alertDetail,
+            ...submitBody,
+            state: 'DONE',
+            handledAt: submitBody.updatedAt,
+          },
+        }));
+
+        // 입력필드는 다시 초기화
+        get().resetReportFields();
+      } catch (error) {
+        set({ error });
+      }
     }, // submitAlertReport 액션 끝
 
     // 특정 마커를 선택 혹은 선택 해지
