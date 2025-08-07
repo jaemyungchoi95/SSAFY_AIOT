@@ -7,23 +7,32 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
   const {
     reportHandlerName,
     reportComment,
+    reportItemName,
     setReportHandlerName,
     setReportComment,
+    setReportItemName,
     resetReportFields,
   } = useAppStore();
 
   useEffect(() => {
     if (alert) {
       setReportHandlerName(alert.handlerName || '');
+      setReportItemName(alert.itemType || '');
       setReportComment(alert.comment || '');
     } else {
       resetReportFields();
     }
-  }, [alert, setReportHandlerName, setReportComment, resetReportFields]);
+  }, [
+    alert,
+    setReportHandlerName,
+    setReportComment,
+    setReportItemName,
+    resetReportFields,
+  ]);
 
   // 아이템 타입 입력 추가
   const handleItemNameChange = (e) => {
-    setItemName(e.target.value);
+    setReportItemName(e.target.value);
   };
 
   const handleSubmit = () => {

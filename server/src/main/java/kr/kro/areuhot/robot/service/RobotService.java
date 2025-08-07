@@ -1,6 +1,9 @@
 package kr.kro.areuhot.robot.service;
 
+import kr.kro.areuhot.common.websocket.WebSocketPublisher;
+import kr.kro.areuhot.common.websocket.WebSocketTopic;
 import kr.kro.areuhot.robot.dto.RobotLocationMessageDto;
+import kr.kro.areuhot.robot.dto.RobotPositionMessageDto;
 import kr.kro.areuhot.robot.mapper.RobotMapper;
 import kr.kro.areuhot.robot.model.RobotLog;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +18,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class RobotService {
     private final RobotMapper robotMapper;
+    private final WebSocketPublisher publisher;
 
-    public int findWarehouseIdByRobotId(Integer robotId) {
+    public Integer findWarehouseIdByRobotId(Integer robotId) {
         return robotMapper.findWarehouseIdByRobotId(robotId);
     }
 
@@ -39,6 +43,7 @@ public class RobotService {
             if (result > 0) {
                 log.info("로봇 로그 저장 성공: robot_id={}, id={}", 
                         message.getRobotId(), robotLog.getId());
+                publishRobotLocation(robotLog);
             } else {
                 log.error("로봇 로그 저장 실패: robot_id={}", message.getRobotId());
             }
@@ -48,5 +53,20 @@ public class RobotService {
         }
     }
 
+    public void publishRobotLocation(RobotLog dto) {
+        Integer warehouseId = findWarehouseIdByRobotId(dto.getRobotId());
+        if(warehouseId == null) {
+            log.warn("로봇 warehouseId 조회 실패: robot_id={}", dto.getRobotId());
+            return;
+        }
+        RobotPositionMessageDto message = RobotPositionMessageDto.builder()
+                .robotId(dto.getRobotId())
+                .x(dto.getX())
+                .y(dto.getY())
+                .direction(dto.getDirection())
+                .build();
+
+        publisher.send(warehouseId, WebSocketTopic.POSITION, message);
+    }
 
 }
