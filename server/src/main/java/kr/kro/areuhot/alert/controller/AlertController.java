@@ -1,9 +1,6 @@
 package kr.kro.areuhot.alert.controller;
 
-import kr.kro.areuhot.alert.dto.AlertDetailResponseDto;
-import kr.kro.areuhot.alert.dto.AlertPageResponseDto;
-import kr.kro.areuhot.alert.dto.AlertResponseDto;
-import kr.kro.areuhot.alert.dto.AlertSearchCondition;
+import kr.kro.areuhot.alert.dto.*;
 import kr.kro.areuhot.alert.service.AlertService;
 import kr.kro.areuhot.common.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +50,23 @@ public class AlertController {
     ) {
         AlertDetailResponseDto dto = alertService.getAlertDetail(alertId);
         return ResponseEntity.ok(ApiResponse.success(dto));
+    }
+
+    @PostMapping("/alerts/{alertId}/processing")
+    public ResponseEntity<ApiResponse<Void>> processAlert(
+            @PathVariable Integer alertId,
+            @RequestBody AlertProcessingRequestDto requestDto
+    ) {
+        alertService.processAlert(alertId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @PutMapping("/alerts/{alertId}/processing")
+    public ResponseEntity<ApiResponse<Void>> updateAlertProcessing(
+            @PathVariable Integer alertId,
+            @RequestBody AlertProcessingRequestDto requestDto
+    ) {
+        alertService.updateAlertProcessing(alertId, requestDto);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

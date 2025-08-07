@@ -2,8 +2,12 @@ package kr.kro.areuhot.alert.service;
 
 import kr.kro.areuhot.alert.dto.*;
 import kr.kro.areuhot.alert.mapper.AlertMapper;
+import kr.kro.areuhot.alert.mapper.AlertProcessingMapper;
 import kr.kro.areuhot.alert.model.Alert;
+import kr.kro.areuhot.alert.model.AlertProcessing;
 import kr.kro.areuhot.alert.model.AlertStatus;
+import kr.kro.areuhot.common.exception.CustomException;
+import kr.kro.areuhot.common.exception.ErrorCode;
 import kr.kro.areuhot.common.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlertService {
     private final AlertMapper alertMapper;
+    private final AlertProcessingMapper alertProcessingMapper;
     private final S3Util s3Util;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
@@ -162,6 +167,117 @@ public class AlertService {
         } catch (Exception e) {
             log.error("위험도 판단 중 오류 발생: spot_id={}, warehouse_id={}", spotId, warehouseId, e);
             return false; // 오류 발생 시 안전하게 false 반환
+        }
+    }
+
+    @Transactional
+    public void processAlert(Integer alertId, AlertProcessingRequestDto requestDto) {
+        try {
+            log.info("Alert Processing 시작: alert_id={}, handler_name={}", 
+                    alertId, requestDto.getHandlerName());
+
+            // 1. Alert 존재 여부 및 상태 확인
+            Alert alert = alertMapper.findAlertById(alertId);
+            if (alert == null) {
+                log.error("Alert을 찾을 수 없음: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+            }
+            if (alert.getStatus() == AlertStatus.DONE) {
+                log.error("이미 처리된 Alert: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_ALREADY_PROCESSED);
+            }
+
+            // 2. Alert에서 rackId 가져오기
+            Integer rackId = alert.getRackId();
+
+            // 3. AlertProcessing 저장
+            LocalDateTime handledAt = requestDto.getUpdatedAt() != null ? 
+                requestDto.getUpdatedAt() : LocalDateTime.now();
+            
+            AlertProcessing processing = AlertProcessing.builder()
+                    .alertId(alertId)
+                    .userId(requestDto.getUserId())
+                    .handledAt(handledAt)
+                    .handlerName(requestDto.getHandlerName())
+                    .itemType(requestDto.getItemType())
+                    .rackId(rackId)
+                    .comment(requestDto.getComment())
+                    .build();
+
+            int processingResult = alertProcessingMapper.insertAlertProcessing(processing);
+
+            // 4. Alert 상태를 DONE으로 변경
+            int alertResult = alertMapper.updateAlertStatus(alertId, AlertStatus.DONE, handledAt);
+
+            if (processingResult > 0 && alertResult > 0) {
+                log.info("Alert Processing 성공: alert_id={}, processing_id={}", 
+                        alertId, processing.getId());
+            } else {
+                log.error("Alert Processing 실패: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_PROCESSING_FAILED);
+            }
+
+        } catch (Exception e) {
+            log.error("Alert Processing 중 오류 발생: alert_id={}", alertId, e);
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void updateAlertProcessing(Integer alertId, AlertProcessingRequestDto requestDto) {
+        try {
+            log.info("Alert Processing 수정 시작: alert_id={}, handler_name={}", 
+                    alertId, requestDto.getHandlerName());
+
+            // 1. Alert 존재 여부 확인
+            Alert alert = alertMapper.findAlertById(alertId);
+            if (alert == null) {
+                log.error("Alert을 찾을 수 없음: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+            }
+
+            // 2. AlertProcessing 존재 여부 확인
+            AlertProcessing existingProcessing = alertProcessingMapper.findByAlertId(alertId);
+            if (existingProcessing == null) {
+                log.error("AlertProcessing을 찾을 수 없음: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_PROCESSING_NOT_FOUND);
+            }
+
+            // 3. Alert에서 rackId 가져오기
+            Integer rackId = alert.getRackId();
+
+            // 4. 업데이트 시간 설정
+            LocalDateTime updatedAt = requestDto.getUpdatedAt() != null ? 
+                requestDto.getUpdatedAt() : LocalDateTime.now();
+
+            // 5. AlertProcessing 전체 업데이트
+            AlertProcessing updatedProcessing = AlertProcessing.builder()
+                    .id(existingProcessing.getId())
+                    .alertId(alertId)
+                    .userId(requestDto.getUserId())
+                    .handledAt(updatedAt)
+                    .handlerName(requestDto.getHandlerName())
+                    .itemType(requestDto.getItemType())
+                    .rackId(rackId)
+                    .comment(requestDto.getComment())
+                    .build();
+
+            int processingResult = alertProcessingMapper.updateAlertProcessing(updatedProcessing);
+
+            // 6. Alert의 updatedAt도 함께 업데이트
+            int alertResult = alertMapper.updateAlertUpdatedAt(alertId, updatedAt);
+
+            if (processingResult > 0 && alertResult > 0) {
+                log.info("Alert Processing 수정 성공: alert_id={}, processing_id={}", 
+                        alertId, existingProcessing.getId());
+            } else {
+                log.error("Alert Processing 수정 실패: alert_id={}", alertId);
+                throw new CustomException(ErrorCode.ALERT_PROCESSING_UPDATE_FAILED);
+            }
+
+        } catch (Exception e) {
+            log.error("Alert Processing 수정 중 오류 발생: alert_id={}", alertId, e);
+            throw e;
         }
     }
 }
