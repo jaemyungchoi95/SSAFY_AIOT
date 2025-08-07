@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.kro.areuhot.alert.mapper.AlertProcessingMapper">
+
+    <insert id="insertAlertProcessing" parameterType="kr.kro.areuhot.alert.model.AlertProcessing" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO alert_processing (
+            alert_id, user_id, handled_at, handler_name, item_type, rack_id, comment
+        ) VALUES (
+            #{alertId}, #{userId}, #{handledAt}, #{handlerName}, #{itemType}, #{rackId}, #{comment}
+        )
+    </insert>
+
+    <select id="findByAlertId" resultType="kr.kro.areuhot.alert.model.AlertProcessing">
+        SELECT id, alert_id, user_id, handled_at, handler_name, item_type, rack_id, comment
+        FROM alert_processing 
+        WHERE alert_id = #{alertId}
+    </select>
+
+    <update id="updateAlertProcessing" parameterType="kr.kro.areuhot.alert.model.AlertProcessing">
+        UPDATE alert_processing
+        SET user_id = #{userId},
+            handled_at = #{handledAt},
+            handler_name = #{handlerName},
+            item_type = #{itemType},
+            rack_id = #{rackId},
+            comment = #{comment}
+        WHERE id = #{id}
+    </update>
+
+</mapper>
