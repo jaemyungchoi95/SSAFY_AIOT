@@ -10,7 +10,9 @@ const SidebarItem = ({ alert, onClick }) => {
   return (
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">
-        <div className="SidebarItem_Spot">Rack-{alert.rackId}</div>
+        <div className="SidebarItem_Spot">
+          Rack {alert.rackId} - {alert.spotId}
+        </div>
 
         {/* ✅ 상태 표시 영역 */}
         <div className="SidebarItem_StatusGroup">

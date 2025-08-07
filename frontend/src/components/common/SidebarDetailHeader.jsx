@@ -6,7 +6,9 @@ const SidebarDetailHeader = ({ alert, onClose }) => {
   return (
     <div className="SidebarDetailHeader">
       <div className="SidebarDetailHeader_Left">
-        <div className="SidebarDetailHeader_Spot">Rack-{alert.rackId}</div>
+        <div className="SidebarDetailHeader_Spot">
+          Rack {alert.rackId} - {alert.spotId}
+        </div>
         <Status
           text={
             alert.danger

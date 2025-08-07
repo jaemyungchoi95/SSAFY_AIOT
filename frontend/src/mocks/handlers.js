@@ -71,7 +71,7 @@ export const handlers = [
       });
     }
 
-    const foundAlertInList = wholeWarehouseAlertListMockData.content.find(
+    const foundAlertInList = monoWarehouseAlertListMockData.content.find(
       (a) => a.alertId === alertId,
     );
 

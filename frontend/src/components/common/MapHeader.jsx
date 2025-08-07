@@ -17,7 +17,7 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
     );
     const danger = filtered.filter((alert) => alert.danger === true).length;
     const caution = filtered.filter(
-      (alert) => alert.status === 'UNCHECKED' && !alert.danger,
+      (alert) => alert.status === 'UNCHECKED',
     ).length;
     return { cautionCnt: caution, dangerCnt: danger };
   }, [alerts, selectedWarehouseId]);
