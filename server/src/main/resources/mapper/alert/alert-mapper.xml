@@ -122,6 +122,15 @@
         WHERE a.id = #{alertId}
     </select>
 
+    <!-- Alert 단건 조회 (내부 로직용) -->
+    <select id="findAlertById" resultType="kr.kro.areuhot.alert.model.Alert">
+        SELECT id, robot_id, rack_id, warehouse_id, spot_id,
+               temperature, image_thermal_url, image_normal_url,
+               status, is_danger, created_at, updated_at
+        FROM alert
+        WHERE id = #{alertId}
+    </select>
+
     <select id="countAlerts" resultType="long">
         SELECT COUNT(*)
         FROM alert a
@@ -185,5 +194,19 @@
         WHERE warehouse_id = #{warehouseId}
         AND created_at >= DATE_SUB(#{currentTime}, INTERVAL #{hours} HOUR)
     </select>
+
+    <!-- Alert 상태 업데이트 -->
+    <update id="updateAlertStatus">
+        UPDATE alert
+        SET status = #{status}, updated_at = #{updatedAt}
+        WHERE id = #{alertId}
+    </update>
+
+    <!-- Alert updated_at 업데이트 -->
+    <update id="updateAlertUpdatedAt">
+        UPDATE alert
+        SET updated_at = #{updatedAt}
+        WHERE id = #{alertId}
+    </update>
 
 </mapper>
