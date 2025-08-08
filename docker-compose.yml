@@ -15,6 +15,7 @@ services:
       - backend_data:/app/data # .lck 파일 저장 경로
     networks:
       - app-network
+    command: sh -c "chmod -R 777 /app/data && java -Duser.timezone=Asia/Seoul -jar app.jar"
 
   frontend:
     image: areuhotreact
@@ -31,3 +32,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  backend_data:
