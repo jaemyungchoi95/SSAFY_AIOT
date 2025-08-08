@@ -1,6 +1,6 @@
 import React from 'react';
 import './TempInfo.css';
-import tempIcon from '../../assets/tempIcon.png';
+import tempIcon from '../../assets/temp.png';
 
 const TempInfo = ({ temperature }) => {
   return (
