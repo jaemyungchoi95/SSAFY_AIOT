@@ -24,7 +24,7 @@ public class MapService {
         map.setWarehouseId(warehouseId);
         map.setFilePath(s3Util.extractKeyFromUrl(url));
         map.setVersion(generate(warehouseId, createdAt));
-        map.setIsActive(true);
+        map.setActive(true);
         map.setType("raw");
         map.setCreatedAt(createdAt);
 
