@@ -1,9 +1,12 @@
 package kr.kro.areuhot.robot.service;
 
+import kr.kro.areuhot.common.exception.CustomException;
+import kr.kro.areuhot.common.exception.ErrorCode;
 import kr.kro.areuhot.common.websocket.WebSocketPublisher;
 import kr.kro.areuhot.common.websocket.WebSocketTopic;
 import kr.kro.areuhot.robot.dto.RobotLocationMessageDto;
 import kr.kro.areuhot.robot.dto.RobotPositionMessageDto;
+import kr.kro.areuhot.robot.dto.RobotResponseDto;
 import kr.kro.areuhot.robot.mapper.RobotMapper;
 import kr.kro.areuhot.robot.model.RobotLog;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -69,4 +73,11 @@ public class RobotService {
         publisher.send(warehouseId, WebSocketTopic.POSITION, message);
     }
 
+    public List<RobotResponseDto> findRobotListByWarehouseId(Integer warehouseId) {
+        List<RobotResponseDto> robots = robotMapper.findRobotListByWarehouseId(warehouseId);
+        if(robots.isEmpty()) {
+            throw new CustomException(ErrorCode.ROBOT_NOT_FOUND);
+        }
+        return robots;
+    }
 }
