@@ -49,7 +49,7 @@ public class AdminAuthController {
 
         return ResponseEntity.ok(ApiResponse.success(
                 LoginResponseDto.builder()
-                        .id(admin.getId())
+                        .userId(admin.getId())
                         .name(admin.getName())
                         .build())
         );

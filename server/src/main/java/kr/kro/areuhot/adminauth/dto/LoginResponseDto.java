@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class LoginResponseDto {
-    private Integer id;
+    private Integer userId;
     private String name;
 }
