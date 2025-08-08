@@ -1,12 +1,22 @@
 import { useDebouncedCallback } from 'use-debounce';
-import { Fragment, useLayoutEffect, useMemo } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+} from 'react';
 import { Stage, Layer, Image, Ring, Line, Text } from 'react-konva';
 import { useMapData } from '../hooks/useMapData';
 import { useMapCanvas } from '../hooks/useMapCanvas';
-import { useAppStore } from '../stores/useAppStore';
 import { getCenter } from '../utils/calcRackCenter';
 import { useStageSize } from '../hooks/useStageSize';
 import DirectionalMarker from './DirectionalMarker';
+import RobotMarker from './RobotMarker';
+
+import { useAppStore } from '../stores/useAppStore';
+import { useRobotStore } from '../stores/useRobotStore';
+import { useWarehouseSubscription } from '../hooks/useWarehouseSubscription';
 
 const MapViewer = ({
   scale,
@@ -26,11 +36,39 @@ const MapViewer = ({
   const {
     racks,
     spots,
-    // alertDetail,
     fetchDetailAlert,
     selectedAlertId,
     setSelectedAlertId,
+    selectedWarehouseId,
   } = useAppStore();
+
+  // Robot 스토어에서 실시간 데이터와 액션을 가져옵니다.
+  const robotPositions = useRobotStore((state) => state.robotPositions);
+  const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
+  const resetRobotState = useRobotStore((state) => state.resetRobotState);
+
+  // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
+  useEffect(() => {
+    resetRobotState();
+  }, [selectedWarehouseId, resetRobotState]);
+
+  // 2. useCallback으로 콜백 함수들을 감싸줍니다.
+  //    의존성 배열이 비어있으므로, 이 함수들은 최초 렌더링 시에만 생성됩니다.
+  const onAlertCallback = useCallback((data) => {
+    console.log('Alert 수신:', data);
+  }, []);
+
+  const onMapCallback = useCallback((data) => {
+    console.log('Map 수신:', data);
+  }, []);
+
+  // 4. 구독 훅에 로봇 위치를 업데이트하는 액션을 콜백으로 전달합니다.
+  useWarehouseSubscription({
+    warehouseId: selectedWarehouseId,
+    onPosition: setRobotPosition, // 로봇 위치 업데이트 콜백 연결
+    onAlert: onAlertCallback, // 알림 처리 로직 연결 필요
+    onMap: onMapCallback, // 맵 업데이트 처리 로직 연결 필요
+  });
 
   const selectedSpot = useMemo(() => {
     if (!selectedAlertId || !Array.isArray(spots)) {
@@ -163,6 +201,12 @@ const MapViewer = ({
                 listening={false} // 이 링은 클릭 이벤트를 받지 않도록 설정
               />
             )}
+          </Layer>
+          {/* 로봇 위치 표시 레이어 */}
+          <Layer>
+            {Object.values(robotPositions).map((robot) => (
+              <RobotMarker key={robot.robotId} robot={robot} scale={scale} />
+            ))}
           </Layer>
         </Stage>
       )}
