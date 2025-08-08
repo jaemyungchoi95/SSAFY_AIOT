@@ -13,7 +13,7 @@ const SidebarDetailContent = ({ alert }) => {
   return (
     <div className="SidebarDetailContent">
       <div className="SidebarDetailContent_Date">
-        <DateInfo createdAt={alert.createdAt} handledAt={alert.handledAt} />
+        <DateInfo createdAt={alert.createdAt} />
       </div>
       <div className="SidebarDetailContent_Temp">
         <TempInfo temperature={alert.temperature} />

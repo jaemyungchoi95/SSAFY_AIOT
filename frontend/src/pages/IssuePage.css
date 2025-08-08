@@ -4,6 +4,7 @@
   height: calc(100dvh - 120px);
   margin: 0px 30px;
   gap: 10px;
+  height: calc(100dvh - 120px);
 }
 
 .IssuePage_header {
@@ -16,4 +17,7 @@
   background-color: #20212a;
   flex: 3;
   border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }

@@ -14,7 +14,6 @@ const SidebarItem = ({ alert, onClick }) => {
           Rack {alert.rackId} - {alert.spotId}
         </div>
 
-        {/* ✅ 상태 표시 영역 */}
         <div className="SidebarItem_StatusGroup">
           {alert.danger && <Status text="위험" type="Danger" />}
           <Status text={isCompleteText} type={isCompleteType} />
@@ -30,7 +29,7 @@ const SidebarItem = ({ alert, onClick }) => {
       <div className="SidebarItem_Footer">
         <div className="SidebarItem_Admin">{alert.handlerName || ''}</div>
         <div className="SidebarItem_Date">
-          {alert.status === 'DONE' ? alert.handledAt : alert.createdAt}
+          {new Date(alert.createdAt).toLocaleDateString()}
         </div>
       </div>
     </button>
