@@ -60,3 +60,11 @@ export const submitAlertReport = (alertId, reportData) => {
     .post(`/api/alerts/${alertId}/processing`, reportData)
     .then(getResponseData);
 };
+
+// 12. 리포트 처리 수정 / PUT 요청
+// /api/alerts/{alertId}/processing
+export const updateAlertReport = (alertId, reportData) => {
+  return axios
+    .put(`/api/alerts/${alertId}/processing`, reportData)
+    .then(getResponseData);
+};

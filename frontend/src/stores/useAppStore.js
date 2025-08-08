@@ -150,26 +150,62 @@ export const useAppStore = create(
       }
     }, // fetchInitialData 액션 끝
 
-    // 등록/수정에 대한 액션
+    // 등록에 대한 액션
     submitAlertReport: (alertId, reportData) => {
-      // MSW/API에 실제로 데이터를 전송하는 로직 (나중에 추가 가능)
-      // axios.post(`/api/alerts/${alertId}/report`, reportData);
+      const fullReportData = {
+        ...reportData,
+        itemType: get().reportItemName, // 상태에서 가져온 itemType 대응 필드
+        updatedAt: new Date().toISOString(),
+        // userId: get().userId, // 만약 userId 상태가 있다면 추가
+        userId: 1,
+      };
+
       set((state) => {
         const updatedAlerts = state.alerts.map((alert) => {
           if (alert.alertId === alertId) {
             return {
               ...alert,
               status: 'DONE',
-              handlerName: reportData.handlerName,
-              comment: reportData.comment,
-              handledAt: new Date().toISOString(),
+              handlerName: fullReportData.handlerName,
+              comment: fullReportData.comment,
+              handledAt: fullReportData.updatedAt,
             };
           }
           return alert;
         });
         return { alerts: updatedAlerts };
       });
+      api.submitAlertReport(alertId, fullReportData);
     }, // submitAlertReport 액션 끝
+
+    updateAlertReport: (alertId, reportData) => {
+      const fullReportData = {
+        ...reportData,
+        itemType: get().reportItemName, // 상태에서 가져온 itemType 대응 필드
+        updatedAt: new Date().toISOString(),
+        // userId: get().userId, // 만약 userId 상태가 있다면 추가
+        userId: 1,
+      };
+
+      set((state) => {
+        const updatedAlerts = state.alerts.map((alert) => {
+          if (alert.alertId === alertId) {
+            return {
+              ...alert,
+              status: 'DONE',
+              handlerName: fullReportData.handlerName,
+              comment: fullReportData.comment,
+              handledAt: fullReportData.updatedAt,
+            };
+          }
+          return alert;
+        });
+        return { alerts: updatedAlerts };
+      });
+      console.log('📦 fullReportData', fullReportData);
+
+      api.updateAlertReport(alertId, fullReportData);
+    }, // updateAlertReport 액션 끝
 
     // 특정 마커를 선택 혹은 선택 해지
     setSelectedAlertId: (alertId) => {

@@ -15,6 +15,8 @@ const SidebarDetail = ({ onClose }) => {
     setIsEditing,
     setIsWritingId,
     submitAlertReport,
+    updateAlertReport,
+    setSelectedAlertId,
   } = useAppStore();
 
   useEffect(() => {
@@ -23,11 +25,15 @@ const SidebarDetail = ({ onClose }) => {
   }, [alertDetail, setIsWritingId, setIsEditing]);
 
   const handleSubmit = (reportData) => {
-    if (alertDetail) {
+    if (!alertDetail) return;
+    if (alertDetail.status === 'DONE') {
+      updateAlertReport(alertDetail.alertId, reportData);
+    } else {
       submitAlertReport(alertDetail.alertId, reportData);
-      setIsWritingId(null);
-      setIsEditing(false);
     }
+    setIsWritingId(null);
+    setIsEditing(false);
+    setSelectedAlertId(null);
   };
 
   const handleEditClick = () => setIsEditing(true);
