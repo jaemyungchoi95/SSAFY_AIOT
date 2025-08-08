@@ -5,19 +5,23 @@ export const useStageSize = () => {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
-    const handleResize = () => {
-      if (ref.current) {
-        setSize({
-          width: ref.current.offsetWidth,
-          height: ref.current.offsetHeight,
-        });
-      }
+    const element = ref.current;
+
+    // 1. 관찰할 DOM 요소를 가져와서 판단한다.
+    if (!element) {
+      return;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect;
+      setSize({ width, height });
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
     };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
   return [ref, size];
 };

@@ -1,17 +1,19 @@
 import React from 'react';
 import './FilterStatus.css';
 import './FilterTime.css';
-import { useState } from 'react';
+import { useFilterStore } from '../../stores/useFilterStore';
+import { useDropdownFilter } from '../../hooks/useDropdownFilter';
 
-const FilterStatus = ({ selectedStatus, setSelectedStatus }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const FilterStatus = () => {
+  const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
+  const { selectedStatus, setSelectedStatus } = useFilterStore();
 
-  const handleSelect = (status) => {
-    setSelectedStatus(status);
+  const handleSelect = (time) => {
+    setSelectedStatus(time);
     setIsOpen(false);
   };
   return (
-    <div className="FilterStatus">
+    <div className="FilterStatus" ref={dropdownRef}>
       <button
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}

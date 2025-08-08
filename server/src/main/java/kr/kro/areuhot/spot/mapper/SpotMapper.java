@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface SpotMapper {
     void insertSpot(Spot spot);
-    List<SpotResponseDto> findByRackId(int rackId);
+    List<SpotResponseDto> findByRackId(Integer rackId);
 }

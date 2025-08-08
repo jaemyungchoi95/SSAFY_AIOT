@@ -1,37 +1,35 @@
 import React from 'react';
 import './SidebarItem.css';
 import Status from './Status';
+import TempInfo from './TempInfo';
 
-const SidebarItem = ({ issue, report, onClick }) => {
-  const isCompleteText = issue.status === 'DONE' ? '처리완료' : '미확인';
-  const isCompleteType = issue.status === 'DONE' ? 'Complete' : 'Caution';
+const SidebarItem = ({ alert, onClick }) => {
+  const isCompleteText = alert.status === 'DONE' ? '처리완료' : '미확인';
+  const isCompleteType = alert.status === 'DONE' ? 'Complete' : 'Caution';
 
   return (
     <button className="SidebarItem" onClick={onClick}>
       <div className="SidebarItem_Header">
-        <div className="SidebarItem_Spot">Rack-{issue.rack_id}</div>
-        <Status
-          text={issue.is_danger ? '위험' : isCompleteText}
-          type={issue.is_danger ? 'Danger' : isCompleteType}
-        />
-      </div>
-      <div className="SidebarItem_Temp">
-        <img
-          src="../../src/assets/Temp.png"
-          alt=""
-          className="SidebarItem_TempIcon"
-        />
-        <span className="SidebarItem_TempValue">{issue.temperature}°C</span>
-      </div>
-      <div className="SidebarItem_Message">{report ? report.comment : ''}</div>
-      <div className="SidebarItem_Footer">
-        <div className="SidebarItem_Admin">
-          {report ? report.handler_name : ''}
+        <div className="SidebarItem_Spot">
+          Rack {alert.rackId} - {alert.spotId}
         </div>
+
+        <div className="SidebarItem_StatusGroup">
+          {alert.danger && <Status text="위험" type="Danger" />}
+          <Status text={isCompleteText} type={isCompleteType} />
+        </div>
+      </div>
+
+      <div className="SidebarItem_Temp">
+        <TempInfo temperature={alert.temperature} />
+      </div>
+
+      <div className="SidebarItem_Message">{alert.comment || ''}</div>
+
+      <div className="SidebarItem_Footer">
+        <div className="SidebarItem_Admin">{alert.handlerName || ''}</div>
         <div className="SidebarItem_Date">
-          {report
-            ? new Date(report.handled_at).toLocaleDateString()
-            : new Date(issue.created_at).toLocaleDateString()}
+          {new Date(alert.createdAt).toLocaleDateString()}
         </div>
       </div>
     </button>

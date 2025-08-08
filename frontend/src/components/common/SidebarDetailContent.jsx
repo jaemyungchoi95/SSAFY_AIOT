@@ -1,27 +1,22 @@
 import React from 'react';
 import './SidebarDetailContent.css';
-import FormatDateTime from '../../utils/FormatDateTime';
 import BootstrapCarousel from './BootstrapCarousel.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import TempInfo from './TempInfo';
+import DateInfo from './DateInfo.jsx';
 
-const SidebarDetailContent = ({ issue, report }) => {
-  const imagePaths = [issue.image_normal_url, issue.image_thermal_url].filter(
+const SidebarDetailContent = ({ alert }) => {
+  const imagePaths = [alert.imageNormalUrl, alert.imageThermalUrl].filter(
     Boolean,
   );
 
   return (
     <div className="SidebarDetailContent">
       <div className="SidebarDetailContent_Date">
-        <img src="/src/assets/Date.png" alt="" />
-        <span>
-          {report?.handled_at
-            ? FormatDateTime(report.handled_at)
-            : FormatDateTime(issue.created_at)}
-        </span>
+        <DateInfo createdAt={alert.createdAt} />
       </div>
       <div className="SidebarDetailContent_Temp">
-        <img src="/src/assets/Temp.png" alt="" />
-        <span>{issue.temperature}°C</span>
+        <TempInfo temperature={alert.temperature} />
       </div>
       <div className="SidebarDetailContent_Img">
         <BootstrapCarousel images={imagePaths} />

@@ -1,45 +1,40 @@
 .DetailWrite {
-  padding: 12px 30px 20px 30px;
+  /* padding: 12px 30px 20px 30px; */
   color: #dad9df;
   height: 35vh;
 }
 
-.DetailWrite_Value {
-}
-
-.DetailWrite_Title {
-  font-weight: bolder;
-  font-size: 18px;
-  margin-bottom: 5px;
-}
-
-.DetailWrite_EmpTitle {
+.DetailWrite_EmpTitle,
+.DetailWrite_ItemTitle,
+.DetailWrite_MessageTitle {
   width: 25%;
   padding-top: 8px;
+
+  font-size: 14px;
+  font-weight: bold;
 }
 
-.DetailWrite_Emp {
+.DetailWrite_Emp,
+.DetailWrite_Item {
   display: flex;
 }
 
 .DetailWrite_Input {
   width: 100%;
   border-bottom: 1px solid #787980;
-  margin: 5px 0px 15px 10px;
+  margin: 5px 0px 10px 10px;
   resize: none;
 }
 
-.DetailWrite_EmpInput {
+.DetailWrite_EmpInput,
+.DetailWrite_ItemInput {
   height: 30px;
 }
-
+.DetailWrite_MessageInput {
+  height: 60px;
+}
 .DetailWrite_Message {
   display: flex;
-}
-
-.DetailWrite_MessageTitle {
-  width: 25%;
-  padding-top: 8px;
 }
 
 .DetailWrite_BtnWrapper {
@@ -47,8 +42,5 @@
   justify-content: flex-end;
   width: 100%;
   padding-top: 3px;
-}
-
-.DetailWrite_MessageInput {
-  height: 70px;
+  gap: 20px;
 }

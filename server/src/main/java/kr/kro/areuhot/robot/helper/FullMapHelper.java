@@ -1,5 +1,6 @@
 package kr.kro.areuhot.robot.helper;
 
+import kr.kro.areuhot.common.util.UuidUtil;
 import kr.kro.areuhot.map.model.WarehouseMap;
 import kr.kro.areuhot.rack.model.Rack;
 import kr.kro.areuhot.robot.dto.FullMapUploadRequestDto;
@@ -8,14 +9,17 @@ import kr.kro.areuhot.robot.dto.SpotUploadDto;
 import kr.kro.areuhot.spot.model.Spot;
 import lombok.experimental.UtilityClass;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static kr.kro.areuhot.map.util.MapVersionGenerator.generate;
 
 @UtilityClass
 public class FullMapHelper {
-    public WarehouseMap toMap(int warehouseId, FullMapUploadRequestDto dto) {
+    public WarehouseMap toMap(Integer warehouseId, FullMapUploadRequestDto dto) {
         WarehouseMap map = new WarehouseMap();
         map.setWarehouseId(warehouseId);
         map.setFilePath(dto.getUrl());
@@ -26,7 +30,7 @@ public class FullMapHelper {
         return map;
     }
 
-    public List<Rack> toRackList(List<RackUploadDto> rackDtos, int warehouseId, int mapId) {
+    public List<Rack> toRackList(List<RackUploadDto> rackDtos, Integer warehouseId, int mapId) {
         List<Rack> result = new ArrayList<>();
         for(RackUploadDto dto: rackDtos) {
             Rack rack = new Rack();
@@ -39,6 +43,7 @@ public class FullMapHelper {
             rack.setX3(dto.getX3());
             rack.setY3(dto.getY3());
             rack.setX4(dto.getX4());
+            rack.setY4(dto.getY4());
             rack.setCenterX(dto.getCenterX());
             rack.setCenterY(dto.getCenterY());
             result.add(rack);
@@ -57,6 +62,13 @@ public class FullMapHelper {
                 spot.setX(spotDto.getX());
                 spot.setY(spotDto.getY());
                 spot.setDirection(spotDto.getDirection());
+                UUID uuid = spotDto.getUuid();
+                if(uuid != null) {
+                    spot.setUuid(UuidUtil.toBytes(uuid));
+                } else {
+                    throw new IllegalArgumentException("Spot UUID가 존재하지 않습니다.");
+                }
+
                 result.add(spot);
             }
         }

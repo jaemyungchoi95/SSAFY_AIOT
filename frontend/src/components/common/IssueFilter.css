@@ -1,0 +1,72 @@
+.IssueFilter {
+  padding: 12px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.IssueFilter_Title {
+  font-size: 17px;
+  font-weight: bolder;
+  color: #eaeaf0;
+  flex: 1;
+}
+
+.Dropdown_Filter {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+}
+
+.Dropdown_Filter_Left {
+  display: flex;
+  gap: 10px;
+  width: 25%;
+}
+
+.Dropdown_Filter_Right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.Searh_Filter {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  width: 100%;
+}
+
+.Search_Filter_Left {
+  display: flex;
+  border-bottom: 2px solid #4b4b4b;
+  gap: 10px;
+  width: 20%;
+  align-items: center;
+}
+
+.Search_Filter_Left input {
+  font-size: 14px;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+.Search_Filter_Left img {
+  width: auto;
+  height: auto;
+}
+
+.Search_Filter_Right {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.Search_Filter_Right input {
+  accent-color: #787980;
+}
+
+.Search_Filter_Checkbox {
+  cursor: pointer;
+}

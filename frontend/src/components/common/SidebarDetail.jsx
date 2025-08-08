@@ -1,54 +1,79 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';
 import SidebarDetailReport from './SidebarDetailReport';
 import ReportBtn from './ReportBtn';
 import DetailWrite from './DetailWrite';
+import { useAppStore } from '../../stores/useAppStore';
 
-const SidebarDetail = ({ issue, report, onClose }) => {
-
-  // const [isWriting, setIsWriting] = useState(false);
-  const [isWritingId, setIsWritingId] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editReport, setEditReport] = useState(null);
+const SidebarDetail = ({ onClose }) => {
+  const {
+    alertDetail,
+    isEditing,
+    isWritingId,
+    setIsEditing,
+    setIsWritingId,
+    submitAlertReport,
+    updateAlertReport,
+    setSelectedAlertId,
+  } = useAppStore();
 
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-    setEditReport(null);
-  }, [issue]);
+  }, [alertDetail, setIsWritingId, setIsEditing]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const handleSubmit = (reportData) => {
+    if (!alertDetail) return;
+    if (alertDetail.status === 'DONE') {
+      updateAlertReport(alertDetail.alertId, reportData);
+    } else {
+      submitAlertReport(alertDetail.alertId, reportData);
+    }
     setIsWritingId(null);
-    setEditReport(relatedReport);
+    setIsEditing(false);
+    setSelectedAlertId(null);
   };
 
-  const handleWriteClick = () => {
-    setIsWritingId(issue.id);
-    setIsEditing(false);
-  };
+  const handleEditClick = () => setIsEditing(true);
+  const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
+  const handleCancel = () => setIsEditing(false);
+  const handleCancelWrite = () => setIsWritingId(null);
+
+  if (!alertDetail) return null;
+
+  const isHandled = alertDetail.status === 'DONE';
 
   return (
     <div className="SidebarDetail">
-      <SidebarDetailHeader issue={issue} onClose={onClose} />
-      <SidebarDetailContent issue={issue} report={report} />
-      {report ? (
+      <SidebarDetailHeader alert={alertDetail} onClose={onClose} />
+      <SidebarDetailContent alert={alertDetail} />
+      {isHandled ? (
         isEditing ? (
-          <DetailWrite
-            issue={issue}
-            report={editReport}
-            onCancel={() => setIsEditing(false)}
-          />
+          <div className="SidebarDetail_Write">
+            <DetailWrite
+              alert={alertDetail}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+            />
+          </div>
         ) : (
-          <SidebarDetailReport
-            report={report}
-            onEditClick={handleEditClick}
-          />
+          <div className="SidebarDetail_Report">
+            <SidebarDetailReport
+              alert={alertDetail}
+              onEditClick={handleEditClick}
+            />
+          </div>
         )
-      ) : isWritingId === issue.id ? (
-        <DetailWrite issue={issue} />
+      ) : isWritingId === alertDetail.alertId ? (
+        <div className="SidebarDetail_Write">
+          <DetailWrite
+            alert={alertDetail}
+            onSubmit={handleSubmit}
+            onCancel={handleCancelWrite}
+          />
+        </div>
       ) : (
         <div className="SidebarDetail_ReportBtnWrapper">
           <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
@@ -57,4 +82,5 @@ const SidebarDetail = ({ issue, report, onClose }) => {
     </div>
   );
 };
+
 export default SidebarDetail;

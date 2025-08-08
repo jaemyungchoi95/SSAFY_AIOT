@@ -17,7 +17,7 @@ public class FullMapController {
 
     @PostMapping("/{robotId}/full-map")
     public ResponseEntity<ApiResponse<Void>> uploadFullMap(
-            @PathVariable("robotId") int robotId,
+            @PathVariable("robotId") Integer robotId,
             @RequestBody FullMapUploadRequestDto dto
             ) {
         int warehouseId = robotService.findWarehouseIdByRobotId(robotId);

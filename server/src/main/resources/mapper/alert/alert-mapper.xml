@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.kro.areuhot.alert.mapper.AlertMapper">
+
+    <sql id="whereConditions">
+        WHERE 1=1
+        <if test="condition.warehouseId != null">
+            AND a.warehouse_id = #{condition.warehouseId}
+        </if>
+        <choose>
+            <when test="condition.range == '1d'">
+                AND a.created_at >= NOW() - INTERVAL 1 DAY
+            </when>
+            <when test="condition.range == '7d'">
+                AND a.created_at >= NOW() - INTERVAL 7 DAY
+            </when>
+            <when test="condition.range == '30d'">
+                AND a.created_at >= NOW() - INTERVAL 30 DAY
+            </when>
+        </choose>
+        <if test="condition.status != null and condition.status != ''">
+            AND a.status = #{condition.status}
+        </if>
+        <if test="condition.dangerOnly == true">
+            AND a.is_danger = TRUE
+        </if>
+        <if test="condition.query != null and condition.query != ''">
+            AND (
+                p.handler_name LIKE CONCAT('%', #{condition.query}, '%')
+                OR p.comment LIKE CONCAT('%', #{condition.query}, '%')
+                OR p.item_type LIKE CONCAT('%', #{condition.query}, '%')
+                OR w.name LIKE CONCAT('%', #{condition.query}, '%')
+                OR u.name LIKE CONCAT('%', #{condition.query}, '%')
+            )
+        </if>
+    </sql>
+
+    <sql id="orderByClause">
+        ORDER BY
+        <choose>
+            <when test="condition.sort == 'latest'">
+                a.created_at DESC
+            </when>
+            <when test="condition.sort == 'oldest'">
+                a.created_at ASC
+            </when>
+            <otherwise>
+                a.created_at DESC
+            </otherwise>
+        </choose>
+    </sql>
+
+    <sql id="selectAlertColumns">
+        a.id AS alert_id,
+        a.warehouse_id,
+        a.rack_id,
+        a.spot_id,
+        a.temperature,
+        a.status,
+        a.is_danger AS danger,
+        a.created_at,
+        a.updated_at,
+        p.id AS processing_id,
+        p.comment,
+        w.name AS warehouse_name,
+        u.name AS user_name
+    </sql>
+
+    <sql id="selectAlertDetailColumns">
+        a.id AS alert_id,
+        a.warehouse_id,
+        a.rack_id,
+        a.spot_id,
+        a.temperature,
+        a.image_thermal_url,
+        a.image_normal_url,
+        a.status,
+        a.is_danger AS danger,
+        a.created_at,
+        a.updated_at,
+        p.id AS processing_id,
+        p.handler_name,
+        p.comment,
+        p.item_type,
+        p.handled_at,
+        w.name AS warehouse_name,
+        u.name AS user_name
+    </sql>
+
+    <select id="getAlertByAlertId" resultType="kr.kro.areuhot.alert.dto.AlertResponseDto">
+        SELECT <include refid="selectAlertColumns" />
+        FROM alert a
+        LEFT JOIN alert_processing p ON a.id = p.alert_id
+        LEFT JOIN user u ON p.user_id = u.id
+        JOIN warehouse w ON a.warehouse_id = w.id
+        WHERE a.id = #{alertId}
+        AND w.id = #{warehouseId}
+    </select>
+
+    <select id="selectPagedAlerts" resultType="kr.kro.areuhot.alert.dto.AlertResponseDto">
+        SELECT <include refid="selectAlertColumns" />
+        FROM alert a
+        LEFT JOIN alert_processing p ON a.id = p.alert_id
+        LEFT JOIN user u ON p.user_id = u.id
+        JOIN warehouse w ON a.warehouse_id = w.id
+
+        <include refid="whereConditions"/>
+        <include refid="orderByClause"/>
+
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="getAlertDetailByAlertId" resultType="kr.kro.areuhot.alert.dto.AlertDetailResponseDto">
+        SELECT <include refid="selectAlertDetailColumns" />
+        FROM alert a
+        LEFT JOIN alert_processing p ON a.id = p.alert_id
+        LEFT JOIN user u ON p.user_id = u.id
+        JOIN warehouse w ON a.warehouse_id = w.id
+        WHERE a.id = #{alertId}
+    </select>
+
+    <!-- Alert 단건 조회 (내부 로직용) -->
+    <select id="findAlertById" resultType="kr.kro.areuhot.alert.model.Alert">
+        SELECT id, robot_id, rack_id, warehouse_id, spot_id,
+               temperature, image_thermal_url, image_normal_url,
+               status, is_danger, created_at, updated_at
+        FROM alert
+        WHERE id = #{alertId}
+    </select>
+
+    <select id="countAlerts" resultType="long">
+        SELECT COUNT(*)
+        FROM alert a
+        LEFT JOIN alert_processing p ON a.id = p.alert_id
+        LEFT JOIN user u ON p.user_id = u.id
+        JOIN warehouse w ON a.warehouse_id = w.id
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="findAllWarehouse" resultType="kr.kro.areuhot.warehouse.dto.WarehouseResponseDto">
+        SELECT id, name, location
+        FROM warehouse
+    </select>
+
+    <!-- Alert 저장 -->
+    <insert id="insertAlert" parameterType="kr.kro.areuhot.alert.model.Alert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO alert (
+        robot_id, rack_id, warehouse_id, spot_id,
+        temperature, image_thermal_url, image_normal_url,
+        status, is_danger, created_at, updated_at
+        ) VALUES (
+        #{robotId}, #{rackId}, #{warehouseId}, #{spotId},
+        #{temperature}, #{imageThermalUrl}, #{imageNormalUrl},
+        #{status}, #{danger}, #{createdAt}, #{updatedAt}
+        )
+    </insert>
+
+    <!-- spot_uuid로 spot_id 조회 -->
+    <select id="findSpotIdByUuid" resultType="java.lang.Integer">
+        SELECT id
+        FROM spot
+        WHERE uuid = UNHEX(REPLACE(#{spotUuid}, '-', ''))
+    </select>
+
+    <!-- robot_id로 warehouse_id 조회 -->
+    <select id="findWarehouseIdByRobotId" resultType="java.lang.Integer">
+        SELECT warehouse_id
+        FROM robot
+        WHERE id = #{robotId}
+    </select>
+
+    <!-- spot_id로 rack_id 조회 -->
+    <select id="findRackIdBySpotId" resultType="java.lang.Integer">
+        SELECT rack_id
+        FROM spot
+        WHERE id = #{spotId}
+    </select>
+
+    <!-- 특정 spot에서 지정된 시간 이내 알림 개수 조회 -->
+    <select id="countRecentAlertsBySpotId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM alert
+        WHERE spot_id = #{spotId}
+        AND created_at >= DATE_SUB(#{currentTime}, INTERVAL #{hours} HOUR)
+    </select>
+
+    <!-- 특정 warehouse에서 지정된 시간 이내 알림 개수 조회 -->
+    <select id="countRecentAlertsByWarehouseId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM alert
+        WHERE warehouse_id = #{warehouseId}
+        AND created_at >= DATE_SUB(#{currentTime}, INTERVAL #{hours} HOUR)
+    </select>
+
+    <!-- Alert 상태 업데이트 -->
+    <update id="updateAlertStatus">
+        UPDATE alert
+        SET status = #{status}, updated_at = #{updatedAt}
+        WHERE id = #{alertId}
+    </update>
+
+    <!-- Alert updated_at 업데이트 -->
+    <update id="updateAlertUpdatedAt">
+        UPDATE alert
+        SET updated_at = #{updatedAt}
+        WHERE id = #{alertId}
+    </update>
+
+</mapper>

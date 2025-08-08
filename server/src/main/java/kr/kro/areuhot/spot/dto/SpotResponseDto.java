@@ -8,7 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class SpotResponseDto {
-    private int spotId;
-    private double x, y;
-    private float direction;
+    private Integer spotId;
+    private Double x, y;
+    private Float direction;
 }
