@@ -43,6 +43,7 @@ public class FullMapHelper {
             rack.setX3(dto.getX3());
             rack.setY3(dto.getY3());
             rack.setX4(dto.getX4());
+            rack.setY4(dto.getY4());
             rack.setCenterX(dto.getCenterX());
             rack.setCenterY(dto.getCenterY());
             result.add(rack);

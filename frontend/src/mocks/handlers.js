@@ -109,7 +109,7 @@ export const handlers = [
     });
   }),
 
-  // 8. 전체 창고 위험 리포트 list API 핸들러 / 백엔드 API 테스트 완료
+  // // 8. 전체 창고 위험 리포트 list API 핸들러 / 백엔드 API 테스트 완료
   http.get('/api/alerts', () => {
     return HttpResponse.json({
       success: true,
