@@ -16,27 +16,32 @@ const IssueList = () => {
     fetchWholeWarehouseAlerts,
   } = useAppStore();
 
-  const { selectedTime, selectedDayRange, selectedDay } = useFilterStore();
+  const { selectedTime, selectedDayRange } = useFilterStore();
 
+  // 초기 알림 데이터 가져오기
   useEffect(() => {
     setSelectedAlertId(null);
     fetchWholeWarehouseAlerts();
   }, [setSelectedAlertId, fetchWholeWarehouseAlerts]);
 
+  // 선택된 알림 모달용
   const selectedAlert = Array.isArray(alerts)
     ? alerts.find((a) => a.alertId === selectedAlertId)
     : null;
 
+  // 필터링 함수
   const getFilteredAlerts = () => {
     if (!Array.isArray(alerts)) return [];
 
-    // 1. 날짜 필터링 (selectedDayRange가 null이면 전체)
-    let filtered = selectedDayRange
-      ? alerts.filter((alert) => {
-          const alertDate = new Date(alert.createdAt);
-          return alertDate >= selectedDayRange;
-        })
-      : [...alerts]; // 복사본 생성
+    let filtered = [...alerts];
+
+    // 1. 날짜 필터
+    if (selectedDayRange) {
+      filtered = filtered.filter((alert) => {
+        const alertDate = new Date(alert.createdAt);
+        return alertDate >= selectedDayRange;
+      });
+    }
 
     // 2. 상태 필터
     if (selectedStatusFilter === '미확인') {
@@ -50,7 +55,7 @@ const IssueList = () => {
       filtered = filtered.filter((alert) => alert.danger === true);
     }
 
-    // 4. 키워드 검색 필터
+    // 4. 키워드 검색
     if (searchKeyword.trim() !== '') {
       const keyword = searchKeyword.toLowerCase();
       filtered = filtered.filter((alert) => {
@@ -60,7 +65,7 @@ const IssueList = () => {
       });
     }
 
-    // 5. 정렬 (최신순 / 오래된순)
+    // 5. 정렬
     filtered.sort((a, b) => {
       const timeA = new Date(a.createdAt).getTime();
       const timeB = new Date(b.createdAt).getTime();
@@ -79,6 +84,7 @@ const IssueList = () => {
           <IssueItem key={alert.alertId} alert={alert} />
         ))}
       </div>
+
       {selectedAlert && <IssueModal onClose={() => setSelectedAlertId(null)} />}
     </div>
   );

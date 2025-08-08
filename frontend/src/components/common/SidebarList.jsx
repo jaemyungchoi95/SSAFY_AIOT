@@ -16,9 +16,7 @@ const SidebarList = () => {
     if (selectedStatus === '처리완료') {
       filtered = filtered.filter((alert) => alert.status === 'DONE');
     } else if (selectedStatus === '미확인') {
-      filtered = filtered.filter((alert) =>
-        ['UNCHECKED', 'Caution'].includes(alert.status),
-      );
+      filtered = filtered.filter((alert) => alert.status === 'UNCHECKED');
     } else if (selectedStatus === '위험') {
       filtered = filtered.filter((alert) => alert.danger === true);
     }
