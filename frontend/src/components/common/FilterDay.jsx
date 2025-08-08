@@ -1,6 +1,10 @@
 import React from 'react';
 import './FilterDay.css';
 import './FilterTime.css';
+
+import CalenderIcon from '../../assets/Calender.png';
+import FilterDropIcon from '../../assets/FilterDrop.png';
+
 import { useFilterStore } from '../../stores/useFilterStore';
 import { useDropdownFilter } from '../../hooks/useDropdownFilter';
 
@@ -19,9 +23,9 @@ const FilterDay = () => {
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img src="../../src/assets/Calender.png" className="Icon" alt="" />
+        <img src={CalenderIcon} className="Icon" alt="" />
         <span className="Label">{selectedDay}</span>
-        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
+        <img src={FilterDropIcon} alt="" className="Chevron" />
       </button>
 
       {isOpen && (

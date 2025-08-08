@@ -3,6 +3,9 @@ import './IssueFilter.css';
 import FilterTime from './FilterTime';
 import FilterStatusClick from './FilterStatusClick';
 import FilterDay from './FilterDay';
+
+import searchIcon from '../../assets/Search.png';
+
 import { useAppStore } from '../../stores/useAppStore';
 
 const IssueFilter = () => {
@@ -26,7 +29,7 @@ const IssueFilter = () => {
       </div>
       <div className="Searh_Filter">
         <div className="Search_Filter_Left">
-          <img src="../../src/assets/Search.png" alt="search icon" />
+          <img src={searchIcon} alt="search icon" />
           <input
             type="text"
             placeholder="검색어를 입력해주세요"

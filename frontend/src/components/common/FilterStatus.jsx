@@ -3,6 +3,8 @@ import './FilterStatus.css';
 import './FilterTime.css';
 import { useFilterStore } from '../../stores/useFilterStore';
 import { useDropdownFilter } from '../../hooks/useDropdownFilter';
+import FilterStatusIcon from '../../assets/FilterStatus.png';
+import FilterDropIcon from '../../assets/FilterDrop.png';
 
 const FilterStatus = () => {
   const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
@@ -18,9 +20,9 @@ const FilterStatus = () => {
         className="Filter_Title"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img src="../../src/assets/FilterStatus.png" className="Icon" alt="" />
+        <img src={FilterStatusIcon} className="Icon" alt="" />
         <span className="Label">{selectedStatus}</span>
-        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
+        <img src={FilterDropIcon} alt="" className="Chevron" />
       </button>
 
       {isOpen && (

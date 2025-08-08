@@ -2,12 +2,14 @@ import React from 'react';
 import './LoginForm.css';
 import LoginInput from './LoginInput';
 
+import LoginIcon from '../../assets/LoginIcon.png';
+
 const LoginForm = () => {
   return (
     <div className="LoginForm">
       <div className="LoginForm_Header">
         <div className="LoginForm_Header_Title">
-          <img src="../../src/assets/LoginIcon.png" alt="" />
+          <img src={LoginIcon} alt="" />
           관리자 인증
         </div>
         <div className="LoginForm_Header_Des">
