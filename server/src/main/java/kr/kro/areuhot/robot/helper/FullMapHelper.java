@@ -24,7 +24,7 @@ public class FullMapHelper {
         map.setWarehouseId(warehouseId);
         map.setFilePath(dto.getUrl());
         map.setVersion(generate(warehouseId, dto.getCreatedAt()));
-        map.setIsActive(true);
+        map.setActive(true);
         map.setType("raw");
         map.setCreatedAt(dto.getCreatedAt());
         return map;

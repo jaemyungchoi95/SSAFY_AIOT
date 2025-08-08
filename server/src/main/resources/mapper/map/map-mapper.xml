@@ -10,7 +10,7 @@
             warehouse_id, file_path, version, is_active, type, created_at
         )
         VALUES (
-            #{warehouseId}, #{filePath}, #{version}, #{isActive}, #{type}, #{createdAt}
+            #{warehouseId}, #{filePath}, #{version}, #{active}, #{type}, #{createdAt}
         )
     </insert>
 

@@ -10,7 +10,7 @@ public class WarehouseMap {
     private Integer warehouseId;
     private String filePath;
     private String version;
-    private Boolean isActive;
+    private Boolean active;
     private String type;
     private LocalDateTime createdAt;
 }
