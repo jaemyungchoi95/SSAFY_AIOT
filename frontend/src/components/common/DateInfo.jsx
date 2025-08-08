@@ -2,10 +2,8 @@ import React from 'react';
 import './DateInfo.css';
 import formatDateTime from '../../utils/FormatDateTime';
 
-const DateInfo = ({ createdAt, handledAt }) => {
-  const date = handledAt
-    ? formatDateTime(handledAt)
-    : formatDateTime(createdAt);
+const DateInfo = ({ createdAt }) => {
+  const date = formatDateTime(createdAt);
 
   return (
     <div className="DateInfo">

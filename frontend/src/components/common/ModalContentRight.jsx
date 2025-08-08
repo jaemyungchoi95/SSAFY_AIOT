@@ -7,40 +7,46 @@ import { useAppStore } from '../../stores/useAppStore';
 
 const ModalContentRight = () => {
   const {
-    alerts,
-    selectedAlertId,
-    submitAlertReport,
-    isWritingId,
-    setIsWritingId,
+    alertDetail,
     isEditing,
+    isWritingId,
     setIsEditing,
+    setIsWritingId,
+    submitAlertReport,
+    updateAlertReport,
+    setSelectedAlertId,
+    fetchDetailAlert,
+    selectedAlertId,
   } = useAppStore();
-
-  const selectedAlert = Array.isArray(alerts)
-    ? alerts.find((alert) => alert.alertId === selectedAlertId)
-    : null;
 
   useEffect(() => {
     setIsWritingId(null);
     setIsEditing(false);
-  }, [selectedAlert, setIsWritingId, setIsEditing]);
+    if (selectedAlertId) {
+      fetchDetailAlert(selectedAlertId);
+    }
+  }, [setIsWritingId, setIsEditing, selectedAlertId, fetchDetailAlert]);
 
   const handleSubmit = (reportData) => {
-    if (selectedAlert) {
-      submitAlertReport(selectedAlert.alertId, reportData);
-      setIsWritingId(null);
-      setIsEditing(false);
+    if (!alertDetail) return;
+    if (alertDetail.status === 'DONE') {
+      updateAlertReport(alertDetail.alertId, reportData);
+    } else {
+      submitAlertReport(alertDetail.alertId, reportData);
     }
+    setIsWritingId(null);
+    setIsEditing(false);
+    setSelectedAlertId(null);
   };
 
   const handleEditClick = () => setIsEditing(true);
-  const handleWriteClick = () => setIsWritingId(selectedAlert.alertId);
+  const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
   const handleCancel = () => setIsEditing(false);
   const handleCancelWrite = () => setIsWritingId(null);
 
-  if (!selectedAlert) return null;
+  if (!alertDetail) return null;
 
-  const isHandled = selectedAlert.status === 'DONE';
+  const isHandled = alertDetail.status === 'DONE';
 
   return (
     <div className="Modal_Content_Right">
@@ -49,19 +55,19 @@ const ModalContentRight = () => {
         {isHandled ? (
           isEditing ? (
             <DetailWrite
-              alert={selectedAlert}
+              alert={alertDetail}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />
           ) : (
             <SidebarDetailReport
-              alert={selectedAlert}
+              alert={alertDetail}
               onEditClick={handleEditClick}
             />
           )
-        ) : isWritingId === selectedAlert.alertId ? (
+        ) : isWritingId === alertDetail.alertId ? (
           <DetailWrite
-            alert={selectedAlert}
+            alert={alertDetail}
             onSubmit={handleSubmit}
             onCancel={handleCancelWrite}
           />

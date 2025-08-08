@@ -17,7 +17,9 @@ const IssueItem = ({ alert }) => {
   return (
     <button className="IssueItem" onClick={handleClick}>
       <div className="IssueItem_Header">
-        <span className="IssueItem_Spot">Rack-{alert.rackId}</span>
+        <span className="IssueItem_Spot">
+          Rack {alert.rackId} - {alert.spotId}
+        </span>
 
         {/* danger가 true면 두 개의 Status를 보여줌 */}
         <div className="IssueItem_StatusGroup">
@@ -32,7 +34,7 @@ const IssueItem = ({ alert }) => {
       <div className="IssueItem_Footer">
         <div className="IssueItem_Admin">{alert?.handlerName || ''}</div>
         <div className="IssueItem_Date">
-          {new Date(alert.handledAt || alert.createdAt).toLocaleDateString()}
+          {new Date(alert.createdAt).toLocaleDateString()}
         </div>
       </div>
     </button>
