@@ -1,5 +1,7 @@
 import { useUserStore } from '../../stores/useUserStore';
 import './Header.css';
+import logo from '../../assets/logo.png';
+
 import { useNavigate } from 'react-router-dom';
 
 // import useUserStore from '.. /../stores/useUserStore';
@@ -13,7 +15,7 @@ const Header = () => {
   return (
     <div className="Header">
       <button className="Header_Logo" onClick={() => nav('/')}>
-        <img src="../../src/assets/logo.png" alt="Logo" className="logo" />
+        <img src={logo} alt="Logo" className="logo" />
       </button>
       <div className="Header_Right">
         <button className="Header_Issue" onClick={() => nav('/issue')}>

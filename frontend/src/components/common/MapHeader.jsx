@@ -1,5 +1,12 @@
 import React, { useMemo } from 'react';
 import './MapHeader.css';
+
+import zoomInIcon from '../../assets/ZoomIn.png';
+import zoomOutIcon from '../../assets/Zoomout.png';
+import cautionIcon from '../../assets/caution.png';
+import dangerIcon from '../../assets/danger.png';
+import ZoomOriginIcon from '../../assets/ZoomOrigin.png';
+
 import FilterLocation from './FilterLocation';
 import { useAppStore } from '../../stores/useAppStore';
 
@@ -30,12 +37,12 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
       <div className="MapHeader_right">
         <div className="MapHeader_issue">
           <div className="MapHeader_caution">
-            <img src="../../src/assets/caution.png" alt="" />
+            <img src={cautionIcon} alt="" />
             <span className="MapHeader_IssueCnt"> {cautionCnt} </span>
             <span>미확인</span>
           </div>
           <div className="MapHeader_danger">
-            <img src="../../src/assets/danger.png" alt="" />
+            <img src={dangerIcon} alt="" />
             <span className="MapHeader_IssueCnt"> {dangerCnt} </span>
             <span> 위험 </span>
           </div>
@@ -47,7 +54,7 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
             onClick={zoomIn}
             aria-label="확대"
           >
-            <img src="../../src/assets/ZoomIn.png" alt="줌인 아이콘" />
+            <img src={zoomInIcon} alt="줌인 아이콘" />
           </button>
           <span>{(scale * 100).toFixed(0)}%</span>
           <button
@@ -56,7 +63,7 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
             onClick={zoomOut}
             aria-label="축소"
           >
-            <img src="../../src/assets/Zoomout.png" alt="줌아웃 아이콘" />
+            <img src={zoomOutIcon} alt="줌아웃 아이콘" />
           </button>
           <button
             type="button"
@@ -64,7 +71,7 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
             onClick={resetZoom}
             aria-label="원래 크기로"
           >
-            <img src="../../src/assets/ZoomOrigin.png" alt="원본보기" />
+            <img src={ZoomOriginIcon} alt="원본보기" />
           </button>
         </div>
       </div>

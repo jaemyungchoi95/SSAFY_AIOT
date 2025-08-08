@@ -1,6 +1,9 @@
 import React from 'react';
 import './ModalHeader.css';
 import Status from './Status';
+
+import CloseBtn from '../../assets/CloseBtn.png';
+
 import { useAppStore } from '../../stores/useAppStore';
 
 const ModalHeader = () => {
@@ -31,7 +34,7 @@ const ModalHeader = () => {
       </div>
 
       <button className="Modal_CloseBtn" onClick={handleClose}>
-        <img src="../../src/assets/CloseBtn.png" alt="닫기 버튼" />
+        <img src={CloseBtn} alt="닫기 버튼" />
       </button>
     </div>
   );
