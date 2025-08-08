@@ -31,3 +31,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  backend_data:
