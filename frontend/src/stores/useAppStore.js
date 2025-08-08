@@ -27,6 +27,7 @@ export const useAppStore = create(
       try {
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
         const warehouseRes = await api.fetchWarehouses();
+        console.log('warehouseRes:', warehouseRes);
         const warehousesData = warehouseRes.map((w) => ({
           ...w,
           id: w.warehouseId,

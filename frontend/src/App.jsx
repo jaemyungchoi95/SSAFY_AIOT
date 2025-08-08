@@ -6,7 +6,6 @@ import IssuePage from './pages/IssuePage';
 import './App.css';
 import Header from './components/common/Header';
 import { useAppStore } from './stores/useAppStore';
-import Test from './pages/Test';
 import { useWebSocketConnection } from './hooks/useWebSocketConnection';
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/issue" element={<IssuePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/test" element={<Test />} />
       </Routes>
     </div>
   );
