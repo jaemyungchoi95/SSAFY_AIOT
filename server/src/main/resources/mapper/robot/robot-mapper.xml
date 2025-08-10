@@ -19,6 +19,17 @@
         )
     </insert>
 
+    <select id="findRobotListByWarehouseId" resultType="kr.kro.areuhot.robot.dto.RobotResponseDto">
+        SELECT
+            id AS robot_id,
+            name,
+            status,
+            created_at
+        FROM robot
+        WHERE warehouse_id = #{warehouseId}
+
+    </select>
+
 
 
 </mapper>
