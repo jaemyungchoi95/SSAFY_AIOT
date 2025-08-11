@@ -1,15 +1,21 @@
+import imgCaution from '../assets/MapCaution.png';
+import imgDanger from '../assets/MapDanger.png';
+import imgDone from '../assets/MapDone.png';
+import imgNothing from '../assets/MapNothing.png';
+
 const useMarkerColor = (spot) => {
+  console.log('spot 전체:', spot);
+  if (spot.status === 'DONE') {
+    return imgDone;
+  }
   if (spot.danger) {
-    return '#ff7575';
-  } else {
-    switch (spot.status) {
-      case 'DONE':
-        return '#5dd082';
-      case 'UNCHECKED':
-        return '#ffbc5f';
-      default:
-        return 'lightgray';
-    }
+    return imgDanger;
+  }
+  switch (spot.status) {
+    case 'UNCHECKED':
+      return imgCaution;
+    default:
+      return imgNothing;
   }
 };
 

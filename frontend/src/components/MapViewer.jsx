@@ -192,12 +192,10 @@ const MapViewer = ({
               <Ring
                 x={selectedSpot.x}
                 y={selectedSpot.y}
-                innerRadius={8 / scale} // 안쪽 원 반지름
-                outerRadius={12 / scale} // 바깥쪽 원 반지름
+                innerRadius={16 / scale} // 안쪽 원 반지름
+                outerRadius={20 / scale} // 바깥쪽 원 반지름
                 fill={'#FF7575'} // 채우기 색상
                 opacity={0.7} // 투명도
-                shadowBlur={10} // 그림자 효과
-                shadowColor="red"
                 listening={false} // 이 링은 클릭 이벤트를 받지 않도록 설정
               />
             )}
