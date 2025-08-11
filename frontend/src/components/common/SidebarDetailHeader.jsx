@@ -2,6 +2,8 @@ import React from 'react';
 import './SidebarDetailHeader.css';
 import Status from './Status';
 
+import CloseBtn from '../../assets/CloseBtn.png'; // Close button image
+
 const SidebarDetailHeader = ({ alert, onClose }) => {
   return (
     <div className="SidebarDetailHeader">
@@ -28,7 +30,7 @@ const SidebarDetailHeader = ({ alert, onClose }) => {
       </div>
 
       <button onClick={onClose} className="SidebarDetailHeader_CloseBtn">
-        <img src="../../src/assets/CloseBtn.png" alt="" />
+        <img src={CloseBtn} alt="" />
       </button>
     </div>
   );

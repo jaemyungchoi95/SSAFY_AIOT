@@ -9,11 +9,7 @@ export const useAppStore = create(
     racks: [], // 전체 랙에 대한 상태를 관리한다
     spots: [], // 창고별 - 랙별의 촬영 스팟을 관리한다
     alerts: [], // 전체 리포트 알림에 대한 상태를 관리한다
-    alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다
-    // gemini question : 왜 alertDetail 초기 상태를 배열이 아닌 null로 가져가는지?
-    // 혹시 아직 선택되지 않았을 때 빈 배열인 상태면 문제가 되는 부분이 있는건지?
-    // 만약 typescript라면 타입이 고정되어있을텐데 그런 관점에서 고려했을때는?
-
+    alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다=
     warehouses: [], // 창고별 아이디와 이름 그리고 가지고 있는 지도에 대한 정보를 가진다
     selectedAlertId: null, // 현재 선택된 리포트 알림의 아이디를 관리한다
     selectedWarehouseId: null, // 현재 선택된 창고 아이디의 상태를 관리한다
@@ -28,12 +24,13 @@ export const useAppStore = create(
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
         const warehouseRes = await api.fetchWarehouses();
         console.log('warehouseRes:', warehouseRes);
-        const warehousesData = warehouseRes.map((w) => ({
-          ...w,
-          id: w.warehouseId,
-        }));
 
-        if (warehousesData.length > 0) {
+        if (Array.isArray(warehouseRes) && warehouseRes.length > 0) {
+          const warehousesData = warehouseRes.map((w) => ({
+            ...w,
+            id: w.warehouseId,
+          }));
+
           // 2. 창고 목록이 있으면, 첫 번째 창고의 ID를 기본 ID로 설정합니다.
           const defaultWarehouseId = warehousesData[0].id;
           set({
