@@ -8,8 +8,9 @@ export const useAppStore = create(
     imageUrl: null, // AWS S3에 있는 url 정보를 받아준다
     racks: [], // 전체 랙에 대한 상태를 관리한다
     spots: [], // 창고별 - 랙별의 촬영 스팟을 관리한다
+    robots: [], // 창고별 - 로봇의 정보를 가진다.
     alerts: [], // 전체 리포트 알림에 대한 상태를 관리한다
-    alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다=
+    alertDetail: null, // 선택된 특정 리포트 알림에 대한 정보를 가진다
     warehouses: [], // 창고별 아이디와 이름 그리고 가지고 있는 지도에 대한 정보를 가진다
     selectedAlertId: null, // 현재 선택된 리포트 알림의 아이디를 관리한다
     selectedWarehouseId: null, // 현재 선택된 창고 아이디의 상태를 관리한다
@@ -50,41 +51,38 @@ export const useAppStore = create(
       }
     }, // initializeApp 액션 끝
 
-    // 특정 이슈에 대한 상세정보를 가져옴
-    fetchDetailAlert: async (alertId) => {
-      set({ loading: true, error: null, selectedAlertId: alertId });
-      try {
-        const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
-        set({
-          alertDetail: alertDetailRes,
-          loading: false,
-        });
-      } catch (error) {
-        set({ error, loading: false });
-      }
-    },
-
     // Home 페이지의 데이터를 받아오는 액션
     fetchInitialData: async (warehouseId) => {
-      set({ loading: true, error: null });
+      set({
+        loading: true,
+        error: null,
+        imageUrl: null,
+        racks: [],
+        spots: [],
+        alerts: [],
+        robots: [],
+      });
       try {
-        const [mapInfoRes, rackListRes, alertsRes] = await Promise.all([
-          api.fetchMapInfo(warehouseId), // 1번
-          api.fetchRacks(warehouseId), // 3번
-          api.fetchAlertsForWarehouse(warehouseId), // 7번
-        ]);
+        const [mapInfoRes, rackListRes, alertsRes, robotRes] =
+          await Promise.all([
+            api.fetchMapInfo(warehouseId), // 1번
+            api.fetchRacks(warehouseId), // 3번
+            api.fetchAlertsForWarehouse(warehouseId), // 7번
+            api.fetchRobotList(warehouseId), // 9번
+          ]);
 
         // 1. API에서 받아온 원본 데이터를 확인합니다.
         console.log('[STORE] API 원본 데이터:', {
           mapInfo: mapInfoRes,
           rackList: rackListRes,
           alerts: alertsRes,
+          robots: robotRes,
         });
 
         const imageUrl = mapInfoRes.filePath;
         const rackList = rackListRes;
         const alertsData = alertsRes;
-        console.log('alertsData : ', alertsData);
+        const robotList = robotRes;
 
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
@@ -140,6 +138,7 @@ export const useAppStore = create(
           racks: processedRacks,
           spots: mergedSpots,
           alerts: alertsData.content,
+          robots: robotList,
           loading: false,
         });
       } catch (error) {
@@ -147,6 +146,46 @@ export const useAppStore = create(
         set({ error, loading: false });
       }
     }, // fetchInitialData 액션 끝
+
+    // 새로운 맵데이터 알림 수신에 대한 액션
+    updateMapDateFromSocket: (newMapData) => {
+      const currentWarehouseId = get().selectedWarehouseId;
+      const currentImageUrl = get().imageUrl;
+      const newImageUrl = newMapData.url;
+
+      const newMapWarehouseId = newMapData.warehouseId;
+
+      if (newMapWarehouseId !== currentWarehouseId) {
+        console.log(`[STORE] 수신된 맵 데이터는 현재 선택된 창고(${currentWarehouseId})의 데이터가 아닙니다. (
+       ${newMapWarehouseId})`);
+        return;
+      }
+
+      if (currentImageUrl !== newImageUrl) {
+        console.log(
+          `[STORE] 새로운 맵 데이터 수신! URL 변경 감지: ${currentImageUrl} -> ${newImageUrl}`,
+        );
+        get().fetchInitialData(currentWarehouseId);
+      } else {
+        console.log(
+          `[STORE] 수신된 맵 데이터는 기존 맵과 동일합니다. (${newImageUrl})`,
+        );
+      }
+    },
+
+    // 특정 이슈에 대한 상세정보를 가져옴
+    fetchDetailAlert: async (alertId) => {
+      set({ loading: true, error: null, selectedAlertId: alertId });
+      try {
+        const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
+        set({
+          alertDetail: alertDetailRes,
+          loading: false,
+        });
+      } catch (error) {
+        set({ error, loading: false });
+      }
+    },
 
     // 등록에 대한 액션
     submitAlertReport: (alertId, reportData) => {

@@ -3,6 +3,7 @@ import { useAlertStore } from '../../stores/useAlertStore';
 
 const AlertToast = ({ alert }) => {
   const { dismissAlert } = useAlertStore();
+
   if (!alert) {
     console.warn("AlertToast received an undefined or null 'alert' prop.");
     return null;

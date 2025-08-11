@@ -43,12 +43,17 @@ const MapViewer = ({
     selectedWarehouseId,
   } = useAppStore();
 
+  const updateMapDataFromSocket = useAppStore(
+    (state) => state.updateMapDataFromSocket,
+  );
+
   // Robot 스토어에서 실시간 데이터와 액션을 가져옵니다.
   const robotPositions = useRobotStore((state) => state.robotPositions);
   const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
   const resetRobotState = useRobotStore((state) => state.resetRobotState);
 
   const addSocketAlert = useAlertStore((state) => state.addSocketAlert);
+  const addSocketMap = useAlertStore((state) => state.addSocketMap);
 
   // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
   useEffect(() => {
@@ -65,9 +70,14 @@ const MapViewer = ({
     [addSocketAlert],
   );
 
-  const onMapCallback = useCallback((data) => {
-    console.log('Map 수신:', data);
-  }, []);
+  const onMapCallback = useCallback(
+    (data) => {
+      console.log('Map 수신:', data);
+      addSocketMap(data);
+      updateMapDataFromSocket(data);
+    },
+    [addSocketMap, updateMapDataFromSocket],
+  );
 
   // 4. 구독 훅에 로봇 위치를 업데이트하는 액션을 콜백으로 전달합니다.
   useWarehouseSubscription({
@@ -119,10 +129,24 @@ const MapViewer = ({
         flex: 1,
         overflow: 'hidden',
         backgroundColor: mapLoading ? '#20212a' : 'transparent',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#EAEAF0',
       }}
     >
+      {/* 로딩 중일 때 메시지 표시 */}
+      {mapLoading && <div>맵 로딩 중...</div>}
+
+      {/* 에러 발생 시 메시지 표시 */}
+      {mapError && <div>맵 로딩 오류: {mapError.message}</div>}
+
+      {/* 로딩도 아니고 에러도 없는데 맵 데이터가 없을 때 메시지 표시 */}
+      {!mapLoading && !mapError && !mapCanvas && (
+        <div>선택된 창고에 맵 정보가 없습니다.</div>
+      )}
       {/* 컨테이너 크기가 잡히고 에러가 없을 때만 Stage를 렌더링합니다. */}
-      {containerSize.width > 0 && !mapError && (
+      {containerSize.width > 0 && mapCanvas && !mapError && (
         <Stage
           width={containerSize.width}
           height={containerSize.height}
