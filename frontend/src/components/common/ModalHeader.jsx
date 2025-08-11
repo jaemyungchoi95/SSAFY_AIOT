@@ -26,11 +26,14 @@ const ModalHeader = () => {
   return (
     <div className="ModalHeader">
       <div className="ModalHeader_Left">
-        <div className="Modal_Spot">Rack-{selectedAlert.rackId}</div>
-        <Status
-          text={selectedAlert.danger ? '위험' : isCompleteText}
-          type={selectedAlert.danger ? 'Danger' : isCompleteType}
-        />
+        <div className="Modal_Spot">
+          {' '}
+          Rack {selectedAlert.rackId} - {selectedAlert.spotId}
+        </div>
+        <div className="IssueItem_StatusGroup">
+          {selectedAlert.danger && <Status text="위험" type="Danger" />}
+          <Status text={isCompleteText} type={isCompleteType} />
+        </div>
       </div>
 
       <button className="Modal_CloseBtn" onClick={handleClose}>

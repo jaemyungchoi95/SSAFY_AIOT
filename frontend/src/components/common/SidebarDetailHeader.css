@@ -1,7 +1,7 @@
 .SidebarDetailHeader {
   display: flex;
   border-bottom: 3px solid #33333c;
-  padding: 10px 30px;
+  padding: 10px 20px;
   justify-content: space-between;
 }
 
@@ -12,9 +12,12 @@
 
 .SidebarDetailHeader_Left {
   display: flex;
-  gap: 20px;
 }
 
 .SidebarDetailHeader_CloseBtn {
   cursor: pointer;
+}
+
+.SidebarDetailHeader_StatusGroup {
+  display: flex;
 }
