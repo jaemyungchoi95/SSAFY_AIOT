@@ -37,3 +37,15 @@
   flex-direction: column;
   display: flex;
 }
+
+/* 기존 Home.css 내용... */
+.alert_toast_container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse; /* 새 알림이 위로 올라오도록 */
+  align-items: center;
+  z-index: 1000; /* 다른 요소들 위에 표시되도록 */
+}

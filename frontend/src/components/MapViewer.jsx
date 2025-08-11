@@ -17,6 +17,7 @@ import RobotMarker from './RobotMarker';
 import { useAppStore } from '../stores/useAppStore';
 import { useRobotStore } from '../stores/useRobotStore';
 import { useWarehouseSubscription } from '../hooks/useWarehouseSubscription';
+import { useAlertStore } from '../stores/useAlertStore';
 
 const MapViewer = ({
   scale,
@@ -47,6 +48,8 @@ const MapViewer = ({
   const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
   const resetRobotState = useRobotStore((state) => state.resetRobotState);
 
+  const addSocketAlert = useAlertStore((state) => state.addSocketAlert);
+
   // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
   useEffect(() => {
     resetRobotState();
@@ -54,9 +57,13 @@ const MapViewer = ({
 
   // 2. useCallback으로 콜백 함수들을 감싸줍니다.
   //    의존성 배열이 비어있으므로, 이 함수들은 최초 렌더링 시에만 생성됩니다.
-  const onAlertCallback = useCallback((data) => {
-    console.log('Alert 수신:', data);
-  }, []);
+  const onAlertCallback = useCallback(
+    (data) => {
+      console.log('Alert 수신:', data);
+      addSocketAlert(data);
+    },
+    [addSocketAlert],
+  );
 
   const onMapCallback = useCallback((data) => {
     console.log('Map 수신:', data);
