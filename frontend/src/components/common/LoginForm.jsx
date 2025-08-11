@@ -8,13 +8,14 @@ import LoginIcon from '../../assets/LoginIcon.png';
 const LoginForm = () => {
   const login = useUserStore((state) => state.login);
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+  const error = useUserStore((state) => state.error);
   const nav = useNavigate();
 
-  const handleLoginClick = () => {
+  const handleLoginClick = async () => {
     console.log('로그인 버튼 클릭');
 
     try {
-      login();
+      await login();
       console.log('로그인 완료');
     } catch (error) {
       console.error('login 함수 실행 중 에러:', error);
@@ -26,6 +27,13 @@ const LoginForm = () => {
       nav('/');
     }
   }, [isLoggedIn, nav]);
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
+
   return (
     <div className="LoginForm">
       <div className="LoginForm_Header">

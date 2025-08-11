@@ -101,6 +101,7 @@ export const useAppStore = create(
               ...spot,
               rackId: rack.rackId,
               status: 'normal',
+              danger: null,
             });
           });
           // return { ...rack, rack_id: rack.rackId };
@@ -123,6 +124,7 @@ export const useAppStore = create(
             return {
               ...spot,
               status: alertOnThisSpot.status,
+              danger: alertOnThisSpot.danger,
               alertId: alertOnThisSpot.alertId,
             };
           }
