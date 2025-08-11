@@ -2,12 +2,23 @@ import React, { useState } from 'react';
 import './LoginInput.css';
 import pwdShow from '../../assets/PwdShow.png';
 import pwdNShow from '../../assets/PwdNShow.png';
+import { useUserStore } from '../../stores/useUserStore';
 
 const LoginInput = ({ text, autoFocus }) => {
   const isPassword = text === '비밀번호';
   const [showPassword, setShowPassword] = useState(false);
+  const setUserName = useUserStore((state) => state.setUserName);
+  const setPassword = useUserStore((state) => state.setPassword);
 
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : 'text';
+
+  const handleChange = (e) => {
+    if (isPassword) {
+      setPassword(e.target.value);
+    } else {
+      setUserName(e.target.value);
+    }
+  };
 
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -26,6 +37,7 @@ const LoginInput = ({ text, autoFocus }) => {
           className={isPassword ? 'password-input' : 'login-input'}
           autoFocus={autoFocus}
           placeholder={placeholderText}
+          onChange={handleChange}
         />
         {isPassword && (
           <button

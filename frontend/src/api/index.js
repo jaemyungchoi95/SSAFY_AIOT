@@ -68,3 +68,17 @@ export const updateAlertReport = (alertId, reportData) => {
     .put(`/api/alerts/${alertId}/processing`, reportData)
     .then(getResponseData);
 };
+
+//13.userLogin
+///api/admin/login
+export const login = (username, password) => {
+  return axios
+    .post('api/admin/login', { username, password }, { withCredentials: true })
+    .then((response) => response.data);
+};
+
+//14.logout
+///api/admin/logout
+export const logout = () => {
+  return axios.post('/api/admin/logout', null, { withCredentials: true });
+};

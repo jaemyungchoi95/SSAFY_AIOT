@@ -6,6 +6,7 @@ import SidebarDetailReport from './SidebarDetailReport';
 import ReportBtn from './ReportBtn';
 import DetailWrite from './DetailWrite';
 import { useAppStore } from '../../stores/useAppStore';
+import { useUserStore } from '../../stores/useUserStore';
 
 const SidebarDetail = ({ onClose }) => {
   const {
@@ -18,6 +19,8 @@ const SidebarDetail = ({ onClose }) => {
     updateAlertReport,
     setSelectedAlertId,
   } = useAppStore();
+
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   useEffect(() => {
     setIsWritingId(null);
@@ -75,9 +78,11 @@ const SidebarDetail = ({ onClose }) => {
           />
         </div>
       ) : (
-        <div className="SidebarDetail_ReportBtnWrapper">
-          <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
-        </div>
+        isLoggedIn && (
+          <div className="SidebarDetail_ReportBtnWrapper">
+            <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
+          </div>
+        )
       )}
     </div>
   );
