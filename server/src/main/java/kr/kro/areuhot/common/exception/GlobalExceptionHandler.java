@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ex.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(ApiResponse.fail(errorCode.getMessage()));
+                .body(ApiResponse.fail(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
