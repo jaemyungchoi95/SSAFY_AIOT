@@ -1,3 +1,4 @@
+/* 기존 스타일 유지 */
 .Home_content {
   display: flex;
   height: calc(100dvh - 120px);
@@ -21,13 +22,14 @@
   transition: flex 0.3s ease;
   overflow: hidden;
 }
-/* 'collapsed' 클래스가 적용되면, 이 영역은 보이지 않고 공간도 차지하지 않게 됩니다. */
+
+/* collapsed 클래스 제거 (필요시, 사용 안해도 됨) */
 .sidebar_detail_area.collapsed {
   flex: 0;
   min-width: 0;
   padding: 0;
   opacity: 0;
-  border: none; /* 혹시 모를 border 제거 */
+  border: none;
 }
 
 .sidebar_area {
@@ -37,6 +39,46 @@
   flex-direction: column;
   display: flex;
 }
+
+/* 모바일 환경 */
+@media (max-width: 768px) {
+  .Home_content {
+    flex-direction: column; /* 세로 배치 유지 */
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .map_area {
+    flex: none;
+    width: 100%;
+    height: 80vh;
+  }
+
+  .sidebar_area {
+    display: none;
+  }
+
+  /* 모바일에서 sidebar_detail_area 모달 스타일 적용 */
+  .sidebar_detail_area {
+    position: fixed;
+    top: 80;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    z-index: 9999;
+    overflow-y: auto;
+    flex: none;
+    min-width: unset;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+
+  /* 필요 시 닫힌 상태 처리 */
+  .sidebar_detail_area.collapsed {
+    display: none;
+  }
 
 /* 기존 Home.css 내용... */
 
