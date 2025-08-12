@@ -4,8 +4,8 @@ import { useSocketStore } from '../stores/useSocketStore';
 export function useWarehouseSubscription({
   warehouseId,
   onPosition,
-  onAlert,
-  // onMap, // 전역관리로 전환함에 따라 주석처리 진행
+  // onAlert, // 전역관리로 전환함에 따라 주석처리 진행
+  // onMap,   // 전역관리로 전환함에 따라 주석처리 진행
 }) {
   const subscriptionsRef = useRef({});
 
@@ -22,10 +22,10 @@ export function useWarehouseSubscription({
       (msg) => onPosition?.(JSON.parse(msg.body)),
     );
 
-    subscriptionsRef.current.alert = client.subscribe(
-      `/topic/warehouses/${warehouseId}/alert`,
-      (msg) => onAlert?.(JSON.parse(msg.body)),
-    );
+    // subscriptionsRef.current.alert = client.subscribe(
+    //   `/topic/warehouses/${warehouseId}/alert`,
+    //   (msg) => onAlert?.(JSON.parse(msg.body)),
+    // );
 
     // 전역 관리로 전환
     // subscriptionsRef.current.map = client.subscribe(
@@ -43,6 +43,7 @@ export function useWarehouseSubscription({
       subscriptionsRef.current = {};
       console.log(`📴 창고 ${warehouseId} 구독 해제`);
     };
-  }, [warehouseId, client, isConnected, onPosition, onAlert]);
-  // 의존성배열에서 onMap 삭제
+  }, [warehouseId, client, isConnected, onPosition]);
+
+  // 의존성배열에서 전역관리로 전환한 onAlert, onMap 삭제
 }
