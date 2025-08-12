@@ -79,7 +79,7 @@
   .sidebar_detail_area.collapsed {
     display: none;
   }
-
+}
 /* 기존 Home.css 내용... */
 
 .alert_toast_container {
