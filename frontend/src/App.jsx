@@ -7,6 +7,7 @@ import './App.css';
 import Header from './components/common/Header';
 import { useAppStore } from './stores/useAppStore';
 import { useWebSocketConnection } from './hooks/useWebSocketConnection';
+import Test from './pages/Test';
 
 function App() {
   const initializeApp = useAppStore((state) => state.initializeApp);
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/issue" element={<IssuePage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/test" element={<Test />}></Route>
       </Routes>
     </div>
   );
