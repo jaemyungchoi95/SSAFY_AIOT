@@ -5,7 +5,7 @@ export function useWarehouseSubscription({
   warehouseId,
   onPosition,
   onAlert,
-  onMap,
+  // onMap, // 전역관리로 전환함에 따라 주석처리 진행
 }) {
   const subscriptionsRef = useRef({});
 
@@ -27,10 +27,11 @@ export function useWarehouseSubscription({
       (msg) => onAlert?.(JSON.parse(msg.body)),
     );
 
-    subscriptionsRef.current.map = client.subscribe(
-      `/topic/warehouses/${warehouseId}/map`,
-      (msg) => onMap?.(JSON.parse(msg.body)),
-    );
+    // 전역 관리로 전환
+    // subscriptionsRef.current.map = client.subscribe(
+    //   `/topic/warehouses/${warehouseId}/map`,
+    //   (msg) => onMap?.(JSON.parse(msg.body)),
+    // );
 
     console.log(`📬 창고 ${warehouseId} 구독 시작`);
 
@@ -42,5 +43,6 @@ export function useWarehouseSubscription({
       subscriptionsRef.current = {};
       console.log(`📴 창고 ${warehouseId} 구독 해제`);
     };
-  }, [warehouseId, client, isConnected, onPosition, onAlert, onMap]);
+  }, [warehouseId, client, isConnected, onPosition, onAlert]);
+  // 의존성배열에서 onMap 삭제
 }

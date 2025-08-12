@@ -6,12 +6,17 @@ export const useMapData = () => {
   const imageUrl = useAppStore((state) => state.imageUrl);
 
   const [pgmData, setPgmData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // 데이터 로딩을 위한 useEffect
   useEffect(() => {
-    if (!imageUrl) return;
+    if (!imageUrl) {
+      setPgmData(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
 
     const fetchData = async () => {
       setLoading(true);
