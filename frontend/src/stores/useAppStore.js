@@ -158,6 +158,37 @@ export const useAppStore = create(
       }
     }, // fetchInitialData 액션 끝
 
+    // 새로운 위험 알림 데이터 수신에 대한 액션
+    updateAlertDataFromSocket: (newAlert) => {
+      const processedAlert = {
+        ...newAlert,
+        temperature: Number(newAlert.temperature.toFixed(1)),
+      };
+
+      set((state) => ({
+        spots: state.spots.map((spot) => {
+          if (
+            spot.rackId == processedAlert.rackId &&
+            spot.spotId === processedAlert.spotId
+          ) {
+            return {
+              ...spot,
+              status: processedAlert.status,
+              alertId: processedAlert.alertId,
+              temperature: processedAlert.temperature,
+            };
+          }
+          return spot;
+        }),
+        alerts: [
+          processedAlert,
+          ...state.alerts.filter(
+            (alert) => alert.alertId !== processedAlert.alertId,
+          ),
+        ],
+      }));
+    },
+
     // 새로운 맵데이터 알림 수신에 대한 액션
     updateMapDataFromSocket: (newMapData) => {
       const currentWarehouseId = get().selectedWarehouseId;
