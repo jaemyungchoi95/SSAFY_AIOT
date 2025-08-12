@@ -118,8 +118,11 @@ export const useAppStore = create(
               alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
           if (alertOnThisSpot) {
+            console.log('초기 로딩 데이터 - alertOnThisSpot:', alertOnThisSpot);
+
             return {
               ...spot,
+              temperature: Number(alertOnThisSpot.temperature.toFixed(1)),
               status: alertOnThisSpot.status,
               alertId: alertOnThisSpot.alertId,
             };
@@ -127,17 +130,23 @@ export const useAppStore = create(
           return spot;
         });
 
+        const processedAlerts = alertsData.content.map((alert) => ({
+          ...alert,
+          temperature: Number(alert.temperature.toFixed(1)),
+        }));
+
         // 3. 최종적으로 상태에 저장될 데이터를 확인합니다.
         console.log('[STORE] 최종 상태 데이터 (set 직전):', {
           racks: processedRacks,
           spots: mergedSpots,
+          alerts: processedAlerts,
         });
 
         set({
           imageUrl: imageUrl,
           racks: processedRacks,
           spots: mergedSpots,
-          alerts: alertsData.content,
+          alerts: processedAlerts,
           robots: robotList,
           loading: false,
         });
@@ -148,7 +157,7 @@ export const useAppStore = create(
     }, // fetchInitialData 액션 끝
 
     // 새로운 맵데이터 알림 수신에 대한 액션
-    updateMapDateFromSocket: (newMapData) => {
+    updateMapDataFromSocket: (newMapData) => {
       const currentWarehouseId = get().selectedWarehouseId;
       const currentImageUrl = get().imageUrl;
       const newImageUrl = newMapData.url;
@@ -178,8 +187,13 @@ export const useAppStore = create(
       set({ loading: true, error: null, selectedAlertId: alertId });
       try {
         const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
+        const processedAlertDetail = {
+          ...alertDetailRes,
+          temperature: Number(alertDetailRes.temperature.toFixed(1)),
+        };
+
         set({
-          alertDetail: alertDetailRes,
+          alertDetail: processedAlertDetail,
           loading: false,
         });
       } catch (error) {
@@ -290,7 +304,14 @@ export const useAppStore = create(
     fetchWholeWarehouseAlerts: async () => {
       try {
         const alertsData = await api.fetchAlertsForWholeWarehouse();
-        set({ alerts: alertsData.content || [] });
+        const alertsContent = alertsData.content || [];
+
+        const processedAlerts = alertsContent.map((alert) => ({
+          ...alert,
+          temperature: Number(alert.temperature.toFixed(1)),
+        }));
+
+        set({ alerts: processedAlerts || [] });
       } catch (error) {
         console.error('[STORE] 전체 창고 경고 리스트 로딩 실패:', error);
       }

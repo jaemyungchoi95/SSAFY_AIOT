@@ -1,8 +1,8 @@
 import { useDebouncedCallback } from 'use-debounce';
 import {
   Fragment,
-  useCallback,
-  useEffect,
+  // useCallback,
+  // useEffect,
   useLayoutEffect,
   useMemo,
 } from 'react';
@@ -16,8 +16,8 @@ import RobotMarker from './RobotMarker';
 
 import { useAppStore } from '../stores/useAppStore';
 import { useRobotStore } from '../stores/useRobotStore';
-import { useWarehouseSubscription } from '../hooks/useWarehouseSubscription';
-import { useAlertStore } from '../stores/useAlertStore';
+// import { useWarehouseSubscription } from '../hooks/useWarehouseSubscription';
+// import { useAlertStore } from '../stores/useAlertStore';
 
 const MapViewer = ({
   scale,
@@ -40,52 +40,51 @@ const MapViewer = ({
     fetchDetailAlert,
     selectedAlertId,
     setSelectedAlertId,
-    selectedWarehouseId,
+    // selectedWarehouseId,
   } = useAppStore();
 
-  const updateMapDataFromSocket = useAppStore(
-    (state) => state.updateMapDataFromSocket,
-  );
+  // const updateMapDataFromSocket = useAppStore(
+  //   (state) => state.updateMapDataFromSocket,
+  // );
 
-  // Robot 스토어에서 실시간 데이터와 액션을 가져옵니다.
+  // // Robot 스토어에서 실시간 데이터와 액션을 가져옵니다.
   const robotPositions = useRobotStore((state) => state.robotPositions);
-  const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
-  const resetRobotState = useRobotStore((state) => state.resetRobotState);
+  // const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
 
-  const addSocketAlert = useAlertStore((state) => state.addSocketAlert);
-  const addSocketMap = useAlertStore((state) => state.addSocketMap);
+  // const addSocketAlert = useAlertStore((state) => state.addSocketAlert);
+  // const addSocketMap = useAlertStore((state) => state.addSocketMap);
 
-  // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
-  useEffect(() => {
-    resetRobotState();
-  }, [selectedWarehouseId, resetRobotState]);
+  // // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
+  // useEffect(() => {
+  //   resetRobotState();
+  // }, [selectedWarehouseId, resetRobotState]);
 
-  // 2. useCallback으로 콜백 함수들을 감싸줍니다.
-  //    의존성 배열이 비어있으므로, 이 함수들은 최초 렌더링 시에만 생성됩니다.
-  const onAlertCallback = useCallback(
-    (data) => {
-      console.log('Alert 수신:', data);
-      addSocketAlert(data);
-    },
-    [addSocketAlert],
-  );
+  // // 2. useCallback으로 콜백 함수들을 감싸줍니다.
+  // //    의존성 배열이 비어있으므로, 이 함수들은 최초 렌더링 시에만 생성됩니다.
+  // const onAlertCallback = useCallback(
+  //   (data) => {
+  //     console.log('Alert 수신:', data);
+  //     addSocketAlert(data);
+  //   },
+  //   [addSocketAlert],
+  // );
 
-  const onMapCallback = useCallback(
-    (data) => {
-      console.log('Map 수신:', data);
-      addSocketMap(data);
-      updateMapDataFromSocket(data);
-    },
-    [addSocketMap, updateMapDataFromSocket],
-  );
+  // const onMapCallback = useCallback(
+  //   (data) => {
+  //     console.log('Map 수신:', data);
+  //     addSocketMap(data);
+  //     updateMapDataFromSocket(data);
+  //   },
+  //   [addSocketMap, updateMapDataFromSocket],
+  // );
 
-  // 4. 구독 훅에 로봇 위치를 업데이트하는 액션을 콜백으로 전달합니다.
-  useWarehouseSubscription({
-    warehouseId: selectedWarehouseId,
-    onPosition: setRobotPosition, // 로봇 위치 업데이트 콜백 연결
-    onAlert: onAlertCallback, // 알림 처리 로직 연결 필요
-    onMap: onMapCallback, // 맵 업데이트 처리 로직 연결 필요
-  });
+  // // 4. 구독 훅에 로봇 위치를 업데이트하는 액션을 콜백으로 전달합니다.
+  // useWarehouseSubscription({
+  //   warehouseId: selectedWarehouseId,
+  //   onPosition: setRobotPosition, // 로봇 위치 업데이트 콜백 연결
+  //   onAlert: onAlertCallback, // 알림 처리 로직 연결 필요
+  //   onMap: onMapCallback, // 맵 업데이트 처리 로직 연결 필요
+  // });
 
   const selectedSpot = useMemo(() => {
     if (!selectedAlertId || !Array.isArray(spots)) {
