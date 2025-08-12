@@ -1,6 +1,4 @@
 import React from 'react';
-import './FilterDay.css';
-import './FilterTime.css';
 
 import CalenderIcon from '../../assets/Calender.png';
 import FilterDropIcon from '../../assets/FilterDrop.png';
@@ -18,22 +16,22 @@ const FilterDay = () => {
   };
 
   return (
-    <div className="FilterStatus" ref={dropdownRef}>
+    <div className="relative w-[100%]" ref={dropdownRef}>
       <button
-        className="Filter_Title"
+        className="flex items-center gap-2 py-2 px-3 border-1 border-[#c2c2c2] rounded-3 bg-[#20212a] text-[#eaeaf0] cursor-pointer w-[100%]"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <img src={CalenderIcon} className="Icon" alt="" />
         <span className="Label">{selectedDay}</span>
-        <img src={FilterDropIcon} alt="" className="Chevron" />
+        <img src={FilterDropIcon} alt="" className="text-xs ml-auto" />
       </button>
 
       {isOpen && (
-        <div className="Filter_Menu">
+        <div className="absolute top-[100%] left-0 bg-[#2a2b35] border-1 border-[#c2c2c2] rounded-3 min-w-[120px] shadow-[0_4px_8px_rgba(0,0,0,0.3)] z-[100] flex flex-col w-[100%]">
           {['전체', '하루', '일주일', '한달'].map((day) => (
             <button
               key={day}
-              className="Filter_Item"
+              className="py-2.5 px-3 text-[#eaeaf0] cursor-pointer text-left"
               onClick={() => handleSelect(day)}
             >
               {day}

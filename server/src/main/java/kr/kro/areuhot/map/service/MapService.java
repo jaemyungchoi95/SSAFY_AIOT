@@ -1,5 +1,7 @@
 package kr.kro.areuhot.map.service;
 
+import kr.kro.areuhot.common.exception.CustomException;
+import kr.kro.areuhot.common.exception.ErrorCode;
 import kr.kro.areuhot.common.util.S3Util;
 import kr.kro.areuhot.map.dto.MapResponseDto;
 import kr.kro.areuhot.map.mapper.MapMapper;
@@ -36,10 +38,13 @@ public class MapService {
     public MapResponseDto getActiveMapByWarehouseId(Integer warehouseId) {
         MapResponseDto dto = mapMapper.findActiveMapByWarehouseId(warehouseId);
 
-        if(dto != null && dto.getFilePath() != null) {
-            String presignedUrl = s3Util.generatePresignedUrl(dto.getFilePath());
-            dto.setFilePath(presignedUrl);
-        }
+        if(dto == null) throw new CustomException(ErrorCode.MAP_NOT_READY);
+
+        String key = dto.getFilePath();
+        if(key == null || key.isBlank()) throw new CustomException(ErrorCode.PATH_MISSING);
+
+        String presignedUrl = s3Util.generatePresignedUrl(key);
+        dto.setFilePath(presignedUrl);
 
         return dto;
     }

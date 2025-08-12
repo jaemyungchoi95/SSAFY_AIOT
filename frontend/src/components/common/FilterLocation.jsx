@@ -1,6 +1,5 @@
 import React from 'react';
 import './FilterLocation.css';
-import './FilterTime.css';
 import { useState } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
 
