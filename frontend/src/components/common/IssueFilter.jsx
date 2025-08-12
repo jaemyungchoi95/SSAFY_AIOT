@@ -1,5 +1,4 @@
 import React from 'react';
-import './IssueFilter.css';
 import FilterTime from './FilterTime';
 import FilterStatusClick from './FilterStatusClick';
 import FilterDay from './FilterDay';
@@ -14,32 +13,36 @@ const IssueFilter = () => {
   const setShowDangerOnly = useAppStore((state) => state.setShowDangerOnly);
 
   return (
-    <div className="IssueFilter">
-      <div className="IssueFilter_Title">전체 이슈 관리</div>
-      <div className="Dropdown_Filter">
-        <div className="Dropdown_Filter_Left">
+    <div className="flex flex-col px-4 py-2 gap-3">
+      <div className="md:text-[17px] text-xs font-bold text-[#eaeaf0] flex-[1]">
+        전체 이슈 관리
+      </div>
+      <div className="flex flex-[1] gap-4">
+        <div className="flex gap-2 w-[25%]">
           <FilterTime />
           <FilterDay />
         </div>
-        <div className="Dropdown_Filter_Right">
+        <div className="flex gap-2 items-center">
           <FilterStatusClick text={'전체'} />
           <FilterStatusClick text={'미확인'} />
           <FilterStatusClick text={'처리 완료'} />
         </div>
       </div>
-      <div className="Searh_Filter">
-        <div className="Search_Filter_Left">
-          <img src={searchIcon} alt="search icon" />
+      <div className="flex gap-3.5 w-[100%]">
+        <div className="flex border-b-2 border-[#4b4b4b] gap-2 w-[20%] items-center">
+          <img className="w-auto h-auto" src={searchIcon} alt="search icon" />
           <input
+            className="text-sm w-[100%] rounded-none outline-0"
             type="text"
             placeholder="검색어를 입력해주세요"
             onChange={(e) => setSearchKeyword(e.target.value)} // 상태 직접 변경
           />
         </div>
-        <div className="Search_Filter_Right">
+        <div className="flex gap-2.5 items-center">
           <label htmlFor="danger">
-            <div className="Search_Filter_Checkbox">
+            <div className="cursor-pointer">
               <input
+                className="accent-[#787980]"
                 type="checkbox"
                 id="danger"
                 checked={showDangerOnly}
