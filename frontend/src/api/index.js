@@ -48,11 +48,15 @@ export const fetchAlertsForWarehouse = (warehouseId) =>
 export const fetchAlertsForWholeWarehouse = () =>
   axios.get('/api/alerts').then(getResponseData);
 
-// 9. 빈칸
-// 10. 창고 내부 로봇 list
-// 빈칸
+// 9. 창고 내부 로봇 list / GET 요청
+// /api/warehouses/{warehouseId}/robots
+export const fetchRobotList = (warehouseId) => {
+  return axios
+    .get(`/api/warehouses/${warehouseId}/robots`)
+    .then(getResponseData);
+};
 
-// 11. 리포트 처리 등록 / POST 요청
+// 10. 리포트 처리 등록 / POST 요청
 // /api/alerts/{alertId}/processing
 export const submitAlertReport = (alertId, reportData) => {
   // 이 예제에서는 POST를 사용하지만, 실제로는 등록(POST)과 수정(PATCH)을 구분해야 할 수 있습니다.
@@ -61,10 +65,24 @@ export const submitAlertReport = (alertId, reportData) => {
     .then(getResponseData);
 };
 
-// 12. 리포트 처리 수정 / PUT 요청
+// 11. 리포트 처리 수정 / PUT 요청
 // /api/alerts/{alertId}/processing
 export const updateAlertReport = (alertId, reportData) => {
   return axios
     .put(`/api/alerts/${alertId}/processing`, reportData)
     .then(getResponseData);
+};
+
+//13.userLogin
+///api/admin/login
+export const login = (username, password) => {
+  return axios
+    .post('api/admin/login', { username, password }, { withCredentials: true })
+    .then((response) => response.data);
+};
+
+//14.logout
+///api/admin/logout
+export const logout = () => {
+  return axios.post('/api/admin/logout', null, { withCredentials: true });
 };

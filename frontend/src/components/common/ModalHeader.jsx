@@ -1,6 +1,9 @@
 import React from 'react';
 import './ModalHeader.css';
 import Status from './Status';
+
+import CloseBtn from '../../assets/CloseBtn.png';
+
 import { useAppStore } from '../../stores/useAppStore';
 
 const ModalHeader = () => {
@@ -23,15 +26,18 @@ const ModalHeader = () => {
   return (
     <div className="ModalHeader">
       <div className="ModalHeader_Left">
-        <div className="Modal_Spot">Rack-{selectedAlert.rackId}</div>
-        <Status
-          text={selectedAlert.danger ? '위험' : isCompleteText}
-          type={selectedAlert.danger ? 'Danger' : isCompleteType}
-        />
+        <div className="Modal_Spot">
+          {' '}
+          Rack {selectedAlert.rackId} - {selectedAlert.spotId}
+        </div>
+        <div className="IssueItem_StatusGroup">
+          {selectedAlert.danger && <Status text="위험" type="Danger" />}
+          <Status text={isCompleteText} type={isCompleteType} />
+        </div>
       </div>
 
       <button className="Modal_CloseBtn" onClick={handleClose}>
-        <img src="../../src/assets/CloseBtn.png" alt="닫기 버튼" />
+        <img src={CloseBtn} alt="닫기 버튼" />
       </button>
     </div>
   );

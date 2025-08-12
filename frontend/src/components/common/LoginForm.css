@@ -37,6 +37,7 @@
   border-radius: 15px;
   margin: 25px 0px 25px 0px;
   cursor: pointer;
+  width: 100%;
 }
 
 .LoginForm_Footer {

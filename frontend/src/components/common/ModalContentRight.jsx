@@ -4,6 +4,7 @@ import DetailWrite from './DetailWrite';
 import SidebarDetailReport from './SidebarDetailReport';
 import ReportBtn from './ReportBtn';
 import { useAppStore } from '../../stores/useAppStore';
+import { useUserStore } from '../../stores/useUserStore';
 
 const ModalContentRight = () => {
   const {
@@ -18,6 +19,8 @@ const ModalContentRight = () => {
     fetchDetailAlert,
     selectedAlertId,
   } = useAppStore();
+
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   useEffect(() => {
     setIsWritingId(null);
@@ -72,9 +75,11 @@ const ModalContentRight = () => {
             onCancel={handleCancelWrite}
           />
         ) : (
-          <div className="Modal_ReportBtnWrapper">
-            <ReportBtn text="작성하기" onClick={handleWriteClick} />
-          </div>
+          isLoggedIn && (
+            <div className="Modal_ReportBtnWrapper">
+              <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
+            </div>
+          )
         )}
       </div>
     </div>

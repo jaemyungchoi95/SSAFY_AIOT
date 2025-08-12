@@ -1,6 +1,5 @@
 import React from 'react';
 import './FilterLocation.css';
-import './FilterTime.css';
 import { useState } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
 
@@ -25,7 +24,9 @@ const FilterLocation = () => {
         className="FilterLocation_Title"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <span>{defaultName}</span>
+        <span className="inline-block max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis">
+          {defaultName}
+        </span>
         <span className="Chevron">▼</span>
       </button>
       <div className="LocationUnderline"></div>

@@ -1,15 +1,14 @@
 import React from 'react';
-import './IssuePage.css';
 import IssueFilter from '../components/common/IssueFilter';
 import IssueContent from '../components/common/IssueContent';
 
 const IssuePage = () => {
   return (
-    <div className="IssuePage">
-      <div className="IssuePage_header">
+    <div className="flex flex-col gap-2.5 h-[calc(100dvh-80px)] mx-5">
+      <div className="bg-[#20212a] flex-[0.5] rounded-[15px] pb-3 pt-2">
         <IssueFilter />
       </div>
-      <div className="IssuePage_Content">
+      <div className="bg-[#20212a] flex-[3] rounded-[15px] flex flex-col overflow-hidden">
         <IssueContent />
       </div>
     </div>

@@ -1,10 +1,11 @@
 import React from 'react';
 import './ReportBtn.css';
+import UpdateIcon from '../../assets/UpdateIcon.png';
 
 const ReportBtn = ({ text, onClick }) => {
   return (
     <button className="ReportBtn" onClick={onClick}>
-      <img src="../../src/assets/UpdateIcon.png" alt="" />
+      <img src={UpdateIcon} alt="" />
       {text}
     </button>
   );

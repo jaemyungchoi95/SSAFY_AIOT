@@ -1,8 +1,8 @@
 import React from 'react';
-import './FilterStatus.css';
-import './FilterTime.css';
 import { useFilterStore } from '../../stores/useFilterStore';
 import { useDropdownFilter } from '../../hooks/useDropdownFilter';
+import FilterStatusIcon from '../../assets/FilterStatus.png';
+import FilterDropIcon from '../../assets/FilterDrop.png';
 
 const FilterStatus = () => {
   const { isOpen, setIsOpen, dropdownRef } = useDropdownFilter();
@@ -13,22 +13,22 @@ const FilterStatus = () => {
     setIsOpen(false);
   };
   return (
-    <div className="FilterStatus" ref={dropdownRef}>
+    <div className="relative w-[100%]" ref={dropdownRef}>
       <button
-        className="Filter_Title"
+        className="flex items-center gap-2 py-2 px-3 border-1 border-[#c2c2c2] rounded-3 bg-[#20212a] text-[#eaeaf0] cursor-pointer w-[100%]"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img src="../../src/assets/FilterStatus.png" className="Icon" alt="" />
+        <img src={FilterStatusIcon} className="Icon" alt="" />
         <span className="Label">{selectedStatus}</span>
-        <img src="../../src/assets/FilterDrop.png" alt="" className="Chevron" />
+        <img src={FilterDropIcon} alt="" className="text-xs ml-auto" />
       </button>
 
       {isOpen && (
-        <div className="Filter_Menu">
+        <div className="absolute top-[100%] left-0 bg-[#2a2b35] border-1 border-[#c2c2c2] rounded-3 min-w-[120px] shadow-[0_4px_8px_rgba(0,0,0,0.3)] z-[100] flex flex-col w-[100%]">
           {['전체', '처리완료', '미확인', '위험'].map((status) => (
             <button
               key={status}
-              className="Filter_Item"
+              className="py-2.5 px-3 text-[#eaeaf0] cursor-pointer text-left"
               onClick={() => handleSelect(status)}
             >
               {status}

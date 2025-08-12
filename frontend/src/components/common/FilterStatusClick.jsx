@@ -1,5 +1,4 @@
 import React from 'react';
-import './FilterStatusClick.css';
 import { useAppStore } from '../../stores/useAppStore';
 
 const FilterStatusClick = ({ text }) => {
@@ -14,7 +13,7 @@ const FilterStatusClick = ({ text }) => {
 
   return (
     <button
-      className={`FilterStatusClick ${isActive ? 'active' : ''}`}
+      className={`FilterStatusClick border-1 border-[#c2c2c2] rounded-3 px-2.5 cursor-pointer font-bold text-base inline-flex items-center justify-center h-10 hover:bg-[#c2c2c2] hover:text-[#20212a] ${isActive ? 'bg-[#c2c2c2] text-[#20212a]' : ''}`}
       onClick={() => setSelectedStatusFilter(text)}
     >
       {text}

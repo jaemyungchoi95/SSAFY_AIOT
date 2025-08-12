@@ -5,25 +5,29 @@ import DateInfo from './DateInfo';
 import { useAppStore } from '../../stores/useAppStore';
 
 const Modal_Content_Left = () => {
-  const { alerts, selectedAlertId } = useAppStore();
-  const selectedAlert = alerts.find((a) => a.alertId === selectedAlertId);
+  const { alertDetail } = useAppStore();
+
+  if (!alertDetail) {
+    // 데이터 없으면 로딩 표시하거나 빈 화면 렌더링
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className="Modal_Content_Left">
       <div className="Modal_Content_Left_Title">리포트 내용</div>
       <div className="Modal_Content_Left_Date">
         <DateInfo
-          createdAt={selectedAlert.createdAt}
-          handledAt={selectedAlert?.handledAt}
+          createdAt={alertDetail.createdAt}
+          handledAt={alertDetail.handledAt}
         />
       </div>
       <div className="Modal_Content_Left_Temp">
-        <TempInfo temperature={selectedAlert.temperature} />
+        <TempInfo temperature={alertDetail.temperature} />
       </div>
 
       <div className="Modal_Content_Left_Images"></div>
-      <img src={selectedAlert.imageThermalUrl} alt="" />
-      <img src={selectedAlert.imageNormalUrl} alt="" />
+      <img src={alertDetail.imageThermalUrl} alt="" />
+      <img src={alertDetail.imageNormalUrl} alt="" />
     </div>
   );
 };

@@ -1,8 +1,10 @@
 .FilterLocation {
   font-family: sans-serif;
-  color: #EAEAF0;
+  color: #eaeaf0;
   position: relative;
-  width: 30vh;
+  width: 100%; /* 부모 너비에 맞게 꽉 채움 */
+  max-width: 300px; /* 최대 너비 제한 */
+  box-sizing: border-box;
 }
 
 .FilterLocation_Title {
@@ -14,16 +16,18 @@
   font-weight: bold;
   cursor: pointer;
   width: 100%;
+  text-overflow: ellipsis;
 }
 
 .Chevron {
   font-size: 10px;
   margin-left: 4px;
+  flex-shrink: 0; /* 축소하지 않음 */
 }
 
 .LocationUnderline {
   height: 1px;
-  background-color: #EAEAF0;
+  background-color: #eaeaf0;
   margin-top: 4px;
 }
 
@@ -49,4 +53,17 @@
 
 .FilterItem:hover {
   background-color: #3a3b45;
+}
+
+@media (max-width: 768px) {
+  .FilterLocation_Title {
+    font-size: 1rem; /* 모바일에서 글자 크기 축소 */
+  }
+
+  /* 말줄임 설정 보강 */
+  .FilterLocation_Title span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

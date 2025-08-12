@@ -52,6 +52,6 @@ public class FullMapService {
                 .createdAt(createdAt)
                 .build();
 
-        publisher.send(warehouseId, WebSocketTopic.MAP_READY, message);
+        publisher.send(WebSocketTopic.MAP_READY, message);
     }
 }
