@@ -314,6 +314,6 @@ public class AlertService {
                 .createdAt(dto.getCreatedAt())
                 .build();
 
-        publisher.send(dto.getWarehouseId(), WebSocketTopic.ALERT, message);
+        publisher.send(WebSocketTopic.ALERT, message);
     }
 }

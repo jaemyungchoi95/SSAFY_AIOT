@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum WebSocketTopic {
-    ALERT("alert", true),
+    ALERT("alert", false),
     POSITION("position", true),
     MAP_READY("map", false);
 
