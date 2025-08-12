@@ -13,7 +13,13 @@ public enum ErrorCode {
     UNAUTHORIZED(401, "인증이 필요합니다."),
     FORBIDDEN(403, "접근 권한이 없습니다."),
 
-    MAP_NOT_READY(400, "지도가 아직 준비되지 않았습니다."),
+    // map
+    MAP_NOT_READY(404, "지도가 아직 준비되지 않았습니다."),
+
+    // file
+    PATH_MISSING(500, "파일 경로가 없습니다."),
+    PATH_INVALID(500, "파일 경로가 올바르지 않습니다."),
+    PRESIGN_FAILED(502, "Presign URL 생성에 실패했습니다."),
 
     // Alert 관련 에러
     ALERT_NOT_FOUND(404, "Alert을 찾을 수 없습니다."),

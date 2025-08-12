@@ -6,6 +6,7 @@ import kr.kro.areuhot.alert.mapper.AlertProcessingMapper;
 import kr.kro.areuhot.alert.model.Alert;
 import kr.kro.areuhot.alert.model.AlertProcessing;
 import kr.kro.areuhot.alert.model.AlertStatus;
+import kr.kro.areuhot.alert.util.AlertConditionValidator;
 import kr.kro.areuhot.common.exception.CustomException;
 import kr.kro.areuhot.common.exception.ErrorCode;
 import kr.kro.areuhot.common.util.S3Util;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,16 +29,33 @@ public class AlertService {
     private final AlertProcessingMapper alertProcessingMapper;
     private final S3Util s3Util;
     private final WebSocketPublisher publisher;
+    private final AlertConditionValidator validator;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
     private static final int DANGER_THRESHOLD_COUNT = 2;  // 2번 이상
 
     public AlertResponseDto getAlertsById(Integer warehouseId, Integer alertId) {
-        return alertMapper.getAlertByAlertId(warehouseId, alertId);
+        AlertResponseDto dto = alertMapper.getAlertByAlertId(warehouseId, alertId);
+        if(dto == null) throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+        return dto;
     }
 
     public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, Integer limit, Integer offset) {
+        if(condition != null) validator.validate(condition);
+
         long totalElements = countAlerts(condition);
+
+        if (totalElements == 0) {
+            return AlertPageResponseDto.builder()
+                    .content(Collections.emptyList())
+                    .offset(offset)
+                    .limit(limit)
+                    .totalElements(0L)
+                    .totalPages(0)
+                    .last(true)
+                    .build();
+        }
+
         int totalPages = (int) Math.ceil((double) totalElements / limit);
         int sqlOffset = offset * limit;
         boolean last = offset + limit >= totalElements;
@@ -56,15 +75,15 @@ public class AlertService {
     public AlertDetailResponseDto getAlertDetail(Integer alertId) {
         AlertDetailResponseDto dto = alertMapper.getAlertDetailByAlertId(alertId);
 
-        if(dto != null) {
-            if(dto.getImageThermalUrl() != null) {
-                String presignedUrl = s3Util.generatePresignedUrl(dto.getImageThermalUrl());
-                dto.setImageThermalUrl(presignedUrl);
-            }
-            if(dto.getImageNormalUrl() != null) {
-                String presignedUrl = s3Util.generatePresignedUrl(dto.getImageNormalUrl());
-                dto.setImageNormalUrl(presignedUrl);
-            }
+        if(dto == null) throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+
+        if(dto.getImageThermalUrl() != null) {
+            String presignedUrl = s3Util.generatePresignedUrl(dto.getImageThermalUrl());
+            dto.setImageThermalUrl(presignedUrl);
+        }
+        if(dto.getImageNormalUrl() != null) {
+            String presignedUrl = s3Util.generatePresignedUrl(dto.getImageNormalUrl());
+            dto.setImageNormalUrl(presignedUrl);
         }
 
         return dto;
