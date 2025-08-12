@@ -1,6 +1,8 @@
 package kr.kro.areuhot.common.util;
 
 import jakarta.annotation.PostConstruct;
+import kr.kro.areuhot.common.exception.CustomException;
+import kr.kro.areuhot.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -46,18 +48,32 @@ public class S3Util {
     }
 
     public String generatePresignedUrl(String key) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build();
+        try {
+            if(presigner == null) {
+                throw new IllegalStateException("S3Presigner이 초기화되지 않았습니다.");
+            }
+            if (key == null || key.isBlank()) {
+                throw new CustomException(ErrorCode.PATH_MISSING);
+            }
 
-        GetObjectPresignRequest getPresignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(URL_DURATION))
-                .getObjectRequest(getObjectRequest)
-                .build();
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
 
-        URL url = presigner.presignGetObject(getPresignRequest).url();
-        return url.toString();
+            GetObjectPresignRequest getPresignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(URL_DURATION))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            URL url = presigner.presignGetObject(getPresignRequest).url();
+            return url.toString();
+
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.PRESIGN_FAILED);
+        }
     }
 
     public String extractKeyFromUrl(String url) {
