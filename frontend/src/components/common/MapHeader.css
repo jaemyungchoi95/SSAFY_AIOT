@@ -1,26 +1,26 @@
 .MapHeader {
-  background-color: #20212A;
+  background-color: #20212a;
   padding: 27px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #EAEAF0;
+  color: #eaeaf0;
   border-radius: 15px;
 }
 
-.MapHeader_right{
-    display: flex;
-    gap: 50px;
+.MapHeader_right {
+  display: flex;
+  gap: 50px;
 }
 
-.MapHeader_caution, 
+.MapHeader_caution,
 .MapHeader_danger {
   display: flex;
   align-items: center;
-  gap: 5px;  
+  gap: 5px;
 }
 
-.MapHeader_IssueCnt{
+.MapHeader_IssueCnt {
   font-weight: bolder;
 }
 
@@ -42,4 +42,37 @@
 .MapHeader_ZoomOut,
 .MapHeader_ZoomOrigin {
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .MapHeader_ratio {
+    display: none;
+  }
+  .MapHeader_left {
+    width: 40%;
+  }
+  .MapHeader_issue {
+    gap: 50%;
+  }
+  .MapHeader_IssueCnt {
+    font-size: 1rem;
+  }
+  .MapHeader_caution,
+  .MapHeader_danger {
+    gap: 5%;
+    font-size: 1rem;
+  }
+  /* 미확인, 위험 텍스트 크기 작게 */
+  .MapHeader_issue span:not(.MapHeader_IssueCnt) {
+    display: none;
+  }
+  .MapHeader {
+    justify-content: flex-start;
+  }
+  .MapHeader_left {
+    width: 40%;
+  }
+  .MapHeader_right {
+    margin-left: 30%;
+  }
 }
