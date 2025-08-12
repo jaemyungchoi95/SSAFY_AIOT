@@ -4,13 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum WebSocketTopic {
-    ALERT("alert"),
-    POSITION("position"),
-    MAP_READY("map");
+    ALERT("alert", true),
+    POSITION("position", true),
+    MAP_READY("map", false);
 
     private final String topicName;
+    private final boolean warehouseScoped;
 
-    WebSocketTopic(String topicName) {
+    WebSocketTopic(String topicName, boolean warehouseScoped) {
         this.topicName = topicName;
+        this.warehouseScoped = warehouseScoped;
     }
 }
