@@ -165,6 +165,16 @@ export const useAppStore = create(
         temperature: Number(newAlert.temperature.toFixed(1)),
       };
 
+      const state = get();
+      // 만약 지금 상세 정보를 보고 있고, 그 정보가 방금 들어온 알림과 동일한 것이라면
+      if (state.alertDetail && state.alertDetail === processedAlert.alertId) {
+        console.log(
+          `[STORE] 현재 보고 있는 알림(${processedAlert.alertId})에 대한 업데이트 수신. 상세 정보를 다시 불러옵니다.`,
+        );
+        // 상세 정보를 다시 불러오는 액션을 호출합니다.
+        state.fetchDetailAlert(processedAlert.alertId);
+      }
+
       set((state) => ({
         spots: state.spots.map((spot) => {
           if (
@@ -220,6 +230,10 @@ export const useAppStore = create(
       set({ loading: true, error: null, selectedAlertId: alertId });
       try {
         const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
+        console.log(
+          `[DEBUG] 서버가 ID ${alertId}에 대해 응답한 데이터:`,
+          alertDetailRes,
+        );
         const processedAlertDetail = {
           ...alertDetailRes,
           temperature: Number(alertDetailRes.temperature.toFixed(1)),
