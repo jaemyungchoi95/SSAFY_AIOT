@@ -23,21 +23,35 @@
   overflow: hidden;
 }
 
-/* collapsed 클래스 제거 (필요시, 사용 안해도 됨) */
-.sidebar_detail_area.collapsed {
-  flex: 0;
-  min-width: 0;
-  padding: 0;
-  opacity: 0;
-  border: none;
-}
-
 .sidebar_area {
   flex: 1;
   min-width: 250px;
   overflow-y: auto;
   flex-direction: column;
   display: flex;
+}
+
+/* 기존 Home.css 내용... */
+.alert_toast_container {
+  position: fixed;
+  top: 150px;
+  left: 50px;
+  display: flex;
+  flex-direction: column; /* 새 알림이 위로 올라오도록 */
+  gap: 5px;
+  align-items: center;
+  z-index: 1000; /* 다른 요소들 위에 표시되도록 */
+}
+
+.map_toast_container {
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse; /* 새 알림이 위로 올라오도록 */
+  align-items: center;
+  z-index: 1000; /* 다른 요소들 위에 표시되도록 */
 }
 
 /* 모바일 환경 */
@@ -65,7 +79,7 @@
     left: 0;
     width: 100%;
     height: 80%;
-    z-index: 9999;
+    z-index: 999;
     overflow-y: auto;
     flex: none;
     min-width: unset;
@@ -79,27 +93,14 @@
   .sidebar_detail_area.collapsed {
     display: none;
   }
-}
-/* 기존 Home.css 내용... */
 
-.alert_toast_container {
-  position: absolute;
-  top: 20%;
-  left: 10%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column-reverse; /* 새 알림이 위로 올라오도록 */
-  align-items: center;
-  z-index: 1000; /* 다른 요소들 위에 표시되도록 */
-}
-
-.map_toast_container {
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column-reverse; /* 새 알림이 위로 올라오도록 */
-  align-items: center;
-  z-index: 1000; /* 다른 요소들 위에 표시되도록 */
+  .alert_toast_container {
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+  }
+  .map_toast_container {
+    bottom: 2%;
+  }
 }

@@ -25,7 +25,6 @@
   height: 200px;
 
   overflow: hidden;
-  background-color: red;
 }
 
 /* 캐러셀과 그 안의 아이템들이 부모(.SidebarDetailContent_Img)의 높이를 100% 사용하도록 설정 */

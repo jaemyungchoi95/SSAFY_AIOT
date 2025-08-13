@@ -20,22 +20,24 @@ const MapToast = ({ map }) => {
 
   return (
     <section
-      className={`bg-[#5B5C67] border-2 border-[#FFBC5F] rounded-[15px] w-[400px] h-[80px] flex  gap-1.5`}
+      className={
+        'bg-[#5B5C67] border-2 border-[#FFBC5F] rounded-[15px] w-70 max-w-[400px] h-20 flex items-center gap-2 px-2'
+      }
     >
-      <div className="flex items-center justify-center w-[15%]">
-        <div className="border-3 border-[#FFBC5F] rounded-full w-[30px] h-[30px] flex justify-center text-center font-bold text-[#FFBC5F]">
+      <div className="flex-shrink-0 px-2">
+        <div className="border-[3px] border-[#FFBC5F] rounded-full w-[30px] h-[30px] flex justify-center text-center font-bold text-[#FFBC5F]">
           !
         </div>
       </div>
-      <div className="w-[70%] flex items-center gap-2">
-        <p className="text-[18px] font-bold m-0 p-0">
-          맵 생성이 완료되었습니다!
+      <div className="flex flex-col flex-1 justify-center min-w-0">
+        <p className="text-sm md:text-base font-bold m-0 p-0 truncate">
+          맵 생성 완료!
         </p>
-        <p className="text-xs sm:text-sm md:text-base font-medium m-0 p-0 text-[#C2C2C2]">
+        <p className="text-xs md:text-sm font-medium m-0 p-0 text-[#C2C2C2] truncate">
           창고 ID: {warehouseId} ({formattedTime})
         </p>
       </div>
-      <div className="w-[15%] flex justify-center items-center">
+      <div className="flex-shrink-0 px-2">
         <button
           className="text-[#C2C2C2] !text-3xl m-0 pb-2 text-center"
           onClick={() => dismissMap(id)}

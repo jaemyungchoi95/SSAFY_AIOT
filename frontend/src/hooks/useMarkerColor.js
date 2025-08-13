@@ -4,7 +4,6 @@ import imgDone from '../assets/MapDone.png';
 import imgNothing from '../assets/MapNothing.png';
 
 const useMarkerColor = (spot) => {
-  console.log('spot 전체:', spot);
   if (spot.status === 'DONE') {
     return imgDone;
   }

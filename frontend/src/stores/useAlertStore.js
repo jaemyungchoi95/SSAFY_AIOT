@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 const ALERT_DISPLAY_DURATION = 5000; // 원하는 시간으로 조정 가능
+const MAX_ALERTS = 5; // 최대 알림 개수
 
 export const useAlertStore = create(
   devtools((set, get) => ({
@@ -15,35 +16,40 @@ export const useAlertStore = create(
     // 특이사항 발견시 알림 업데이트
     addSocketAlert: (newAlert) =>
       set((state) => {
-        // 동일한 alertId를 가진 기존 알림의 타임아웃이 있다면 클리어
-        if (state._alertTimeouts[newAlert.alertId]) {
-          clearTimeout(state._alertTimeouts[newAlert.alertId]);
-          delete state._alertTimeouts[newAlert.alertId];
+        const newTimeouts = { ...state._alertTimeouts };
+
+        // 만약 동일한 ID의 알림이 이미 있다면, 기존 타임아웃을 취소
+        if (newTimeouts[newAlert.alertId]) {
+          clearTimeout(newTimeouts[newAlert.alertId]);
         }
 
-        // 기존 알림들은 isNew를 false로 설정
-        const updatedSocketAlerts = state.socketAlerts.map((alert) => ({
-          ...alert,
-          isNew: false,
-        }));
+        // 새 알림을 배열의 맨 앞에 추가하고, 기존에 있던 동일 ID의 알림은 필터링하여 제거
+        const currentAlerts = [
+          newAlert,
+          ...state.socketAlerts.filter((a) => a.alertId !== newAlert.alertId),
+        ];
 
-        // 새 알림을 추가하고 isNew를 true로 설정, 고유 ID 부여 (alertId가 없거나 중복될 경우 대비)
-        const newSocketAlerts = {
-          ...newAlert,
-          isNew: true,
-          id: newAlert.alertId || Date.now(),
-        };
+        // 최대 개수(5개)를 넘는 알림은 잘라냄
+        const alertsToKeep = currentAlerts.slice(0, MAX_ALERTS);
+        const alertsToRemove = currentAlerts.slice(MAX_ALERTS);
 
+        // 잘려나간 알림들의 타임아웃을 메모리에서 정리
+        alertsToRemove.forEach((alert) => {
+          if (newTimeouts[alert.alertId]) {
+            clearTimeout(newTimeouts[alert.alertId]);
+            delete newTimeouts[alert.alertId];
+          }
+        });
+
+        // 새 알림에 대한 자동 닫기 타임아웃 설정
         const timeoutId = setTimeout(() => {
-          get().dismissAlert(newSocketAlerts.id);
+          get().dismissAlert(newAlert.alertId);
         }, ALERT_DISPLAY_DURATION);
+        newTimeouts[newAlert.alertId] = timeoutId;
 
         return {
-          socketAlerts: [...updatedSocketAlerts, newSocketAlerts],
-          _alertTimeouts: {
-            ...state._alertTimeouts,
-            [newSocketAlerts.id]: timeoutId,
-          },
+          socketAlerts: alertsToKeep,
+          _alertTimeouts: newTimeouts,
         };
       }),
 
@@ -75,28 +81,39 @@ export const useAlertStore = create(
       }),
 
     // 소켓 알림 창닫기
-    dismissAlert: (id) =>
+    dismissAlert: (alertId) =>
       set((state) => {
-        // 수동으로 닫을 경우 해당 알림의 타임아웃 클리어
-        if (state._alertTimeouts[id]) {
-          clearTimeout(state._alertTimeouts[id]);
-          delete state._alertTimeouts[id];
+        // 상태를 직접 바꾸지 않고, 복사본을 만들어 작업
+        const newTimeouts = { ...state._alertTimeouts };
+
+        // 복사된 객체에서 타임아웃을 찾아 제거
+        if (newTimeouts[alertId]) {
+          clearTimeout(newTimeouts[alertId]);
+          delete newTimeouts[alertId];
         }
         return {
-          socketAlerts: state.socketAlerts.filter((alert) => alert.id !== id),
+          socketAlerts: state.socketAlerts.filter(
+            (alert) => alert.alertId !== alertId,
+          ),
+          // 수정된 타임아웃 객체를 반환하여 상태를 업데이트
+          _alertTimeouts: newTimeouts,
         };
       }),
 
     // Map 알림 창닫기
     dismissMap: (id) =>
       set((state) => {
-        // 수동으로 닫을 경우 해당 맵 알림의 타임아웃 클리어
-        if (state._mapTimeouts[id]) {
-          clearTimeout(state._mapTimeouts[id]);
-          delete state._mapTimeouts[id];
+        // 상태를 직접 바꾸지 않고, 복사본을 만들어 작업
+        const newTimeouts = { ...state._mapTimeouts };
+
+        // 복사된 객체에서 타임아웃을 찾아 제거
+        if (newTimeouts[id]) {
+          clearTimeout(newTimeouts[id]);
+          delete newTimeouts[id];
         }
         return {
           socketMaps: state.socketMaps.filter((map) => map.id !== id),
+          _mapTimeouts: newTimeouts,
         };
       }),
   })), // devtools

@@ -97,7 +97,7 @@ def extract_racks_and_spots(filled, min_v):
     boxes = [m['box'] for m in meta if m['keep']]
 
     # Margin point 계산
-    margin, interval = 30, 50
+    margin, interval = 10, 20
     raw_margin = []
     for rid, box in enumerate(boxes, start=1):
         center = box.mean(axis=0)
