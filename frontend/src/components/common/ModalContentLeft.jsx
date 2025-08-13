@@ -24,10 +24,43 @@ const Modal_Content_Left = () => {
       <div className="Modal_Content_Left_Temp">
         <TempInfo temperature={alertDetail.temperature} />
       </div>
-
-      <div className="Modal_Content_Left_Images"></div>
-      <img src={alertDetail.imageThermalUrl} alt="" />
-      <img src={alertDetail.imageNormalUrl} alt="" />
+      <div className="Modal_Content_Left_Images">
+        <div
+          style={{
+            position: 'relative',
+            height: '100%',
+            width: '100%',
+            marginBottom: '20px',
+          }}
+        >
+          <img
+            src={alertDetail.imageNormalUrl}
+            style={{ filter: 'brightness(200%)' }}
+            alt=""
+          />
+          <img
+            src={alertDetail.imageThermalUrl}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              opacity: 0.45,
+              width: '100%',
+              height: '100%',
+            }}
+            alt=""
+          />
+        </div>
+        <img
+          src={alertDetail.imageNormalUrl}
+          style={{
+            filter: 'brightness(200%)',
+            marginBottom: '20px',
+          }}
+          alt="일반 이미지"
+        />
+        <img src={alertDetail.imageThermalUrl} alt="열화상 이미지" />
+      </div>
     </div>
   );
 };

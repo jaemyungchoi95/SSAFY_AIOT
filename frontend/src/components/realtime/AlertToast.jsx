@@ -5,30 +5,33 @@ const AlertToast = ({ alert }) => {
   const { dismissAlert } = useAlertStore();
 
   if (!alert) {
-    console.warn("AlertToast received an undefined or null 'alert' prop.");
     return null;
   }
 
-  const { alertId, rackId, spotId, isNew } = alert;
+  const { alertId, rackId, spotId } = alert;
 
   const rackIdentifier = `Rack - ${String(rackId).padStart(2, '0')} - ${String(spotId).padStart(2, '0')}`;
 
   return (
     <section
-      className={`border-2 border-[#FFBC5F] rounded-[15px] w-[400px] h-[80px] flex  gap-1.5 ${isNew ? 'opacity-100' : 'opacity-70'}`}
+      className={
+        'bg-[#5B5C67] border-2 border-[#FFBC5F] rounded-[15px] w-70 max-w-[400px] h-16 flex items-center gap-2 px-2'
+      }
     >
-      <div className="flex items-center justify-center w-[15%]">
-        <div className="border-3 border-[#FFBC5F] rounded-full w-[30px] h-[30px] flex justify-center text-center font-bold text-[#FFBC5F]">
+      <div className="flex-shrink-0 px-2">
+        <div className="border-[3px] border-[#FFBC5F] rounded-full w-[30px] h-[30px] flex justify-center text-center font-bold text-[#FFBC5F] px-2">
           !
         </div>
       </div>
-      <div className="w-[70%] flex items-center gap-2">
-        <p className="text-[18px] font-bold m-0 p-0">비정상 온도 감지</p>
-        <p className="text-[18px] font-medium m-0 p-0 text-[#C2C2C2]">
+      <div className="flex flex-1 flex-col justify-center min-w-0">
+        <p className="text-sm md:text-base font-bold m-0 p-0 truncate">
+          비정상 온도 감지
+        </p>
+        <p className="text-xs md:text-sm font-medium m-0 p-0 text-[#C2C2C2] truncate">
           {rackIdentifier}
         </p>
       </div>
-      <div className="w-[15%] flex justify-center items-center">
+      <div className="flex-shrink-0 px-2">
         <button
           className="text-[#C2C2C2] !text-3xl m-0 pb-2 text-center"
           onClick={() => dismissAlert(alertId)}
