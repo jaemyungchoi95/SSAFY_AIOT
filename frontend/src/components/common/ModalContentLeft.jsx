@@ -1,65 +1,60 @@
-import React from 'react';
-import './ModalContentLeft.css';
-import TempInfo from './TempInfo';
-import DateInfo from './DateInfo';
+import React, { useState } from 'react';
+
 import { useAppStore } from '../../stores/useAppStore';
 
 const Modal_Content_Left = () => {
   const { alertDetail } = useAppStore();
+  // 1. 투명도를 관리할 state 생성, 초기값 0.45
+  const [opacity, setOpacity] = useState(0.45);
 
+  // 2. 마우스 휠 이벤트를 처리할 핸들러 함수
+  const handleWheel = (e) => {
+    // 휠을 움직일 때 페이지 전체가 스크롤되는 기본 동작을 막습니다.
+    e.preventDefault();
+
+    // 휠을 올리면(e.deltaY < 0) 값이 증가, 내리면(e.deltaY > 0) 감소
+    const direction = e.deltaY > 0 ? -1 : 1;
+
+    // 현재 opacity 상태를 기반으로 값을 조절합니다.
+    setOpacity((prevOpacity) => {
+      const newOpacity = prevOpacity + direction * 0.025;
+      // 값이 0과 1 사이를 벗어나지 않도록 고정(clamp)합니다.
+      return Math.max(0, Math.min(1, newOpacity));
+    });
+  };
   if (!alertDetail) {
     // 데이터 없으면 로딩 표시하거나 빈 화면 렌더링
     return <div>로딩 중...</div>;
   }
 
   return (
-    <div className="Modal_Content_Left">
-      <div className="Modal_Content_Left_Title">리포트 내용</div>
-      <div className="Modal_Content_Left_Date">
-        <DateInfo
-          createdAt={alertDetail.createdAt}
-          handledAt={alertDetail.handledAt}
-        />
-      </div>
-      <div className="Modal_Content_Left_Temp">
-        <TempInfo temperature={alertDetail.temperature} />
-      </div>
-      <div className="Modal_Content_Left_Images">
-        <div
-          style={{
-            position: 'relative',
-            height: '100%',
-            width: '100%',
-            marginBottom: '20px',
-          }}
-        >
-          <img
-            src={alertDetail.imageNormalUrl}
-            style={{ filter: 'brightness(200%)' }}
-            alt=""
-          />
-          <img
-            src={alertDetail.imageThermalUrl}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              opacity: 0.45,
-              width: '100%',
-              height: '100%',
-            }}
-            alt=""
-          />
-        </div>
+    <div className="Modal_Content_Left py-1.5 px-7.5">
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+        }}
+        onWheel={handleWheel}
+      >
         <img
           src={alertDetail.imageNormalUrl}
-          style={{
-            filter: 'brightness(200%)',
-            marginBottom: '20px',
-          }}
-          alt="일반 이미지"
+          style={{ filter: 'brightness(200%)' }}
+          alt=""
         />
-        <img src={alertDetail.imageThermalUrl} alt="열화상 이미지" />
+        <img
+          src={alertDetail.imageThermalUrl}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            opacity: opacity,
+            width: '100%',
+            height: '100%',
+          }}
+          alt=""
+        />
       </div>
     </div>
   );

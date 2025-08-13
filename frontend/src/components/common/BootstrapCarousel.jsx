@@ -44,15 +44,15 @@ const BootstrapCarousel = ({ images }) => {
   return (
     <div
       id="carouselExample"
-      className="carousel slide"
+      className="carousel slide h-[100%]"
       data-bs-ride="carousel"
       ref={carouselRef}
     >
-      <div className="carousel-inner">
+      <div className="carousel-inner h-[100%]">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`carousel-item ${index === 0 ? 'active' : ''}`}
+            className={`carousel-item h-[100%] ${index === 0 ? 'active' : ''}`}
           >
             {slide.type === 'single' && (
               <img

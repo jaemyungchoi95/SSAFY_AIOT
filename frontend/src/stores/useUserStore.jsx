@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { login } from '../api';
 import { logout } from '../api';
+import { useAppStore } from './useAppStore';
 
 export const useUserStore = create((set) => ({
   // 1. 관리할 상태 (state)
@@ -38,6 +39,7 @@ export const useUserStore = create((set) => ({
   logout: async () => {
     try {
       await logout();
+      // User 스토어의 상태를 초기화합니다.
       set({
         username: '',
         password: '',
@@ -46,6 +48,9 @@ export const useUserStore = create((set) => ({
         isLoggedIn: false,
         error: null,
       });
+
+      // App 스토어의 상태도 함께 초기화합니다.
+      useAppStore.getState().resetAppStore();
     } catch (error) {
       console.error('로그아웃 실패', error);
     }

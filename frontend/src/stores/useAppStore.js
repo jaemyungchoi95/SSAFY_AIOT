@@ -363,5 +363,21 @@ export const useAppStore = create(
         console.error('[STORE] 전체 창고 경고 리스트 로딩 실패:', error);
       }
     },
+
+    // --- 아래 모달 관련 상태와 액션을 추가합니다 ---
+    viewingImageUrl: null, // 현재 모달에서 보고 있는 이미지 URL, null이면 닫힌 상태
+
+    setViewingImageUrl: (url) => set({ viewingImageUrl: url }),
+    clearViewingImageUrl: () => set({ viewingImageUrl: null }),
+
+    // 로그아웃시 다시 초기상태로 appStore 데이터를 돌려놓는 액션
+    resetAppStore: () => {
+      set({
+        selectedAlertId: null,
+        alertDetail: null,
+        isEditing: false,
+        isWritingId: null,
+      });
+    },
   })),
 );
