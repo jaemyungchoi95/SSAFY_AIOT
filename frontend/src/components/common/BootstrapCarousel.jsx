@@ -44,20 +44,25 @@ const BootstrapCarousel = ({ images }) => {
   return (
     <div
       id="carouselExample"
-      className="carousel slide"
+      className="carousel slide h-[100%]"
       data-bs-ride="carousel"
       ref={carouselRef}
     >
-      <div className="carousel-inner">
+      <div className="carousel-inner h-[100%]">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`carousel-item ${index === 0 ? 'active' : ''}`}
+            className={`carousel-item h-[100%] ${index === 0 ? 'active' : ''}`}
           >
             {slide.type === 'single' && (
               <img
                 src={slide.src}
-                style={slide.style}
+                style={{
+                  ...slide.style,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
                 className="d-block w-100"
                 alt={slide.alt}
               />
@@ -66,14 +71,20 @@ const BootstrapCarousel = ({ images }) => {
               <div
                 style={{
                   position: 'relative',
-                  overflow: 'hidden',
+                  width: '100%',
                   height: '100%',
+                  overflow: 'hidden',
                 }}
               >
                 <img
                   src={slide.srcs[0]}
                   className="d-block w-100"
-                  style={{ filter: 'brightness(200%)' }}
+                  style={{
+                    filter: 'brightness(200%)',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
                   alt={`Slide ${index}`}
                 />
                 <img
@@ -85,6 +96,9 @@ const BootstrapCarousel = ({ images }) => {
                     left: 0,
                     opacity: 0.45, // 투명도 조절 (0.0 ~ 1.0 사이 값)
                     // transform: 'scale(1.4)', // 배율 확대
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
                   }}
                   alt={`Slide ${index}`}
                 />

@@ -16,16 +16,3 @@
 .SidebarDetailWriteBtn {
   padding: 20px 50px;
 }
-.SidebarDetail_ReportBtnWrapper {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px 30px;
-}
-
-.SidebarDetail_Report {
-  padding: 20px 30px 20px 30px;
-}
-
-.SidebarDetail_Write {
-  padding: 12px 30px 20px 30px;
-}
