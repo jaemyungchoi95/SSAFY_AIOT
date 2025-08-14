@@ -11,7 +11,12 @@ import FilterLocation from './FilterLocation';
 import { useAppStore } from '../../stores/useAppStore';
 
 const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
-  const { alerts, selectedWarehouseId } = useAppStore();
+  const {
+    alerts,
+    selectedWarehouseId,
+    mapInteractionMode,
+    setMapInteractionMode,
+  } = useAppStore();
 
   // useMemo를 활용하여 창고의 이슈가 변경될 때만 카운트를 다시 계산
   const { cautionCnt, dangerCnt } = useMemo(() => {
@@ -28,6 +33,13 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
     ).length;
     return { cautionCnt: caution, dangerCnt: danger };
   }, [alerts, selectedWarehouseId]);
+
+  // 맵 상호작용 모드 전환 핸들러
+  const toggleMapInteractionMode = () => {
+    setMapInteractionMode(
+      mapInteractionMode === 'VIEW_DETAILS' ? 'COMMAND_ROBOT' : 'VIEW_DETAILS',
+    );
+  };
 
   return (
     <div className="MapHeader">
@@ -48,6 +60,18 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
           </div>
         </div>
         <div className="MapHeader_ratio">
+          <button
+            type="button"
+            className={
+              mapInteractionMode === 'VIEW_DETAILS'
+                ? 'py-0.5 px-2'
+                : 'py-0.5 px-2 bg-[#396DF0] font-bold !rounded-md'
+            }
+            onClick={toggleMapInteractionMode}
+            aria-label="맵 상호작용 모드 전환"
+          >
+            조작
+          </button>
           <button
             type="button"
             className="MapHeader_ZoomIn"

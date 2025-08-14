@@ -24,6 +24,7 @@
     "sockjs-client": "^1.6.1",
     "use-debounce": "^10.0.5",
     "use-image": "^1.1.4",
+    "uuid": "^11.1.0",
     "ws": "^8.18.3",
     "zustand": "^5.0.6"
   },
