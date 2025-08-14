@@ -102,23 +102,18 @@ export const logout = () => {
 
 // 19. 서버 → 프론트 맵 완성 알림 / 웹소켓 통신
 
-// 20. 로봇을 특정 위치로 이동시키는 명령
-// /api/robots/{robotId}/move <- 가칭
-export const sendMoveCommand = (robotId, targetPosition) =>
-  axios
-    .post(`/api/robots/${robotId}/move`, targetPosition)
-    .then((res) => res.data.data);
+// 20. 프론트 → 서버 로봇 명령 / POST 요청
+// /api/warehouses/{warehouseId}/robots/{robotId}
+export const sendMoveCommand = (warehouseId, robotId, spotId, commandId) => {
+  const payload = {
+    spotId: spotId,
+    commandId: commandId,
+  };
+  console.log(
+    `[API] 로봇 이동 명령 전송 페이로드: ${JSON.stringify(payload)} warehouseId: ${warehouseId}`,
+  );
 
-/*
-  데이터 예시
-  {
-    ”robotId”: 1,
-    ”x”: 11.11,
-    ”y”: 11.11,
-    ”direction”: 10.1
-  }
-  */
-
-// 로봇 현재 위치 가져오기
-// export const getRobotPosition = (robotId) =>
-//   axios.get(`/api/robots/${robotId}/position`).then((res) => res.data.data);
+  return axios
+    .post(`/api/warehouses/${warehouseId}/robots/${robotId}`, payload)
+    .then(getResponseData);
+};

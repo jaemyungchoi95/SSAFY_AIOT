@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import * as api from '../api/index';
+import { useAppStore } from './useAppStore';
 
 export const useRobotStore = create(
   devtools((set) => ({
@@ -22,13 +23,24 @@ export const useRobotStore = create(
     },
 
     // 로봇 위치 이동 명령
-    moveRobotTo: async (robotId, targetPosition) => {
+    moveRobotTo: async (robotId, spotId, commandId) => {
       set({ moving: true, error: null });
       try {
+        const selectedWarehouseId = useAppStore.getState().selectedWarehouseId;
+
+        if (!selectedWarehouseId) {
+          throw new Error('선택된 창고 ID가 없습니다.');
+        }
+
         console.log(
-          `[ROBOT STORE] 로봇 ${robotId}에게 ${JSON.stringify(targetPosition)}로 이동 명령 전송`,
+          `[ROBOT STORE] 로봇 ${robotId}에게 ${spotId} 스팟으로 (명령ID: ${commandId})로 이동 명령 전송`,
         );
-        await api.sendMoveCommand(robotId, targetPosition);
+        await api.sendMoveCommand(
+          selectedWarehouseId,
+          robotId,
+          spotId,
+          commandId,
+        );
         set({ moving: false });
         // 명령 후 위치 갱신
       } catch (err) {

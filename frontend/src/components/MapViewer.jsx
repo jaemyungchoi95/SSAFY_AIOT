@@ -10,6 +10,7 @@ import RobotMarker from './RobotMarker';
 
 import { useAppStore } from '../stores/useAppStore';
 import { useRobotStore } from '../stores/useRobotStore';
+import { v4 as uuidv4 } from 'uuid';
 
 const MapViewer = ({
   scale,
@@ -29,21 +30,15 @@ const MapViewer = ({
   const {
     racks,
     spots,
+    robots,
     fetchDetailAlert,
     selectedAlertId,
     setSelectedAlertId,
-    // selectedWarehouseId,
+    mapInteractionMode,
   } = useAppStore();
 
-  const [commandTargetSpot, setCommandTargetSpot] = useState(null); // 로봇 명령 대상 스팟
-
   // useRobotStore에서 필요한 액션과 상태를 가져옵니다.
-  const {
-    moveRobotTo,
-    moving: robotMoving,
-    robotPositions,
-    error: robotError,
-  } = useRobotStore();
+  const { moveRobotTo, robotPositions, error: robotError } = useRobotStore();
 
   const selectedSpot = useMemo(() => {
     if (!selectedAlertId || !Array.isArray(spots)) {
@@ -79,6 +74,24 @@ const MapViewer = ({
       debouncedRecalculate(containerSize, pgmData);
     }
   }, [resetKey, containerSize, pgmData, debouncedRecalculate]);
+
+  const debouncedMoveRobot = useDebouncedCallback(
+    async (robotId, spotId) => {
+      const commandId = uuidv4();
+      try {
+        await moveRobotTo(robotId, spotId, commandId);
+        alert(
+          `로봇 ${robotId}에게 스팟 (${spotId})으로 이동 명령을 전송했습니다. (명령ID: ${commandId})`,
+        );
+      } catch (err) {
+        alert(
+          `로봇 이동 명령 실패: ${robotError || err.message || '알 수 없는 오류'}`,
+        );
+      }
+    },
+    500,
+    { leading: true, trailing: false },
+  );
 
   return (
     <div
@@ -119,6 +132,7 @@ const MapViewer = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedAlertId(null);
+              fetchDetailAlert(null);
             }
           }}
         >
@@ -173,7 +187,22 @@ const MapViewer = ({
                   scale={scale}
                   onClick={(e) => {
                     e.cancelBubble = true;
-                    fetchDetailAlert(spot.alertId);
+                    if (mapInteractionMode === 'VIEW_DETAILS') {
+                      // 상세 보기 모드일 때
+                      fetchDetailAlert(spot.alertId); // 기존 알림 상세 보기 기능
+                    } else if (mapInteractionMode === 'COMMAND_ROBOT') {
+                      // 로봇 명령 모드일 때
+                      setSelectedAlertId(null); // 기존 알림 선택 해제
+                      fetchDetailAlert(null); // 상세 정보 초기화
+
+                      // 로봇 ID를 가져와 디바운스된 함수 호출
+                      if (Array.isArray(robots) && robots.length > 0) {
+                        const robotIdToCommand = robots[0].robotId;
+                        debouncedMoveRobot(robotIdToCommand, spot.spotId); // 디바운스된 함수 호출
+                      } else {
+                        alert('명령을 내릴 수 있는 로봇 정보가 없습니다.');
+                      }
+                    }
                   }}
                 />
               ))}
