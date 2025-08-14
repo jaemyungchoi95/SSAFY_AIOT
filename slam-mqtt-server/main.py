@@ -25,7 +25,7 @@ PREFIX = "iot_credentials"
 CERT = "/tmp/certificate.pem.crt"
 KEY = "/tmp/private.pem.key"
 CA = "/tmp/AmazonRootCA1.pem"
-API_BASE_URL = "http://localhost:8080"
+API_BASE_URL = "http://api.are-u-hot.kro.kr"
 
 # --- 인증서 다운로드 ---
 def download_certificates():
