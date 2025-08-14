@@ -73,7 +73,7 @@ export const updateAlertReport = (alertId, reportData) => {
     .then(getResponseData);
 };
 
-//13.userLogin
+// 12.유저 로그인 / POST 요청
 ///api/admin/login
 export const login = (username, password) => {
   return axios
@@ -81,8 +81,44 @@ export const login = (username, password) => {
     .then((response) => response.data);
 };
 
-//14.logout
+// 13. 유저 로그아웃 / POST 요청
 ///api/admin/logout
 export const logout = () => {
   return axios.post('/api/admin/logout', null, { withCredentials: true });
 };
+
+// 14. 서버 → 로봇 촬영 스팟 / MQTT 통신
+// 서버 로봇간 통신
+
+// 15. 로봇 → 서버 리포트 / MQTT 통신
+// 서버 로봇간 통신
+
+// 16. 로봇 → 서버 로봇의 실시간 위치 / MQTT 통신
+// 서버 로봇간 통신
+
+// 17. 서버 → 프론트 robot position / 웹소켓 통신
+
+// 18. 서버 → 프론트 alert / 웹소켓 통신
+
+// 19. 서버 → 프론트 맵 완성 알림 / 웹소켓 통신
+
+// 20. 로봇을 특정 위치로 이동시키는 명령
+// /api/robots/{robotId}/move <- 가칭
+export const sendMoveCommand = (robotId, targetPosition) =>
+  axios
+    .post(`/api/robots/${robotId}/move`, targetPosition)
+    .then((res) => res.data.data);
+
+/*
+  데이터 예시
+  {
+    ”robotId”: 1,
+    ”x”: 11.11,
+    ”y”: 11.11,
+    ”direction”: 10.1
+  }
+  */
+
+// 로봇 현재 위치 가져오기
+// export const getRobotPosition = (robotId) =>
+//   axios.get(`/api/robots/${robotId}/position`).then((res) => res.data.data);
