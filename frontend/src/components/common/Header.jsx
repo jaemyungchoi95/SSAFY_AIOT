@@ -27,6 +27,7 @@ const Header = () => {
               if (isLoggedIn) {
                 // 로그아웃 처리 예시 (간단하게 스토어 상태 변경)
                 useUserStore.getState().logout();
+                nav('/');
               } else {
                 nav('/login');
               }

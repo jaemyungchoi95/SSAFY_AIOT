@@ -3,7 +3,7 @@ import './DetailWrite.css';
 import ReportBtn from './ReportBtn';
 import { useAppStore } from '../../stores/useAppStore';
 
-const DetailWrite = ({ alert, onSubmit, onCancel }) => {
+const DetailWrite = ({ alert, onSubmit }) => {
   const {
     reportHandlerName,
     reportComment,
@@ -78,13 +78,6 @@ const DetailWrite = ({ alert, onSubmit, onCancel }) => {
       </div>
 
       <div className="DetailWrite_BtnWrapper">
-        <ReportBtn
-          text="취소하기"
-          onClick={() => {
-            resetReportFields();
-            onCancel();
-          }}
-        />
         <ReportBtn text="등록하기" onClick={handleSubmit} />
       </div>
     </div>

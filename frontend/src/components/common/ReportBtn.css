@@ -10,7 +10,17 @@
   font-size: 14px;
 }
 
-.ReportBtn img {
-  width: 20px;
-  height: 20px;
+.ReportBtn_Icon {
+  /* 모든 아이콘의 기본 크기 */
+  width: 20px; /* 예시 크기 */
+  height: 20px; /* 예시 크기 */
+  object-fit: contain; /* 이미지 비율 유지 */
+}
+
+.ReportBtn_Icon_Small {
+  /* '취소하기' 아이콘에만 적용될 작은 크기 */
+  width: 18px; /* 20px의 80% */
+  height: 18px; /* 20px의 80% */
+  padding-left: 3px;
+  /* 또는 transform: scale(0.8); */
 }
