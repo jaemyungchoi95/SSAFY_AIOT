@@ -22,7 +22,7 @@ const Home = () => {
   const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
   const resetRobotState = useRobotStore((state) => state.resetRobotState);
 
-  const addSocketMap = useAlertStore((state) => state.addSocketMap); // 테스트용
+  // const addSocketMap = useAlertStore((state) => state.addSocketMap); // 테스트용
 
   // 전체 맵 구독
   useGlobalSubscription();
@@ -41,6 +41,7 @@ const Home = () => {
     resetRobotState();
   }, [selectedWarehouseId, setSelectedAlertId, resetRobotState]);
 
+  /*
   // // 맵 알림 테스트용 데이터 핸들러
   const mapTest = {
     warehouseId: 1,
@@ -77,7 +78,7 @@ const Home = () => {
     console.log('테스트 로봇 위치 업데이트:', testRobot);
     setRobotPosition(testRobot);
   };
-
+  */
   return (
     <>
       <div className="Home_content">
@@ -106,7 +107,12 @@ const Home = () => {
           ))}
         </div>
       </div>
-      {/* 맵 테스트 버튼 */}
+    </>
+  );
+};
+
+export default Home;
+/* 테스트 버튼들
       <button
         onClick={handleAddMapTest}
         style={{
@@ -130,8 +136,4 @@ const Home = () => {
       >
         로봇 위치 테스트
       </button>
-    </>
-  );
-};
-
-export default Home;
+*/
