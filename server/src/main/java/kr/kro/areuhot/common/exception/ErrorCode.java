@@ -30,7 +30,8 @@ public enum ErrorCode {
 
     // Robot
     ROBOT_NOT_FOUND(404, "창고에 배정된 로봇이 없습니다."),
-    ROBOT_BUSY(409, "로봇이 현재 작업 중입니다.");
+    ROBOT_BUSY(409, "로봇이 현재 작업 중입니다."),
+    DUPLICATE_COMMAND(409, "중복된 명령입니다.");
 
 
     private final int status;
