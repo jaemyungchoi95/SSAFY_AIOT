@@ -28,7 +28,7 @@ const Modal_Content_Left = () => {
   }
 
   return (
-    <div className="Modal_Content_Left py-1.5 px-7.5">
+    <div className="Modal_Content_Left py-1.5 px-7.5 h-full">
       <div
         style={{
           position: 'relative',
@@ -40,7 +40,12 @@ const Modal_Content_Left = () => {
       >
         <img
           src={alertDetail.imageNormalUrl}
-          style={{ filter: 'brightness(200%)' }}
+          style={{
+            filter: 'brightness(200%)',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
           alt=""
         />
         <img
@@ -52,6 +57,7 @@ const Modal_Content_Left = () => {
             opacity: opacity,
             width: '100%',
             height: '100%',
+            objectFit: 'cover',
           }}
           alt=""
         />

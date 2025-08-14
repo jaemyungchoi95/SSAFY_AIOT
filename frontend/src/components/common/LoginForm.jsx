@@ -22,6 +22,11 @@ const LoginForm = () => {
     }
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleLoginClick();
+  };
+
   useEffect(() => {
     if (isLoggedIn) {
       nav('/');
@@ -35,7 +40,7 @@ const LoginForm = () => {
   }, [error]);
 
   return (
-    <div className="LoginForm">
+    <form className="LoginForm" onSubmit={handleFormSubmit}>
       <div className="LoginForm_Header">
         <div className="LoginForm_Header_Title">
           <img src={LoginIcon} alt="" />
@@ -58,7 +63,7 @@ const LoginForm = () => {
       <div className="LoginForm_Footer">
         아이디 또는 비밀번호 분실시 담당자에게 문의하세요.
       </div>
-    </div>
+    </form>
   );
 };
 

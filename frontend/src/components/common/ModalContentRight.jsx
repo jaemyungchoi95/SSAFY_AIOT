@@ -19,6 +19,7 @@ const ModalContentRight = () => {
     setSelectedAlertId,
     fetchDetailAlert,
     selectedAlertId,
+    resetReportFields,
   } = useAppStore();
 
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
@@ -41,16 +42,26 @@ const ModalContentRight = () => {
     setIsWritingId(null);
     setIsEditing(false);
     setSelectedAlertId(null);
+    resetReportFields();
   };
 
   const handleEditClick = () => setIsEditing(true);
   const handleWriteClick = () => setIsWritingId(alertDetail.alertId);
-  const handleCancel = () => setIsEditing(false);
-  const handleCancelWrite = () => setIsWritingId(null);
+
+  const handleCancel = () => {
+    resetReportFields();
+    setIsEditing(false);
+  };
+  const handleCancelWrite = () => {
+    resetReportFields();
+    setIsWritingId(null);
+  };
 
   if (!alertDetail) return null;
 
   const isHandled = alertDetail.status === 'DONE';
+
+  const isFormActivate = isEditing || isWritingId === alertDetail.alertId;
 
   return (
     <div className="Modal_Content_Right">
@@ -68,17 +79,25 @@ const ModalContentRight = () => {
           <TempInfo temperature={alertDetail.temperature} />
         </div>
       </div>
-      <div className="flex justify-between items-center  pr-4">
-        <div className="Modal_Content_Right_Title flex font-bold text-xl mb-2.5">
+
+      <div className="flex justify-between items-center pr-4 mb-2.5">
+        <div className="Modal_Content_Right_Title flex font-bold text-xl">
           처리 내역
         </div>
         {/* 로그인 상태이고, 수정/작성 중이 아닐 때만 버튼을 보여줍니다. */}
-        {isLoggedIn && !isEditing && isWritingId !== alertDetail.alertId && (
+        {isLoggedIn && (
           <div className="Modal_ReportBtnWrapper flex">
-            {isHandled ? (
-              <ReportBtn text={'수정하기'} onClick={handleEditClick} />
+            {!isFormActivate ? (
+              isHandled ? (
+                <ReportBtn text={'수정하기'} onClick={handleEditClick} />
+              ) : (
+                <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
+              )
             ) : (
-              <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
+              <ReportBtn
+                text="취소하기"
+                onClick={isEditing ? handleCancel : handleCancelWrite}
+              />
             )}
           </div>
         )}
@@ -88,13 +107,7 @@ const ModalContentRight = () => {
         {(() => {
           // "수정하기" 모드이거나 "작성하기" 모드일 때 DetailWrite 폼을 보여줍니다.
           if (isEditing || isWritingId === alertDetail.alertId) {
-            return (
-              <DetailWrite
-                alert={alertDetail}
-                onSubmit={handleSubmit}
-                onCancel={isEditing ? handleCancel : handleCancelWrite}
-              />
-            );
+            return <DetailWrite alert={alertDetail} onSubmit={handleSubmit} />;
           }
           // 처리 완료된 리포트일 경우, 보고서 내용을 보여줍니다.
           if (isHandled) {

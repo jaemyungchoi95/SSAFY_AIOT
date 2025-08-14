@@ -106,7 +106,7 @@ const Home = () => {
           ))}
         </div>
       </div>
-      맵 테스트 버튼
+      {/* 맵 테스트 버튼 */}
       <button
         onClick={handleAddMapTest}
         style={{
