@@ -89,6 +89,22 @@ export const useAppStore = create(
         const alertsData = alertsRes;
         const robotList = robotRes;
 
+        // spot별 최신 알람만 남도록 맵 선언하여 데이터 담기 설정
+        const latestAlertOnSpot = new Map();
+
+        alertsData.content.forEach(alert => {
+          // 임시 고유키 지정
+          const spotKey = `${alert.rackId}-${alert.spotId}`;
+          const existingAlert = latestAlertOnSpot.get(spotKey);
+
+          if (!existingAlert || alert.alertId > existingAlert.alertId) {
+            latestAlertOnSpot.set(spotKey, alert);
+          }
+        })
+
+        // Map에 저장된 값들(최신 알림 객체들)만 추출하여 새로운 배열로 만듭니다.
+        const uniqueLatestAlerts = Array.from(latestAlertOnSpot.values());
+
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
           console.warn('[STORE] rackList 데이터가 비어있습니다!');
@@ -119,7 +135,7 @@ export const useAppStore = create(
 
         // 2. 이슈 데이터를 기반으로 spots의 상태를 업데이트(병합)합니다.
         const mergedSpots = allSpots.map((spot) => {
-          const alertOnThisSpot = alertsData.content.find(
+          const alertOnThisSpot = uniqueLatestAlerts.find(
             (alert) =>
               alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
@@ -137,7 +153,7 @@ export const useAppStore = create(
           return spot;
         });
 
-        const processedAlerts = alertsData.content.map((alert) => ({
+        const processedAlerts = uniqueLatestAlerts.map((alert) => ({
           ...alert,
           temperature: Number(alert.temperature.toFixed(1)),
         }));
@@ -364,7 +380,20 @@ export const useAppStore = create(
         const alertsData = await api.fetchAlertsForWholeWarehouse();
         const alertsContent = alertsData.content || [];
 
-        const processedAlerts = alertsContent.map((alert) => ({
+        const latestAlertOnSpot = new Map();
+
+        alertsContent.forEach(alert => {
+          const spotKey = `${alert.warehouseId}-${alert.rackId}-${alert.spotId}`;
+          const existingAlert = latestAlertOnSpot.get(spotKey);
+
+          if (!existingAlert || alert.alertId > existingAlert.alertId) {
+            latestAlertOnSpot.set(spotKey, alert);
+          }
+        });
+
+        const uniqueLatestAlerts = Array.from(latestAlertOnSpot.values());
+
+        const processedAlerts = uniqueLatestAlerts.map((alert) => ({
           ...alert,
           temperature: Number(alert.temperature.toFixed(1)),
         }));

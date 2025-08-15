@@ -63,7 +63,7 @@ const MapViewer = ({
 
     setScale(newScale);
     setPosition(newPos);
-  });
+  }, 200);
 
   useLayoutEffect(() => {
     debouncedRecalculate(containerSize, pgmData);
@@ -170,8 +170,8 @@ const MapViewer = ({
                       fill="black"
                       align="center"
                       verticalAlign="middle"
-                      offsetX={10} // 텍스트 너비 절반 (적절히 조절 필요)
-                      offsetY={2} // 텍스트 높이 절반 (적절히 조절 필요)
+                      offsetX={(`Rack - ${rack.rackId}`.length * 3.5) / scale}
+                      offsetY={7 / scale}
                     />
                   </Fragment>
                 );
