@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import ReportBtn from './ReportBtn';
 import { useAppStore } from '../../stores/useAppStore';
 
-const DetailWrite = ({ alert, onSubmit }) => {
+const DetailWrite = ({ alert, onSubmit, cname = '' }) => {
   const {
     reportHandlerName,
     reportComment,
@@ -44,7 +44,7 @@ const DetailWrite = ({ alert, onSubmit }) => {
 
   return (
     <div className="DetailWrite flex flex-col h-full text-[#dad9df]">
-      <div className="DetailWrite_Value flex flex-col">
+      <div className="DetailWrite_Value flex flex-col flex-1">
         <div className="DetailWrite_Emp flex">
           <div className="DetailWrite_EmpTitle w-[25%] pt-1.5 text-base">작업자</div>
           <textarea
@@ -65,11 +65,11 @@ const DetailWrite = ({ alert, onSubmit }) => {
             onChange={handleItemNameChange}
           ></textarea>
         </div>
-        <div className="DetailWrite_Message flex ">
+        <div className="DetailWrite_Message flex flex-1">
           <div className="DetailWrite_MessageTitle w-[25%] pt-1.5 text-base">메시지</div>
           <textarea
             placeholder="이슈 상황 및 처리 내용을 입력해 주세요"
-            className='DetailWrite_Input DetailWrite_MessageInput w-full h-full border-b-1 border-[#787980] resize-none my-1'
+            className={`DetailWrite_Input DetailWrite_MessageInput w-full h-[100px] border-b-1 border-[#787980] resize-none my-1 ${cname == 'modal' ? 'h-[295px]' : ''}`}
             value={reportComment}
             onChange={(e) => setReportComment(e.target.value)}
           />

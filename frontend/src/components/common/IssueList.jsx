@@ -77,7 +77,7 @@ const IssueList = () => {
   const filteredAlerts = getFilteredAlerts();
 
   return (
-    <div className="IssueContent">
+    <div className="IssueContent p-3 h-[100%] overflow-y-auto scrollbar-none">
       <div className="IssueGridWrapper grid grid-cols-4 gap-3 w-[100%]">
         {filteredAlerts.map((alert) => (
           <IssueItem key={alert.alertId} alert={alert} />

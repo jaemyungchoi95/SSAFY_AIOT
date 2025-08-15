@@ -21,4 +21,8 @@
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+
+  .transition-flex {
+    transition: flex 0.3s ease;
+  }
 }
