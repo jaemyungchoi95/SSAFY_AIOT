@@ -14,6 +14,11 @@ export const useAppStore = create(
     warehouses: [], // 창고별 아이디와 이름 그리고 가지고 있는 지도에 대한 정보를 가진다
     selectedAlertId: null, // 현재 선택된 리포트 알림의 아이디를 관리한다
     selectedWarehouseId: null, // 현재 선택된 창고 아이디의 상태를 관리한다
+    viewingImageUrl: null, // 현재 모달에서 보고 있는 이미지 URL, null이면 닫힌 상태
+    // 'VIEW_DETAILS': 스팟 클릭 시 상세 정보 보기 (기본값)
+    // 'COMMAND_ROBOT': 스팟 클릭 시 로봇 이동 명령 UI 활성화
+    mapInteractionMode: 'VIEW_DETAILS',
+
     loading: false,
     error: null,
 
@@ -84,6 +89,22 @@ export const useAppStore = create(
         const alertsData = alertsRes;
         const robotList = robotRes;
 
+        // spot별 최신 알람만 남도록 맵 선언하여 데이터 담기 설정
+        const latestAlertOnSpot = new Map();
+
+        alertsData.content.forEach(alert => {
+          // 임시 고유키 지정
+          const spotKey = `${alert.rackId}-${alert.spotId}`;
+          const existingAlert = latestAlertOnSpot.get(spotKey);
+
+          if (!existingAlert || alert.alertId > existingAlert.alertId) {
+            latestAlertOnSpot.set(spotKey, alert);
+          }
+        })
+
+        // Map에 저장된 값들(최신 알림 객체들)만 추출하여 새로운 배열로 만듭니다.
+        const uniqueLatestAlerts = Array.from(latestAlertOnSpot.values());
+
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
           console.warn('[STORE] rackList 데이터가 비어있습니다!');
@@ -114,7 +135,7 @@ export const useAppStore = create(
 
         // 2. 이슈 데이터를 기반으로 spots의 상태를 업데이트(병합)합니다.
         const mergedSpots = allSpots.map((spot) => {
-          const alertOnThisSpot = alertsData.content.find(
+          const alertOnThisSpot = uniqueLatestAlerts.find(
             (alert) =>
               alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
@@ -132,7 +153,7 @@ export const useAppStore = create(
           return spot;
         });
 
-        const processedAlerts = alertsData.content.map((alert) => ({
+        const processedAlerts = uniqueLatestAlerts.map((alert) => ({
           ...alert,
           temperature: Number(alert.temperature.toFixed(1)),
         }));
@@ -227,6 +248,12 @@ export const useAppStore = create(
 
     // 특정 이슈에 대한 상세정보를 가져옴
     fetchDetailAlert: async (alertId) => {
+      if (!alertId) {
+        // alertId가 null이면 상세 정보를 초기화합니다.
+        set({ alertDetail: null, selectedAlertId: null, loading: false });
+        return;
+      }
+
       set({ loading: true, error: null, selectedAlertId: alertId });
       try {
         const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
@@ -353,7 +380,20 @@ export const useAppStore = create(
         const alertsData = await api.fetchAlertsForWholeWarehouse();
         const alertsContent = alertsData.content || [];
 
-        const processedAlerts = alertsContent.map((alert) => ({
+        const latestAlertOnSpot = new Map();
+
+        alertsContent.forEach(alert => {
+          const spotKey = `${alert.warehouseId}-${alert.rackId}-${alert.spotId}`;
+          const existingAlert = latestAlertOnSpot.get(spotKey);
+
+          if (!existingAlert || alert.alertId > existingAlert.alertId) {
+            latestAlertOnSpot.set(spotKey, alert);
+          }
+        });
+
+        const uniqueLatestAlerts = Array.from(latestAlertOnSpot.values());
+
+        const processedAlerts = uniqueLatestAlerts.map((alert) => ({
           ...alert,
           temperature: Number(alert.temperature.toFixed(1)),
         }));
@@ -364,11 +404,12 @@ export const useAppStore = create(
       }
     },
 
-    // --- 아래 모달 관련 상태와 액션을 추가합니다 ---
-    viewingImageUrl: null, // 현재 모달에서 보고 있는 이미지 URL, null이면 닫힌 상태
-
+    // --- 아래 모달 관련 액션
     setViewingImageUrl: (url) => set({ viewingImageUrl: url }),
     clearViewingImageUrl: () => set({ viewingImageUrl: null }),
+
+    // 로봇의 이동명령 모드에 대한 액션
+    setMapInteractionMode: (mode) => set({ mapInteractionMode: mode }),
 
     // 로그아웃시 다시 초기상태로 appStore 데이터를 돌려놓는 액션
     resetAppStore: () => {

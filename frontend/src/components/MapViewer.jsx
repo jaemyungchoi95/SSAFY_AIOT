@@ -1,11 +1,5 @@
 import { useDebouncedCallback } from 'use-debounce';
-import {
-  Fragment,
-  // useCallback,
-  // useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react';
+import { Fragment, useLayoutEffect, useMemo } from 'react';
 import { Stage, Layer, Image, Ring, Line, Text } from 'react-konva';
 import { useMapData } from '../hooks/useMapData';
 import { useMapCanvas } from '../hooks/useMapCanvas';
@@ -16,8 +10,7 @@ import RobotMarker from './RobotMarker';
 
 import { useAppStore } from '../stores/useAppStore';
 import { useRobotStore } from '../stores/useRobotStore';
-// import { useWarehouseSubscription } from '../hooks/useWarehouseSubscription';
-// import { useAlertStore } from '../stores/useAlertStore';
+import { v4 as uuidv4 } from 'uuid';
 
 const MapViewer = ({
   scale,
@@ -37,54 +30,15 @@ const MapViewer = ({
   const {
     racks,
     spots,
+    robots,
     fetchDetailAlert,
     selectedAlertId,
     setSelectedAlertId,
-    // selectedWarehouseId,
+    mapInteractionMode,
   } = useAppStore();
 
-  // const updateMapDataFromSocket = useAppStore(
-  //   (state) => state.updateMapDataFromSocket,
-  // );
-
-  // // Robot 스토어에서 실시간 데이터와 액션을 가져옵니다.
-  const robotPositions = useRobotStore((state) => state.robotPositions);
-  // const setRobotPosition = useRobotStore((state) => state.setRobotPosition);
-
-  // const addSocketAlert = useAlertStore((state) => state.addSocketAlert);
-  // const addSocketMap = useAlertStore((state) => state.addSocketMap);
-
-  // // 3. 창고 ID가 변경되면 이전 로봇 데이터를 초기화합니다.
-  // useEffect(() => {
-  //   resetRobotState();
-  // }, [selectedWarehouseId, resetRobotState]);
-
-  // // 2. useCallback으로 콜백 함수들을 감싸줍니다.
-  // //    의존성 배열이 비어있으므로, 이 함수들은 최초 렌더링 시에만 생성됩니다.
-  // const onAlertCallback = useCallback(
-  //   (data) => {
-  //     console.log('Alert 수신:', data);
-  //     addSocketAlert(data);
-  //   },
-  //   [addSocketAlert],
-  // );
-
-  // const onMapCallback = useCallback(
-  //   (data) => {
-  //     console.log('Map 수신:', data);
-  //     addSocketMap(data);
-  //     updateMapDataFromSocket(data);
-  //   },
-  //   [addSocketMap, updateMapDataFromSocket],
-  // );
-
-  // // 4. 구독 훅에 로봇 위치를 업데이트하는 액션을 콜백으로 전달합니다.
-  // useWarehouseSubscription({
-  //   warehouseId: selectedWarehouseId,
-  //   onPosition: setRobotPosition, // 로봇 위치 업데이트 콜백 연결
-  //   onAlert: onAlertCallback, // 알림 처리 로직 연결 필요
-  //   onMap: onMapCallback, // 맵 업데이트 처리 로직 연결 필요
-  // });
+  // useRobotStore에서 필요한 액션과 상태를 가져옵니다.
+  const { moveRobotTo, robotPositions, error: robotError } = useRobotStore();
 
   const selectedSpot = useMemo(() => {
     if (!selectedAlertId || !Array.isArray(spots)) {
@@ -109,7 +63,7 @@ const MapViewer = ({
 
     setScale(newScale);
     setPosition(newPos);
-  });
+  }, 200);
 
   useLayoutEffect(() => {
     debouncedRecalculate(containerSize, pgmData);
@@ -120,6 +74,24 @@ const MapViewer = ({
       debouncedRecalculate(containerSize, pgmData);
     }
   }, [resetKey, containerSize, pgmData, debouncedRecalculate]);
+
+  const debouncedMoveRobot = useDebouncedCallback(
+    async (robotId, spotId) => {
+      const commandId = uuidv4();
+      try {
+        await moveRobotTo(robotId, spotId, commandId);
+        alert(
+          `로봇 ${robotId}에게 스팟 (${spotId})으로 이동 명령을 전송했습니다. (명령ID: ${commandId})`,
+        );
+      } catch (err) {
+        alert(
+          `로봇 이동 명령 실패: ${robotError || err.message || '알 수 없는 오류'}`,
+        );
+      }
+    },
+    500,
+    { leading: true, trailing: false },
+  );
 
   return (
     <div
@@ -160,6 +132,7 @@ const MapViewer = ({
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setSelectedAlertId(null);
+              fetchDetailAlert(null);
             }
           }}
         >
@@ -197,8 +170,8 @@ const MapViewer = ({
                       fill="black"
                       align="center"
                       verticalAlign="middle"
-                      offsetX={10} // 텍스트 너비 절반 (적절히 조절 필요)
-                      offsetY={2} // 텍스트 높이 절반 (적절히 조절 필요)
+                      offsetX={(`Rack - ${rack.rackId}`.length * 3.5) / scale}
+                      offsetY={7 / scale}
                     />
                   </Fragment>
                 );
@@ -214,7 +187,22 @@ const MapViewer = ({
                   scale={scale}
                   onClick={(e) => {
                     e.cancelBubble = true;
-                    fetchDetailAlert(spot.alertId);
+                    if (mapInteractionMode === 'VIEW_DETAILS') {
+                      // 상세 보기 모드일 때
+                      fetchDetailAlert(spot.alertId); // 기존 알림 상세 보기 기능
+                    } else if (mapInteractionMode === 'COMMAND_ROBOT') {
+                      // 로봇 명령 모드일 때
+                      setSelectedAlertId(null); // 기존 알림 선택 해제
+                      fetchDetailAlert(null); // 상세 정보 초기화
+
+                      // 로봇 ID를 가져와 디바운스된 함수 호출
+                      if (Array.isArray(robots) && robots.length > 0) {
+                        const robotIdToCommand = robots[0].robotId;
+                        debouncedMoveRobot(robotIdToCommand, spot.spotId); // 디바운스된 함수 호출
+                      } else {
+                        alert('명령을 내릴 수 있는 로봇 정보가 없습니다.');
+                      }
+                    }
                   }}
                 />
               ))}
