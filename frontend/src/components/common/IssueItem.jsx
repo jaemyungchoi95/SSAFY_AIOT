@@ -1,5 +1,4 @@
 import React from 'react';
-import './IssueItem.css';
 import Status from './Status';
 import TempInfo from './TempInfo';
 import { useAppStore } from '../../stores/useAppStore';
@@ -15,9 +14,9 @@ const IssueItem = ({ alert }) => {
   };
 
   return (
-    <button className="IssueItem" onClick={handleClick}>
-      <div className="IssueItem_Header">
-        <span className="IssueItem_Spot">
+    <button className="IssueItem flex flex-col px-4 py-3 bg-[#32343f] cursor-pointer !rounded-2xl h-44 hover:bg-[#444653]" onClick={handleClick}>
+      <div className="IssueItem_Header flex justify-between items-center mb-2">
+        <span className="IssueItem_Spot font-bold text-xl">
           Rack {alert.rackId} - {alert.spotId}
         </span>
 
@@ -27,16 +26,13 @@ const IssueItem = ({ alert }) => {
           <Status text={isCompleteText} type={isCompleteType} />
         </div>
       </div>
-      <div className="IssueItem_Temp">
+      <div className="IssueItem_Temp flex justify-between text-[#c2c2c2]">
         <TempInfo temperature={alert.temperature} />
-      </div>
-      <div className="IssueItem_Message">{alert?.comment || <br />}</div>
-      <div className="IssueItem_Footer">
-        <div className="IssueItem_Admin">{alert?.handlerName || ''}</div>
         <div className="IssueItem_Date">
           {new Date(alert.createdAt).toLocaleDateString()}
         </div>
       </div>
+      <div className="IssueItem_Message flex mt-2 text-left h-[50%] overflow-hidden">{alert?.comment || <br />}</div>
     </button>
   );
 };

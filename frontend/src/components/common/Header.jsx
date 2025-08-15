@@ -8,7 +8,7 @@ const Header = () => {
   const nav = useNavigate();
 
   return (
-    <header className="bg-[#20212a] text-[#eaeaf0] flex items-center justify-center md:justify-between p-3 mb-2 md:px-8 md:py-4 !md:mb-8">
+    <header className="bg-[#20212a] text-[#eaeaf0] flex items-center justify-center md:justify-between py-3 px-5 mb-2">
       <button className="" onClick={() => nav('/')}>
         <img src={logo} alt="Logo" className="logo" />
       </button>
