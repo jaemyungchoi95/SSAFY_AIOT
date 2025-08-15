@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFilterStore } from '../../stores/useFilterStore';
 import { useDropdownFilter } from '../../hooks/useDropdownFilter';
-
 import FilterTimeIcon from '../../assets/FilterTime.png';
 import FilterDropIcon from '../../assets/FilterDrop.png';
 
@@ -15,7 +14,7 @@ const FilterTime = () => {
   };
 
   return (
-    <div className="w-[100%] relative" ref={dropdownRef}>
+    <div className="relative w-[100%]" ref={dropdownRef}>
       <button
         className="flex items-center gap-2 py-2 px-3 border-1 border-[#c2c2c2] rounded-3 bg-[#20212a] text-[#eaeaf0] cursor-pointer w-[100%]"
         onClick={() => setIsOpen((prev) => !prev)}

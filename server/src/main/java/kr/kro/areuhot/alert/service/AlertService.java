@@ -32,16 +32,18 @@ public class AlertService {
     private final AlertConditionValidator validator;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
-    private static final int DANGER_THRESHOLD_COUNT = 2;  // 2번 이상
+    private static final int DANGER_THRESHOLD_COUNT = 2; // 2번 이상
 
     public AlertResponseDto getAlertsById(Integer warehouseId, Integer alertId) {
         AlertResponseDto dto = alertMapper.getAlertByAlertId(warehouseId, alertId);
-        if(dto == null) throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+        if (dto == null)
+            throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
         return dto;
     }
 
     public AlertPageResponseDto getPagedAlerts(AlertSearchCondition condition, Integer limit, Integer offset) {
-        if(condition != null) validator.validate(condition);
+        if (condition != null)
+            validator.validate(condition);
 
         long totalElements = countAlerts(condition);
 
@@ -75,13 +77,14 @@ public class AlertService {
     public AlertDetailResponseDto getAlertDetail(Integer alertId) {
         AlertDetailResponseDto dto = alertMapper.getAlertDetailByAlertId(alertId);
 
-        if(dto == null) throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
+        if (dto == null)
+            throw new CustomException(ErrorCode.ALERT_NOT_FOUND);
 
-        if(dto.getImageThermalUrl() != null) {
+        if (dto.getImageThermalUrl() != null) {
             String presignedUrl = s3Util.generatePresignedUrl(dto.getImageThermalUrl());
             dto.setImageThermalUrl(presignedUrl);
         }
-        if(dto.getImageNormalUrl() != null) {
+        if (dto.getImageNormalUrl() != null) {
             String presignedUrl = s3Util.generatePresignedUrl(dto.getImageNormalUrl());
             dto.setImageNormalUrl(presignedUrl);
         }
@@ -177,7 +180,8 @@ public class AlertService {
             }
 
             // 2. 해당 warehouse에서 12시간 이내 알림 개수 확인
-            int warehouseAlertCount = alertMapper.countRecentAlertsByWarehouseId(warehouseId, DANGER_THRESHOLD_HOURS, currentTime);
+            int warehouseAlertCount = alertMapper.countRecentAlertsByWarehouseId(warehouseId, DANGER_THRESHOLD_HOURS,
+                    currentTime);
 
             if (warehouseAlertCount >= 3) { // warehouse는 3번 이상이면 위험
                 log.warn("위험도 판단: warehouse_id={}에서 12시간 이내 {}번의 알림 발생 (임계값: 3)",
@@ -196,7 +200,7 @@ public class AlertService {
     @Transactional
     public void processAlert(Integer alertId, AlertProcessingRequestDto requestDto) {
         try {
-            log.info("Alert Processing 시작: alert_id={}, handler_name={}", 
+            log.info("Alert Processing 시작: alert_id={}, handler_name={}",
                     alertId, requestDto.getHandlerName());
 
             // 1. Alert 존재 여부 및 상태 확인
@@ -214,9 +218,9 @@ public class AlertService {
             Integer rackId = alert.getRackId();
 
             // 3. AlertProcessing 저장
-            LocalDateTime handledAt = requestDto.getUpdatedAt() != null ? 
-                requestDto.getUpdatedAt() : LocalDateTime.now();
-            
+            LocalDateTime handledAt = requestDto.getUpdatedAt() != null ? requestDto.getUpdatedAt()
+                    : LocalDateTime.now();
+
             AlertProcessing processing = AlertProcessing.builder()
                     .alertId(alertId)
                     .userId(requestDto.getUserId())
@@ -233,7 +237,7 @@ public class AlertService {
             int alertResult = alertMapper.updateAlertStatus(alertId, AlertStatus.DONE, handledAt);
 
             if (processingResult > 0 && alertResult > 0) {
-                log.info("Alert Processing 성공: alert_id={}, processing_id={}", 
+                log.info("Alert Processing 성공: alert_id={}, processing_id={}",
                         alertId, processing.getId());
             } else {
                 log.error("Alert Processing 실패: alert_id={}", alertId);
@@ -270,8 +274,8 @@ public class AlertService {
             Integer rackId = alert.getRackId();
 
             // 4. 업데이트 시간 설정
-            LocalDateTime updatedAt = requestDto.getUpdatedAt() != null ?
-                requestDto.getUpdatedAt() : LocalDateTime.now();
+            LocalDateTime updatedAt = requestDto.getUpdatedAt() != null ? requestDto.getUpdatedAt()
+                    : LocalDateTime.now();
 
             // 5. AlertProcessing 전체 업데이트
             AlertProcessing updatedProcessing = AlertProcessing.builder()
@@ -306,7 +310,7 @@ public class AlertService {
 
     private void publishAlert(Alert dto) {
         AlertMessageDto message = AlertMessageDto.builder()
-                .alertID(dto.getId())
+                .alertId(dto.getId())
                 .spotId(dto.getSpotId())
                 .rackId(dto.getRackId())
                 .temperature(dto.getTemperature())

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class AlertMessageDto {
-    private Integer alertID;
+    private Integer alertId;
     private Integer spotId;
     private Integer rackId;
     private Double temperature;

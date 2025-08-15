@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './IssueContent.css';
 import { useAppStore } from '../../stores/useAppStore';
 import { useFilterStore } from '../../stores/useFilterStore';
 import IssueItem from './IssueItem';
@@ -79,7 +78,7 @@ const IssueList = () => {
 
   return (
     <div className="IssueContent">
-      <div className="IssueGridWrapper">
+      <div className="IssueGridWrapper grid grid-cols-4 gap-3 w-[100%]">
         {filteredAlerts.map((alert) => (
           <IssueItem key={alert.alertId} alert={alert} />
         ))}
