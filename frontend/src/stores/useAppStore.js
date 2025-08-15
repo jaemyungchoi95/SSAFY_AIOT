@@ -181,43 +181,79 @@ export const useAppStore = create(
 
     // 새로운 위험 알림 데이터 수신에 대한 액션
     updateAlertDataFromSocket: (newAlert) => {
+      const { selectedWarehouseId, alertDetail } = get();
+      
       const processedAlert = {
         ...newAlert,
+        warehouseId: selectedWarehouseId,
         temperature: Number(newAlert.temperature.toFixed(1)),
       };
 
       const state = get();
       // 만약 지금 상세 정보를 보고 있고, 그 정보가 방금 들어온 알림과 동일한 것이라면
-      if (state.alertDetail && state.alertDetail === processedAlert.alertId) {
+      if (alertDetail && alertDetail.alertId === processedAlert.alertId) {
         console.log(
           `[STORE] 현재 보고 있는 알림(${processedAlert.alertId})에 대한 업데이트 수신. 상세 정보를 다시 불러옵니다.`,
         );
         // 상세 정보를 다시 불러오는 액션을 호출합니다.
         state.fetchDetailAlert(processedAlert.alertId);
       }
-
-      set((state) => ({
-        spots: state.spots.map((spot) => {
-          if (
-            spot.rackId == processedAlert.rackId &&
-            spot.spotId === processedAlert.spotId
-          ) {
+                set((state) => {
+            const newAlertsArray = [
+              processedAlert,
+              ...state.alerts.filter(
+                (alert) => !(alert.rackId === processedAlert.rackId && alert.spotId === processedAlert.spotId)
+              ),
+            ];
+   
+            // --- 디버깅용 로그 ---
+            console.log('[DEBUG] 수신된 새 알림:', processedAlert);
+            console.log('[DEBUG] 변경 전 alerts 배열:', state.alerts);
+            console.log('[DEBUG] 변경 후 alerts 배열:', newAlertsArray);
+            // --------------------
+   
             return {
-              ...spot,
-              status: processedAlert.status,
-              alertId: processedAlert.alertId,
-              temperature: processedAlert.temperature,
+              spots: state.spots.map((spot) => {
+                if (
+                  spot.rackId == processedAlert.rackId &&
+                  spot.spotId === processedAlert.spotId
+                ) {
+                  return {
+                    ...spot,
+                    status: processedAlert.status,
+                    alertId: processedAlert.alertId,
+                    temperature: processedAlert.temperature,
+                  };
+                }
+                return spot;
+              }),
+              alerts: newAlertsArray,
             };
-          }
-          return spot;
-        }),
-        alerts: [
-          processedAlert,
-          ...state.alerts.filter(
-            (alert) => alert.alertId !== processedAlert.alertId,
-          ),
-        ],
-      }));
+          });
+      
+      // 기존 로직
+      // set((state) => ({
+      //   spots: state.spots.map((spot) => {
+      //     if (
+      //       spot.rackId == processedAlert.rackId &&
+      //       spot.spotId === processedAlert.spotId
+      //     ) {
+      //       return {
+      //         ...spot,
+      //         status: processedAlert.status,
+      //         alertId: processedAlert.alertId,
+      //         temperature: processedAlert.temperature,
+      //       };
+      //     }
+      //     return spot;
+      //   }),
+      //   alerts: [
+      //     processedAlert,
+      //     ...state.alerts.filter(
+      //       (alert) => !(alert.rackId === processedAlert.rackId && alert.spotId === processedAlert.spotId)
+      //     ),
+      //   ],
+      // }));
     },
 
     // 새로운 맵데이터 알림 수신에 대한 액션

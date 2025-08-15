@@ -8,11 +8,6 @@
   border-radius: 15px;
 }
 
-.MapHeader_right {
-  display: flex;
-  gap: 50px;
-}
-
 .MapHeader_caution,
 .MapHeader_danger {
   display: flex;
@@ -24,10 +19,6 @@
   font-weight: bolder;
 }
 
-.MapHeader_issue {
-  display: flex;
-  gap: 30px;
-}
 
 .MapHeader_ratio {
   display: flex;

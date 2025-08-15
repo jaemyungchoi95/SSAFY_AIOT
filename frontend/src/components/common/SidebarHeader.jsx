@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import './SidebarHeader.css';
 import FilterTime from './FilterTime';
 import FilterStatus from './FilterStatus';
 import { useAppStore } from '../../stores/useAppStore';
@@ -15,8 +14,8 @@ const SidebarHeader = () => {
 
   return (
     <div className="SidebarHeader">
-      <div className="SidebarHeader_title">이슈 목록</div>
-      <div className="SidebarHeader_Filter">
+      <div className="SidebarHeader_title text-2xl font-bold mt-1 mb-3">이슈 목록</div>
+      <div className="SidebarHeader_Filter flex justify-between gap-3 mb-1">
         <FilterTime />
         <FilterStatus />
       </div>

@@ -46,8 +46,8 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
       <div className="MapHeader_left">
         <FilterLocation />
       </div>
-      <div className="MapHeader_right">
-        <div className="MapHeader_issue">
+      <div className="MapHeader_right flex gap-6">
+        <div className="MapHeader_issue flex gap-3">
           <div className="MapHeader_caution">
             <img src={cautionIcon} alt="" />
             <span className="MapHeader_IssueCnt"> {cautionCnt} </span>

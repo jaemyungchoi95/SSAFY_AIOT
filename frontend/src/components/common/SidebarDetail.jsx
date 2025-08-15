@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import './SidebarDetail.css';
 import SidebarDetailHeader from './SidebarDetailHeader';
 import SidebarDetailContent from './SidebarDetailContent';
 import SidebarDetailReport from './SidebarDetailReport';
@@ -61,7 +60,7 @@ const SidebarDetail = ({ onClose }) => {
   const isFormActivate = isEditing || isWritingId === alertDetail.alertId;
 
   return (
-    <div className="SidebarDetail">
+    <div className="SidebarDetail bg-[#20212a] rounded-2xl h-[100%] text-[#eaeaf0] overflow-y-auto scrollbar-none">
       <SidebarDetailHeader alert={alertDetail} onClose={onClose} />
       <SidebarDetailContent alert={alertDetail} />
 
@@ -109,38 +108,3 @@ const SidebarDetail = ({ onClose }) => {
 };
 
 export default SidebarDetail;
-/*
-      {isHandled ? (
-        isEditing ? (
-          <div className="SidebarDetail_Write px-3">
-            <DetailWrite
-              alert={alertDetail}
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-            />
-          </div>
-        ) : (
-          <div className="SidebarDetail_Report px-3">
-            <SidebarDetailReport
-              alert={alertDetail}
-              onEditClick={handleEditClick}
-            />
-          </div>
-        )
-      ) : isWritingId === alertDetail.alertId ? (
-        <div className="SidebarDetail_Write  px-3">
-          <DetailWrite
-            alert={alertDetail}
-            onSubmit={handleSubmit}
-            onCancel={handleCancelWrite}
-          />
-        </div>
-      ) : (
-        isLoggedIn && (
-          <div className="SidebarDetail_ReportBtnWrapper flex justify-end px-3">
-            <ReportBtn text={'작성하기'} onClick={handleWriteClick} />
-          </div>
-        )
-      )}
-
-      */

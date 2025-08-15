@@ -1,10 +1,9 @@
 import React from 'react';
-import './IssueContent.css';
 import IssueList from './IssueList';
 
 const IssueContent = () => {
   return (
-    <div className="IssueContent">
+    <div className="IssueContent p-3 h-[100%] overflow-y-auto scrollbar-none">
       <IssueList />
     </div>
   );
