@@ -64,7 +64,7 @@ const ModalContentRight = () => {
   const isFormActivate = isEditing || isWritingId === alertDetail.alertId;
 
   return (
-    <div className="Modal_Content_Right flex flex-col">
+    <div className="Modal_Content_Right flex flex-col h-full">
       <div className="Modal_Content_Right_Title flex font-bold text-2xl mb-2.5">
         리포트 내용
       </div>
@@ -80,7 +80,7 @@ const ModalContentRight = () => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center pr-4 mb-2.5">
+      <div className="flex justify-between pr-4 mb-2.5">
         <div className="Modal_Content_Right_Title flex font-bold text-2xl">
           처리 내역
         </div>
@@ -103,11 +103,11 @@ const ModalContentRight = () => {
         )}
       </div>
 
-      <div className="Modal_Content_Right_Content flex flex-1 mt-2.5 pr-4">
+      <div className="Modal_Content_Right_Content mt-2.5 pr-4">
         {(() => {
           // "수정하기" 모드이거나 "작성하기" 모드일 때 DetailWrite 폼을 보여줍니다.
           if (isEditing || isWritingId === alertDetail.alertId) {
-            return <DetailWrite alert={alertDetail} onSubmit={handleSubmit} cname='IssueModal' />;
+            return <DetailWrite alert={alertDetail} onSubmit={handleSubmit} cname='modal' />;
           }
           // 처리 완료된 리포트일 경우, 보고서 내용을 보여줍니다.
           if (isHandled) {

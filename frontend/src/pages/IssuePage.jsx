@@ -1,6 +1,6 @@
 import React from 'react';
 import IssueFilter from '../components/common/IssueFilter';
-import IssueContent from '../components/common/IssueContent';
+import IssueList from '../components/common/IssueList';
 
 const IssuePage = () => {
   return (
@@ -9,7 +9,7 @@ const IssuePage = () => {
         <IssueFilter />
       </div>
       <div className="bg-[#20212a] flex-[3] rounded-[15px] flex flex-col overflow-hidden">
-        <IssueContent />
+        <IssueList />
       </div>
     </div>
   );
