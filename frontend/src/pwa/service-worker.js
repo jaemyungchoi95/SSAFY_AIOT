@@ -1,8 +1,9 @@
+/* global clients */
+
 const CACHE_NAME = 'areuhot-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/static/js/bundle.js'
 ];
 
 self.addEventListener('install', event => {
@@ -19,4 +20,13 @@ self.addEventListener('fetch', event => {
             return response || fetch(event.request);
         })
     );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  // 클릭 시 특정 URL 열기
+  event.waitUntil(
+    clients.openWindow("/issue") // 예시: 위험 알림이면 이슈 페이지로
+  );
 });
