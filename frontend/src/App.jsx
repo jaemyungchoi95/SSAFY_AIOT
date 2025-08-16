@@ -16,6 +16,17 @@ function App() {
     initializeApp();
   }, [initializeApp]);
 
+  // 1. 알림 권한 요청 : 앱 초기화 시점에서 한 번
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission().then((permission) => {
+          console.log("알림 권한:", permission);
+        });
+      }
+    }
+  }, []);
+
   return (
     <div className="App">
       {/* 로그인 경로면 Header 안 보여줌 */}
