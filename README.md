@@ -41,7 +41,7 @@
 ## 아키텍처 
 
 ## 기술 스택 
-- Embedded: ROS2, 
+- Embedded: Ubuntu 22.04 LTS, ROS2, Python 3.10.11
 - Frontend: JavaScript, React, Zustand, Tailwind 
 - Backend: Python 3.10.11, Java 21, Spring Boot 3.5.3, Spring Security 6, MyBatis, Lombok, WebSocket(STOMP)
 - DB: MySQL 8.0.37
@@ -73,8 +73,8 @@ root/
 ## 팀원 구성 및 역할 분배 
 | 이름 | 역할 | 담당 영역 | 주 사용 스택 | 
 |:----:|:----:|-----------|--------------|
-| 김준엽 | Embedded | RBi, Jetson 제어·통신 구현 | Python, Paho MQTT, ROS2 |
-| 한경훈 | Embedded | 팀장, SLAM, 자율주행 | Python, Paho MQTT, ROS2 |
+| 김준엽 | Embedded | RPi, Jetson 제어·통신 구현 | Python, Paho MQTT, ROS2(Cartographer, Navigation2) |
+| 한경훈 | Embedded | 팀장, SLAM, 자율주행 | Python, Paho MQTT, ROS2(Cartographer, Navigation2) |
 | 유아름 | Backend | 비즈니스 로직 구현, DB 설계, design, 영상 포트폴리오  | Java, Spring Boot, MyBatis, MySQL, WebSocket |
 | 황상하 | Backend | 발표, 맵 데이터 전처리, MQTT, DB | Java, Spring Boot, MyBatis, MySQL, Python, MQTT |
 | 남여경 | Frontend | 컴포넌트 기반 페이지 구조 설계·구현 | React, Zustand |
