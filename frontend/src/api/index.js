@@ -77,7 +77,7 @@ export const updateAlertReport = (alertId, reportData) => {
 ///api/admin/login
 export const login = (username, password) => {
   return axios
-    .post('api/admin/login', { username, password }, { withCredentials: true })
+    .post('/api/admin/login', { username, password }, { withCredentials: true })
     .then((response) => response.data);
 };
 
