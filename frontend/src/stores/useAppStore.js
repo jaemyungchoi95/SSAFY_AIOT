@@ -25,7 +25,7 @@ export const useAppStore = create(
     // 액션 (Actions) 정의
 
     // 앱 초기화 액션
-    initializeApp: async () => {
+    initializeAppData: async () => {
       try {
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
         const warehouseRes = await api.fetchWarehouses();
@@ -54,7 +54,7 @@ export const useAppStore = create(
         console.error('[STORE] 앱 초기화 실패!', error);
         set({ error, loading: false });
       }
-    }, // initializeApp 액션 끝
+    }, // initializeAppData 액션 끝
 
     // Home 페이지의 데이터를 받아오는 액션
     fetchInitialData: async (warehouseId) => {
@@ -230,30 +230,6 @@ export const useAppStore = create(
               alerts: newAlertsArray,
             };
           });
-      
-      // 기존 로직
-      // set((state) => ({
-      //   spots: state.spots.map((spot) => {
-      //     if (
-      //       spot.rackId == processedAlert.rackId &&
-      //       spot.spotId === processedAlert.spotId
-      //     ) {
-      //       return {
-      //         ...spot,
-      //         status: processedAlert.status,
-      //         alertId: processedAlert.alertId,
-      //         temperature: processedAlert.temperature,
-      //       };
-      //     }
-      //     return spot;
-      //   }),
-      //   alerts: [
-      //     processedAlert,
-      //     ...state.alerts.filter(
-      //       (alert) => !(alert.rackId === processedAlert.rackId && alert.spotId === processedAlert.spotId)
-      //     ),
-      //   ],
-      // }));
     },
 
     // 새로운 맵데이터 알림 수신에 대한 액션

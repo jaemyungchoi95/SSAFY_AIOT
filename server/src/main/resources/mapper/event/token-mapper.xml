@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.kro.areuhot.event.TokenMapper">
+    <!-- Alert 저장 -->
+    <insert id="insertToken" parameterType="kr.kro.areuhot.event.TokenVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO notification_token (
+            id, token
+        ) VALUES (
+            #{id}, #{token}
+        )
+    </insert>
+
+    <!-- spot_uuid로 spot_id 조회 -->
+    <select id="findAllToken" resultType="kr.kro.areuhot.event.TokenVO">
+        SELECT *
+        FROM notification_token
+    </select>
+
+</mapper>

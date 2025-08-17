@@ -12,7 +12,7 @@ export const fetchMapInfo = (warehouseId) =>
 
 // 2. 창고list / GET 요청
 // : /api/warehouses
-// useAppStore.js 의 initializeApp에 사용됨
+// useAppStore.js 의 initializeAppData에 사용됨
 export const fetchWarehouses = () =>
   axios.get('/api/warehouses').then(getResponseData);
 
