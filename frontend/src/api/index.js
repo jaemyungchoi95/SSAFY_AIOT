@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const getResponseData = (res) => res.data.data;
 
+axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_SPRING_BASE_URL;
+
 // 1. 맵 / GET 요청
 // : /api/warehouses/{warehouse_id}/map
 // useAppStore.js 의 fetchInitialData에 사용됨
