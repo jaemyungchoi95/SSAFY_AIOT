@@ -8,23 +8,73 @@ import Header from './components/common/Header';
 import { useAppStore } from './stores/useAppStore';
 import { useWebSocketConnection } from './hooks/useWebSocketConnection';
 
+import { onMessage, getToken } from 'firebase/messaging';
+import { messaging } from './utils/firebase';
+
 function App() {
-  const initializeApp = useAppStore((state) => state.initializeApp);
+  const initializeAppData = useAppStore((state) => state.initializeAppData);
   const location = useLocation();
 
+  // 초기 정보 로딩
   useEffect(() => {
-    initializeApp();
-  }, [initializeApp]);
+    initializeAppData();
+  }, [initializeAppData]);
 
-  // 1. 알림 권한 요청 : 앱 초기화 시점에서 한 번
+  //
   useEffect(() => {
-    if ("Notification" in window) {
-      if (Notification.permission !== "granted") {
-        Notification.requestPermission().then((permission) => {
-          console.log("알림 권한:", permission);
-        });
+    function registerServiceWorker() {
+      if (typeof window !== 'undefined') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+            .register('/firebase-messaging-sw.js')
+            .then((registration) => {
+              console.log('Service Worker Registered');
+              console.dir(registration);
+            });
+        }
       }
     }
+    const requestPermission = async () => {
+      const messagingResolve = await messaging();
+      if (!('Notification' in window)) {
+        console.warn('This browser does not support notifications.');
+        return;
+      }
+      if (messagingResolve) {
+        const token = await getToken(messagingResolve);
+        console.log('token : ', token);
+      }
+    };
+
+    const onMessageListener = async () => {
+      const messagingResolve = await messaging();
+      if (messagingResolve) {
+        onMessage(messagingResolve, (payload) => {
+          console.log('payload : ', payload);
+          if (!('Notification' in window)) {
+            return;
+          }
+          const permission = Notification.permission;
+          const title = payload.data?.title;
+          const body = payload.data?.body;
+          if (permission === 'granted') {
+            // console.log("payload", payload);
+            if (payload.data) {
+              const notification = new Notification(title, {
+                body,
+                icon: '/favicon.ico',
+              });
+              notification.onclick = () => {
+                window.open(payload.data.redirectUri, '_blank')?.focus();
+              };
+            }
+          }
+        });
+      }
+    };
+    registerServiceWorker();
+    requestPermission();
+    onMessageListener();
   }, []);
 
   return (

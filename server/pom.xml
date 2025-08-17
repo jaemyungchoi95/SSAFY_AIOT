@@ -125,6 +125,12 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
+		<!-- firebase -->
+		<dependency>
+		<groupId>com.google.firebase</groupId>
+		<artifactId>firebase-admin</artifactId>
+		<version>9.5.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

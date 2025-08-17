@@ -12,8 +12,11 @@ import kr.kro.areuhot.common.exception.ErrorCode;
 import kr.kro.areuhot.common.util.S3Util;
 import kr.kro.areuhot.common.websocket.WebSocketPublisher;
 import kr.kro.areuhot.common.websocket.WebSocketTopic;
+import kr.kro.areuhot.event.CreatedAlertEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,9 @@ public class AlertService {
     private final S3Util s3Util;
     private final WebSocketPublisher publisher;
     private final AlertConditionValidator validator;
+
+    // firebase
+    private final ApplicationEventPublisher eventPublisher;
 
     private static final int DANGER_THRESHOLD_HOURS = 12; // 12시간 이내
     private static final int DANGER_THRESHOLD_COUNT = 2; // 2번 이상
@@ -151,6 +157,8 @@ public class AlertService {
                 log.info("Alert 저장 성공: id={}, spot_id={}, robot_id={}, is_danger={}",
                         alert.getId(), spotId, mqttMessage.getRobotId(), danger);
                 publishAlert(alert);
+                // firebase
+                eventPublisher.publishEvent(CreatedAlertEvent.of(alert));
             } else {
                 log.error("Alert 저장 실패: spot_uuid={}, robot_id={}",
                         mqttMessage.getSpotUuid(), mqttMessage.getRobotId());
