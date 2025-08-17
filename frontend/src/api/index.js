@@ -119,3 +119,8 @@ export const sendMoveCommand = (warehouseId, robotId, spotId, commandId) => {
     .post(`/api/warehouses/${warehouseId}/robots/${robotId}`, payload)
     .then(getResponseData);
 };
+
+// 번외. Fcm 토큰 저장
+export const saveFcmToken = (token) => {
+  return axios.post('/api/notification/token', token).then(getResponseData)
+}
