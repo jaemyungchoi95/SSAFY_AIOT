@@ -31,8 +31,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/alerts/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/alerts/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/alerts/**").authenticated()
-                        .anyRequest().permitAll()
-                );
+                        .anyRequest().permitAll());
         return http.build();
     }
 
@@ -44,7 +43,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://*.kro.kr", "http://localhost:*", "http://localhost:5173"));
+        config.setAllowedOriginPatterns(
+                List.of("http://*.kro.kr", "https://*.kro.kr", "http://localhost:*", "http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
