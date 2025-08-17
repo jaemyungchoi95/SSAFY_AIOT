@@ -16,6 +16,8 @@ setup(
         (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
+        (os.path.join('share', package_name, 'scripts'), glob('scripts/*'),
+        (os.path.join('share', package_name, 'maps'), glob('maps/*')
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -28,6 +30,7 @@ setup(
         'console_scripts': [
             # 이 라인을 추가하세요!
             'kart_teleop = my_cartographer.scripts.kart_teleop:main',
+            'twist_to_ackermann = scripts.twist_to_ackermann:main',
         ],
     },
 )

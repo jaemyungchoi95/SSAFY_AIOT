@@ -3,49 +3,66 @@ controller_server:
     use_sim_time: false
     controller_frequency: 20.0
     controller_plugins: ["FollowPath"]
+
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.6
+
+      # --- 속도/가속 설정(기존값 유지) ---
+      desired_linear_vel: 0.7
       max_linear_accel: 1.0
       max_linear_decel: -1.0
       min_slowdown_velocity: 0.6
       regulated_linear_scaling_min_speed: 0.6
+
+      # --- 감속/루카헤드(기존값 유지) ---
       use_cost_regulated_linear_velocity_scaling: true
       use_velocity_scaled_lookahead_dist: true
       lookahead_dist: 1.0
       min_lookahead_dist: 0.35
       max_lookahead_dist: 1.5
-      transform_tolerance: 0.2
       lookahead_time: 0.8
+      transform_tolerance: 0.2
+
+      # --- 조향/차량 제약 ---
       rotate_to_heading_angular_vel: 1.8
       max_angular_accel: 2.0
-      min_turning_radius: 1.2
-      cost_scaling_dist: 0.6
-      cost_scaling_gain: 1.0
-      allow_reversing: true
+      min_turning_radius: 0.5
+      allow_reversing: true          # ← 후진 주행 허용 (핵심)
       use_rotate_to_heading: false
       use_intermediate_points: true
+
+      # --- 장애물 감속(기존값 유지) ---
+      cost_scaling_dist: 0.6
+      cost_scaling_gain: 1.0
 
 planner_server:
   ros__parameters:
     use_sim_time: false
     expected_planner_frequency: 2.0
-    planner_plugins: ["GridBased"]
-    #planner_plugins: ["SmacHybrid"]
-    #SmacHybrid:
-    GridBased:
-      #plugin: "nav2_navfn_planner/NavfnPlanner"
-      #tolerance: 0.2
-      #allow_unknown: true # hmm
-      #minimum_turning_radius: 0.53
+
+    # Navfn → Smac Hybrid 로 교체
+    planner_plugins: ["Hybrid"]
+    Hybrid:
       plugin: "nav2_smac_planner/SmacPlannerHybrid"
+
+      # 기본 설정
       tolerance: 0.2
       allow_unknown: true
-      motion_model_for_search: "REEDS_SHEPP"  # ← 전/후진 허용
-      allow_reverse: true                     # ← 후진 전개 허용
-      minimum_turning_radius: 1.2             # ← 컨트롤러의 min_turning_radius와 **같게**
-      angle_quantization_bins: 72             # (권장) 회전 해상도
+      downsample_costmap: false
+      max_planning_time: 3.0
+      smooth_path: true
+      analytic_expansion: true
+      angle_quantization_bins: 72
       lookup_table_size: 20.0
+
+      # Ackermann + 후진 허용: 리드-셰프 모델 사용
+      motion_model_for_search: "REEDS_SHEPP"  # ← 후진 가능한 모델(중요)
+      min_turning_radius: 0.53                # 차량 최소 회전반경(네 값 반영)
+
+      # (선택) 후진을 너무 선호하지 않게 약한 페널티
+      reverse_penalty: 1.5
+      change_penalty: 0.2
+      non_straight_penalty: 1.2
 
 local_costmap:
   local_costmap:
@@ -60,7 +77,9 @@ local_costmap:
       footprint: '[[0.30, 0.11], [0.30, -0.11], [-0.06, -0.1], [-0.06, 0.1]]'
       update_frequency: 10.0
       publish_frequency: 10.0
+
       plugins: ["obstacle_layer", "inflation_layer"]
+
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         observation_sources: scan
@@ -92,6 +111,7 @@ global_costmap:
       rolling_window: true
       width: 20
       height: 20
+
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
 
       static_layer:
@@ -109,7 +129,7 @@ global_costmap:
           clearing: true
           obstacle_range: 3.5
           raytrace_range: 4.5
-          inf_is_valid: true # hmm
+          inf_is_valid: true
         combination_method: 1
 
       inflation_layer:

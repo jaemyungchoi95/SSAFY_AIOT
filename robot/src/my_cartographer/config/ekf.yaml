@@ -1,0 +1,47 @@
+# robot_localization EKF 설정 파일
+
+ekf_filter_node:
+  ros__parameters:
+    # EKF 업데이트 주기 (Hz)
+    frequency: 30.0
+
+    # 센서 타임아웃 (이 시간 동안 데이터가 안 들어오면 사용 중지)
+    sensor_timeout: 0.1
+
+    # 2D 모드 활성화 (로봇이 평면에서만 움직이므로 안정성 향상)
+    two_d_mode: true
+
+    # --- 좌표계(TF) 프레임 설정 ---
+    map_frame: map          # 사용 안 함 (Cartographer가 담당)
+    odom_frame: odom        # EKF가 생성할 Odometry 좌표계 이름
+    base_link_frame: base_link  # 로봇의 기준 좌표계 이름
+    world_frame: odom       # 최종 TF 발행 기준 (odom -> base_link)
+
+    # --- 센서 입력 설정 (IMU) ---
+    # 사용할 IMU 토픽 이름
+    imu0: /imu
+
+    # imu0 센서의 어떤 값을 융합(fuse)할지 결정하는 행렬
+    # 순서: [X, Y, Z,
+    #        Roll, Pitch, Yaw,       (자세)
+    #        VX, VY, VZ,
+    #        VRoll, VPitch, VYaw,     (각속도)
+    #        AX, AY, AZ]
+    # 2D 환경에서는 Yaw(회전)와 VYaw(회전 속도)만 사용합니다.
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    
+    # 미분해서 사용할지 여부 (IMU는 절대 자세를 주므로 false)
+    imu0_differential: false
+
+    # 큐 사이즈
+    imu0_queue_size: 10
+
+    # --- 고급 설정 ---
+    # 디버그 모드 비활성화
+    debug: false
+    debug_out_file: /path/to/debug/file.txt
+    print_diagnostics: true
