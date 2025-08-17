@@ -34,6 +34,38 @@
 
 ## 빠른 시작 
 
+**0. 프로젝트 클론**
+```bash
+git clone https://lab.ssafy.com/s13-webmobile3-sub1/S13P11A202.git
+cd S13P11A202
+```
+
+**1. 필수 요건**
+- JDK 21, Node 18+, AWS 자격증명(Access/Secret)
+
+**2. 백엔드 설정**
+- 포팅 매뉴얼 참고
+
+**3. 백엔드 실행**
+```bash
+cd server 
+mvn spring-boot:run 
+# 또는 패키징 후 실행
+mvn clean package -DskipTests
+java -jar target/*-SNAPSHOT.jar
+```
+
+**4. 프론트엔드 설정**
+- 포팅 매뉴얼 참고 
+
+**5. 프론트엔드 실행**
+```bash
+cd frontend
+npm i
+npm run dev
+```
+
+**6. 임베디드** 
 ```bash
 # 0. ROS2 개발 환경 구축
 https://docs.ros.org/en/humble/Installation.html#binary-packages
@@ -76,6 +108,12 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     - m-explore-ros2로 frontier 기반 탐색 및 다중 로봇 확장성 제공
 - 수동 조작
     - teleop_twist_keyboard를 통한 heuristic/manual 제어 지원
+- 실시간 로봇 위치 트래킹 
+    - WebSocket(STOMP + SockJS)으로 창고 단위 토픽 구독 
+- 위험 리포트(Alert)와 처리 이력(Processing)
+    - 처리 내역 등록/수정, 타임 스탬프 반영(updatedAt)
+- SLAM 맵 버저닝 
+    - 로봇이 업로드한 맵을 저장하고 활성 버전을 관리 
 
 ## 개발 환경 
 
@@ -89,6 +127,10 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     - Cartographer (SLAM)
     - Nav2 (Navigation2)
 
+- 빌드/도구: Maven 3.9+, Docker 24+
+
+- OS & 런타임: Ubuntu 22.04 LTS, Python 3.10.11, Java 21, Node 18+
+
 ## 아키텍처 
 
 ## 기술 스택 
@@ -97,6 +139,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 - Backend: Python 3.10.11, Java 21, Spring Boot 3.5.3, Spring Security 6, MyBatis, Lombok, WebSocket(STOMP)
 - DB: MySQL 8.0.37
 - Storage: AWS S3 (presigned URL)
+- Messaging/Broker: MQTT 
 
 ## 프로젝트 구조 
 ```
@@ -141,6 +184,6 @@ root/
 | 한경훈 | Embedded | 팀장, SLAM, 자율주행 | Python, Paho MQTT, ROS2(Cartographer, Navigation2) |
 | 유아름 | Backend | 비즈니스 로직 구현, DB 설계, design, 영상 포트폴리오  | Java, Spring Boot, MyBatis, MySQL, WebSocket |
 | 황상하 | Backend | 발표, 맵 데이터 전처리, MQTT, DB | Java, Spring Boot, MyBatis, MySQL, Python, MQTT |
-| 남여경 | Frontend | 컴포넌트 기반 페이지 구조 설계·구현 | React, Zustand |
-| 최재명 | Frontend, Infra | 인프라, 전역 상태 관리 구조 설계·구현 | React, Zustand, Docker |
+| 남여경 | Frontend | 컴포넌트 기반 페이지 구조 설계·구현, 발표 자료 제작 | JavaScript, React, Zustand |
+| 최재명 | Frontend, Infra | 인프라, 전역 상태 관리 구조 설계·구현 | JavaScript, React, Zustand, Docker |
 
