@@ -43,7 +43,7 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
 
   return (
     <div className="MapHeader">
-      <div className="MapHeader_left">
+      <div className="MapHeader_left px-3">
         <FilterLocation />
       </div>
       <div className="MapHeader_right flex gap-6">
@@ -51,12 +51,12 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
           <div className="MapHeader_caution">
             <img src={cautionIcon} alt="" />
             <span className="MapHeader_IssueCnt"> {cautionCnt} </span>
-            <span>미확인</span>
+            <span className="truncate">미확인</span>
           </div>
           <div className="MapHeader_danger">
             <img src={dangerIcon} alt="" />
             <span className="MapHeader_IssueCnt"> {dangerCnt} </span>
-            <span> 위험 </span>
+            <span className="truncate"> 위험 </span>
           </div>
         </div>
         <div className="MapHeader_ratio">
@@ -64,8 +64,8 @@ const MapHeader = ({ scale, zoomIn, zoomOut, resetZoom }) => {
             type="button"
             className={
               mapInteractionMode === 'VIEW_DETAILS'
-                ? 'py-0.5 px-2'
-                : 'py-0.5 px-2 bg-[#396DF0] font-bold !rounded-md'
+                ? 'py-0.5 px-2 truncate'
+                : 'py-0.5 px-2 bg-[#396DF0] font-bold !rounded-md truncate'
             }
             onClick={toggleMapInteractionMode}
             aria-label="맵 상호작용 모드 전환"

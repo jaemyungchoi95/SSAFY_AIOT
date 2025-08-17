@@ -13,7 +13,7 @@ const FilterLocation = () => {
   );
   const defaultName = selectedWarehouse ? selectedWarehouse.name : '창고 선택';
 
-  const handleSelect = (id) => {
+  const handleSelect = async (id) => {
     setSelectedWarehouseId(id);
     setIsOpen(false);
   };

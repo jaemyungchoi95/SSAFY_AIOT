@@ -6,11 +6,9 @@
 <mapper namespace="kr.kro.areuhot.event.TokenMapper">
     <!-- Alert 저장 -->
     <insert id="insertToken" parameterType="kr.kro.areuhot.event.TokenVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO notification_token (
-            id, token
-        ) VALUES (
-            #{id}, #{token}
-        )
+        INSERT INTO notification_token (token)
+        VALUES (#{token})
+        ON DUPLICATE KEY UPDATE created_at = CURRENT_TIMESTAMP
     </insert>
 
     <!-- spot_uuid로 spot_id 조회 -->
