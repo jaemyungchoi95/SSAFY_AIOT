@@ -1,3 +1,5 @@
+-- Lidar-only SLAM configuration for my_robot
+
 include "map_builder.lua"
 include "trajectory_builder.lua"
 
@@ -28,24 +30,21 @@ options = {
   landmarks_sampling_ratio = 1.,
 }
 
-TRAJECTORY_BUILDER_2D.use_imu_data = true
-TRAJECTORY_BUILDER_2D.imu_gravity_time_constant = 10. 
-
--- ## 이 값을 수정했습니다! ##
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 1e3
-
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight = 1e2
+-- IMU 데이터를 사용하지 않도록 설정
+TRAJECTORY_BUILDER_2D.use_imu_data = false
 
 MAP_BUILDER.use_trajectory_builder_2d = true
-TRAJECTORY_BUILDER_2D.min_range = 0.1
-TRAJECTORY_BUILDER_2D.max_range = 10.0
-TRAJECTORY_BUILDER_2D.missing_data_ray_length = 5.
-TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
-TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(0.1)
 
-POSE_GRAPH.optimization_problem.huber_scale = 1e1
-POSE_GRAPH.optimize_every_n_nodes = 35
+TRAJECTORY_BUILDER_2D.submaps.grid_options_2d.resolution = 0.02
+
+-- Lidar 스캔 매칭 관련 설정
+TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.linear_search_window = 0.1
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.angular_search_window = math.rad(20.)
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.translation_delta_cost_weight = 1e-1
+TRAJECTORY_BUILDER_2D.real_time_correlative_scan_matcher.rotation_delta_cost_weight = 1e-1
+
+POSE_GRAPH.optimize_every_n_nodes = 20
 POSE_GRAPH.constraint_builder.min_score = 0.65
-POSE_GRAPH.constraint_builder.global_localization_min_score = 0.7
 
 return options

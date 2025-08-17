@@ -9,13 +9,16 @@ def generate_launch_description():
     pkg_share = get_package_share_directory('my_cartographer')
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
     
-    # --- 설정 파일 경로 ---
+    # 설정 파일 경로들
     urdf_path = os.path.join(pkg_share, 'urdf', 'my_robot.urdf')
     carto_config_dir = os.path.join(pkg_share, 'config')
     carto_lua_filename = 'my_robot.lua'
     nav2_params_file = os.path.join(pkg_share, 'config', 'nav2_params.yaml')
-    # SLAM용 RViz 설정 파일을 사용합니다.
     rviz_config_file = os.path.join(pkg_share, 'rviz', 'cartographer_config.rviz')
+    ydlidar_yaml = os.path.join(pkg_share, 'config', 'ydlidar.yaml')
+    imu_yaml = os.path.join(pkg_share, 'config', 'imu.yaml')
+    
+    use_sim_time = False
 
     # =================== 실행할 노드 목록 ===================
 
@@ -23,18 +26,32 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': open(urdf_path).read(), 'use_sim_time': False}]
+        parameters=[{'robot_description': open(urdf_path).read(), 'use_sim_time': use_sim_time}]
     )
     ydlidar_node = Node(
         package='ydlidar_ros2_driver',
         executable='ydlidar_ros2_driver_node',
-        name='ydlidar_ros2_driver_node',
-        parameters=[os.path.join(pkg_share, 'config', 'ydlidar.yaml')],
+        parameters=[ydlidar_yaml, {'use_sim_time': use_sim_time}],
+    )
+    imu_node = Node(
+        package='ros2_mpu6050_driver',
+        executable='mpu6050driver',
+        name='mpu6050driver',
+        parameters=[imu_yaml, {'use_sim_time': use_sim_time}],
+        remappings=[('/imu', '/imu/data_raw')]
+    )
+    imu_filter_node = Node(
+        package='imu_filter_madgwick',
+        executable='imu_filter_madgwick_node',
+        name='imu_filter',
+        parameters=[{'use_mag': False, 'publish_tf': False, 'use_sim_time': use_sim_time}],
+        remappings=[('/imu/data_raw', '/imu/data_raw'), ('/imu/data', '/imu')]
     )
     motor_controller_node = Node(
         package='motor_controller',
         executable='motor_node',
-        name='robot_motor_controller'
+        name='robot_motor_controller',
+        parameters=[{'use_sim_time': use_sim_time}]
     )
 
     # 2. SLAM (Cartographer) - 지도와 위치 추정을 담당
@@ -43,8 +60,9 @@ def generate_launch_description():
         executable='cartographer_node',
         name='cartographer_node',
         output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
         arguments=['-configuration_directory', carto_config_dir, '-configuration_basename', carto_lua_filename],
-        remappings=[('odom', 'odom')] # Cartographer가 odom 프레임을 제공하도록 설정
+        remappings=[('/imu', '/imu')]
     )
 
     cartographer_occupancy_grid_node = Node(
@@ -52,13 +70,10 @@ def generate_launch_description():
         executable='cartographer_occupancy_grid_node',
         name='cartographer_occupancy_grid_node',
         output='screen',
-        parameters=[{'use_sim_time': False}],
-        arguments=['-resolution', '0.05', '-publish_period_sec', '1.0']
+        parameters=[{'use_sim_time': use_sim_time}]
     )
 
     # 3. 자율주행 (Nav2) - 경로 계획과 제어만 담당
-    # bringup_launch.py 대신 navigation_launch.py를 사용합니다.
-    # 이 파일은 map_server와 amcl을 실행하지 않으므로 SLAM과 충돌하지 않습니다.
     nav2_navigation_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(nav2_bringup_dir, 'launch', 'navigation_launch.py')),
         launch_arguments={
@@ -88,10 +103,12 @@ def generate_launch_description():
     return LaunchDescription([
         robot_state_publisher_node,
         ydlidar_node,
+        imu_node,
+        imu_filter_node,
         motor_controller_node,
         cartographer_node,
         cartographer_occupancy_grid_node,
         nav2_navigation_node,
         explore_lite_node,
-        rviz_node,
+        rviz_node
     ])

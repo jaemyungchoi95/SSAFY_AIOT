@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'motor_controller'
+package_name = 'my_imu_calibration_pkg'
 
 setup(
     name=package_name,
@@ -20,9 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'motor_node = motor_controller.motor_node:main',
-            'keyboard_teleop = motor_controller.keyboard_teleop:main',
-            'hardware_controller = motor_controller.hardware_controller:main',
+            'imu_calibrator = my_imu_calibration_pkg.imu_calibrator:main',
         ],
     },
 )

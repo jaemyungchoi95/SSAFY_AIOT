@@ -5,7 +5,7 @@ mpu6050driver:
     calibrate: true
     
     # I2C Device path
-    port: "/dev/i2c-0"
+    port: "/dev/i2c-1"
 
     # measurement ranges (match MPU6050Sensor::GyroRange and ::AccelRange enums)
     gyro_range: 0         # GYR_250_DEG_S

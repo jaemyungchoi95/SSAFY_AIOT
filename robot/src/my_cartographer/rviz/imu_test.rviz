@@ -13,62 +13,34 @@ Panels:
 Visualization Manager:
   Class: ""
   Displays:
-    - Alpha: 0.5
-      Cell Size: 1
-      Class: rviz_default_plugins/Grid
-      Color: 160; 160; 164
+    - Class: rviz_default_plugins/Grid
       Enabled: true
-      Line Style:
-        Line Width: 0.03
-        Value: Lines
       Name: Grid
-      Normal Cell Count: 0
-      Offset:
-        X: 0
-        Y: 0
-        Z: 0
-      Plane: XY
-      Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
-      Value: true
     - Class: rviz_default_plugins/TF
       Enabled: true
       Name: TF
       Marker Scale: 0.3
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        {}
-      Update Interval: 0
-      Value: true
-    - Alpha: 1
+    - Alpha: 1.0
       Class: rviz_default_plugins/Imu
+      Color: 255; 25; 0
       Enabled: true
-      Name: IMU_Raw
+      Name: IMU_Raw_Data
       Topic:
         Value: /imu/data_raw
-      Value: true
-    - Alpha: 1
+      Update Interval: 0.04
+    - Alpha: 1.0
       Class: rviz_default_plugins/Imu
+      Color: 0; 255; 0
       Enabled: true
-      Name: IMU_Filtered
+      Name: IMU_Filtered_Data
       Topic:
         Value: /imu/data_filtered
-      Value: true
+      Update Interval: 0.04
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Fixed Frame: base_link
     Frame Rate: 30
   Name: root
-  Tools:
-    - Class: rviz_default_plugins/Interact
-      Hide Inactive Objects: true
-  Transformation:
-    Current:
-      Class: rviz_default_plugins/TF
+  Tools: []
   Value: true
-  Windows:
-    - Class: rviz_common/
-      Name: Displays
