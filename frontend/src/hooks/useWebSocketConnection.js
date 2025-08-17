@@ -8,7 +8,7 @@ export function useWebSocketConnection() {
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS(`https://api.are-u-hot.kro.kr/api/ws`),
+      webSocketFactory: () => new SockJS(`https://api.are-u-hot.kro.kr/api/ws/`),
       reconnectDelay: 5000,
       onConnect: () => {
         console.log('📡 WebSocket 연결됨');
