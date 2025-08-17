@@ -179,14 +179,12 @@ root/
         │   │   ├── bringup_ackermann_nav2.launch.py    # Ackermann + Nav2 실행 (map_server 포함)
         │   │   ├── my_robot.launch.py                  # 제자리 Cartographer 실행
         │   │   └── check_imu.launch.py                 # imu 디버깅 노드 실행
-        │   │   
         │   ├── urdf/                                   # 로봇 구조 및 TF 정의
-        │   │   ├── robot.urdf
+        │   │   └── robot.urdf
         │   ├── rviz/                                   # rviz 프로파일
         │   │   ├── cartographer_config.rviz            # Cartographer rviz 설정
         │   │   ├── nav2_slam_view.rviz                 # Cartographer + Navigation rviz 설정
         │   │   └── imu_test.rviz                       # IMU 설정
-        │   │
         │   └── maps/                                   # Cartographer로 생성된 지도 저장소
         │       ├── my_map.pgm
         │       ├── my_map.yaml
