@@ -1,7 +1,7 @@
 # 마! 뜨급나?
 물류 창고 화재 예방·모니터링 플랫폼 `마! 뜨급나?`는 SLAM 기반 맵과 자율주행 로봇, 열화상 리포트, 실시간 알림을 하나로 통합하여 제공하는 산업용 모니터링 시스템입니다. 
 
-> **🚨 기본 프로젝트트 정보**
+> **🚨 기본 프로젝트 정보**
 > - 배포 URL: http://are-u-hot.kro.kr/
 > - 총 기획·개발 기간: 25.07.14 ~ 25.08.18 
 > 
@@ -34,14 +34,65 @@
 
 ## 빠른 시작 
 
+```bash
+# 0. ROS2 개발 환경 구축
+https://docs.ros.org/en/humble/Installation.html#binary-packages
+
+# 1. 워크스페이스 생성
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# 2. 프로젝트 클론
+git clone <this-repo-url> robot
+cd ..
+
+# 3. 빌드 및 환경설정
+colcon build --symlink-install
+source /opt/ros/humble/setup.bash 
+source install/setup.bash
+
+# 4. SLAM 실행 (Cartographer)
+ros2 launch my_cartographer now_slam_test.launch.py
+
+# 5. 네비게이션 실행 (Nav2)
+ros2 launch my_cartographer bringup_ackermann_nav2.launch.py
+
+# 6. 키보드 조작 (Teleop)
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
 ## 핵심 기능 
 
+- SLAM 기반 지도 생성 및 업로드
+    - my_cartographer, map_uploader 패키지를 통해 실시간 맵 생성 및 AWS 업로드
+- 자율 주행 및 모터 제어
+    - nav2 기반 목표 지점 이동, motor_controller 패키지를 통한 저수준 모터 제어
+- 센서 융합 및 보정
+    - ydlidar_ros2_driver, ros2_mpu6050_driver로 LiDAR/IMU 데이터 수집
+    - my_imu_calibration_pkg, my_imu_corrector_pkg로 캘리브레이션 수행
+- 위치 및 상태 전송
+    - robot_location_publisher를 통해 로봇 좌표를 서버에 실시간 송신
+- 탐색 및 다중 로봇 확장
+    - m-explore-ros2로 frontier 기반 탐색 및 다중 로봇 확장성 제공
+- 수동 조작
+    - teleop_twist_keyboard를 통한 heuristic/manual 제어 지원
+
 ## 개발 환경 
+
+- 로봇 플랫폼: Jetson Orin Nano, Raspberry Pi 5
+
+- 센서: YDLiDAR X4 Pro, MPU6050 IMU, 열화상 카메라, Pi Camera
+
+- 프레임워크:
+
+    - ROS 2 Humble
+    - Cartographer (SLAM)
+    - Nav2 (Navigation2)
 
 ## 아키텍처 
 
 ## 기술 스택 
-- Embedded: Ubuntu 22.04 LTS, ROS2, Python 3.10.11
+- Embedded: Ubuntu 22.04 LTS, ROS2 Humble, Python 3.10.11, Cartographer, Navigation2
 - Frontend: JavaScript, React, Zustand, Tailwind 
 - Backend: Python 3.10.11, Java 21, Spring Boot 3.5.3, Spring Security 6, MyBatis, Lombok, WebSocket(STOMP)
 - DB: MySQL 8.0.37
@@ -67,7 +118,20 @@ root/
 │       ├── robot/
 │       └── common/          # 공통 Util, Error, WebSocket 등
 ├── frontend/                # 프론트엔드 (React.js, PWA)
-└── embedded/                # 로봇 스크립트/도구 (Python, MQTT)
+└── robot/
+    ├── maps/                        # SLAM을 통한 지도 생성 및 저장
+    └── src/
+        ├── map_uploader/            # 생성된 지도 AWS 서버로 업로드
+        ├── motor_controller/        # 로봇 모터 제어
+        ├── my_cartographer/         # SLAM 및 자율주행(nav2 활용)
+        ├── my_imu_calibration_pkg/  # IMU 정적 캘리브레이션 데이터 수집
+        ├── my_imu_corrector_pkg/    # IMU 정적 캘리브레이션 보정 적용
+        ├── robot_location_publisher/# 로봇 위치를 서버로 전송
+        ├── m-explore-ros2/          # 다중 로봇 탐사 및 frontier 기반 탐색
+        ├── ros2_mpu6050_driver/     # MPU6050 IMU 드라이버
+        ├── teleop_twist_keyboard/   # 키보드로 모터 조작 (Heuristic 제어)
+        └── ydlidar_ros2_driver/     # YDLiDAR 드라이버
+
 ```
 
 ## 팀원 구성 및 역할 분배 
