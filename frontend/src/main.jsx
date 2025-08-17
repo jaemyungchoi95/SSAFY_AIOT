@@ -31,8 +31,6 @@ const root = createRoot(document.getElementById('root'));
 // 실제 서버데이터 호출
 root.render(
   <StrictMode>
-    {/* 서비스워커 등록 (PWA 기능) */}
-    {/* <link href='/service-worker.js' rel='pre-load' /> */}
     <App />,
   </StrictMode>,
 );

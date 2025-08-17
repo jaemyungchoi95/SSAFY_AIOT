@@ -40,7 +40,6 @@ const Home = () => {
     setSelectedAlertId(null);
     resetRobotState();
   }, [selectedWarehouseId, setSelectedAlertId, resetRobotState]);
-
   /*
   // // 맵 알림 테스트용 데이터 핸들러
   const mapTest = {
@@ -78,7 +77,7 @@ const Home = () => {
     console.log('테스트 로봇 위치 업데이트:', testRobot);
     setRobotPosition(testRobot);
   };
-  */
+*/
   return (
     <>
       <div className="Home_content">
@@ -113,7 +112,7 @@ const Home = () => {
 
 export default Home;
 /* 테스트 버튼들
-      <button
+<button
         onClick={handleAddMapTest}
         style={{
           position: 'fixed',
