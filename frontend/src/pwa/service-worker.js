@@ -4,6 +4,7 @@ const CACHE_NAME = 'areuhot-cache-v1';
 const urlsToCache = [
     '/',
     '/index.html',
+    '/pwa/service-worker.js', // 서비스워커 경로 추가
 ];
 
 self.addEventListener('install', event => {
@@ -15,6 +16,12 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+    // API 요청은 캐싱 없이 그대로 전달
+    if (event.request.url.includes('/api/')) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+    
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);

@@ -24,6 +24,8 @@ services:
     container_name: areuhot-react-container
     ports:
       - "5173:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html # 빌드 결과물 호스트->컨테이너 공유
     depends_on:
       - backend
     networks:
