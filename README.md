@@ -160,7 +160,26 @@ root/
 │       ├── rackspot/
 │       ├── robot/
 │       └── common/          # 공통 Util, Error, WebSocket 등
-├── frontend/                # 프론트엔드 (React.js, PWA)
+├── frontend/               # 프론트엔드 (React.js, PWA)
+│   ├── nginx/              # 배포용 Nginx 설정 파일
+│   ├── public/
+│   └── src/
+│       ├── api/            # 서버와 통신하는 API 모듈
+│       │   └── index.js
+│       ├── assets/         # 이미지, 아이콘, 폰트 등 정적 리소스
+│       ├── components/     # 재사용 가능한 UI 컴포넌트
+│       │   ├── common/
+│       │   └── realtime/
+│       ├── firebase/       # Firebase 설정 및 연동 코드
+│       ├── hooks/          # 커스텀 React Hooks
+│       ├── mocks/          
+│       ├── pages/          # 실제 라우트 페이지 컴포넌트
+│       ├── stores/         # 전역 상태 관리
+│       ├── utils/          # 공용 유틸리티 함수
+│       ├── App.css
+│       ├── App.jsx
+│       ├── index.css
+│       └── main.jsx
 └── robot/
     ├── maps/                                           # SLAM을 통한 지도 생성 및 저장
     └── src/
