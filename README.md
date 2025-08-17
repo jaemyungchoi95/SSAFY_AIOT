@@ -162,18 +162,59 @@ root/
 │       └── common/          # 공통 Util, Error, WebSocket 등
 ├── frontend/                # 프론트엔드 (React.js, PWA)
 └── robot/
-    ├── maps/                        # SLAM을 통한 지도 생성 및 저장
+    ├── maps/                                           # SLAM을 통한 지도 생성 및 저장
     └── src/
-        ├── map_uploader/            # 생성된 지도 AWS 서버로 업로드
-        ├── motor_controller/        # 로봇 모터 제어
-        ├── my_cartographer/         # SLAM 및 자율주행(nav2 활용)
-        ├── my_imu_calibration_pkg/  # IMU 정적 캘리브레이션 데이터 수집
-        ├── my_imu_corrector_pkg/    # IMU 정적 캘리브레이션 보정 적용
-        ├── robot_location_publisher/# 로봇 위치를 서버로 전송
-        ├── m-explore-ros2/          # 다중 로봇 탐사 및 frontier 기반 탐색
-        ├── ros2_mpu6050_driver/     # MPU6050 IMU 드라이버
-        ├── teleop_twist_keyboard/   # 키보드로 모터 조작 (Heuristic 제어)
-        └── ydlidar_ros2_driver/     # YDLiDAR 드라이버
+        ├── my_cartographer/                            # SLAM 및 자율주행(nav2 활용)
+        │   ├── CMakeLists.txt
+        │   ├── package.xml
+        │   ├── config/                                 # 파라미터, yaml 설정 모음
+        │   │   ├── my_robot.lua                        # Cartographer SLAM 주요 설정
+        │   │   ├── nav2_params.yaml                    # Navigation2 파라미터 (controller, planner, costmap 등)
+        │   │   ├── my_robot_localization.yaml          # Localization 모드용 설정
+        │   │   ├── camera.yaml
+        │   │   ├── imu.yaml
+        │   │   └── ekf.yaml
+        │   ├── launch/                                 # 실행용 launch 파일
+        │   │   ├── now_slam_test.launch.py             # LiDAR + IMU + Cartographer 통합 실행
+        │   │   ├── bringup_ackermann_nav2.launch.py    # Ackermann + Nav2 실행 (map_server 포함)
+        │   │   ├── my_robot.launch.py                  # 제자리 Cartographer 실행
+        │   │   └── check_imu.launch.py                 # imu 디버깅 노드 실행
+        │   │   
+        │   ├── urdf/                                   # 로봇 구조 및 TF 정의
+        │   │   ├── robot.urdf
+        │   ├── rviz/                                   # rviz 프로파일
+        │   │   ├── cartographer_config.rviz            # Cartographer rviz 설정
+        │   │   ├── nav2_slam_view.rviz                 # Cartographer + Navigation rviz 설정
+        │   │   └── imu_test.rviz                       # IMU 설정
+        │   │
+        │   └── maps/                                   # Cartographer로 생성된 지도 저장소
+        │       ├── my_map.pgm
+        │       ├── my_map.yaml
+        │       └── my_map.pbstream                     # Cartographer pbstream (Localization 용)
+        ├── map_uploader/                               # 생성된 지도 AWS 서버로 업로드
+        │   ├── setup.py
+        │   └── motor_controller/
+        │       └── motor_node.py
+        ├── motor_controller/                           # 로봇 모터 제어
+        │   ├── setup.py
+        │   └── map_uploader/
+        │       └── map_uploader_node.py
+        ├── my_imu_calibration_pkg/                     # IMU 정적 캘리브레이션 데이터 수집
+        │   ├── setup.py
+        │   └── my_imu_calibration_pkg/
+        │       └── imu_calibrator.py
+        ├── my_imu_corrector_pkg/                       # IMU 정적 캘리브레이션 보정 적용
+        │   ├── setup.py
+        │   └── my_imu_calibration_pkg/
+        │       └── imu_corrector_node.py
+        ├── robot_location_publisher/                   # 로봇 위치를 서버로 전송
+        │   ├── setup.py
+        │   └── robot_location_publisher/
+        │       └── location_publisher.py
+        ├── m-explore-ros2/                             # 다중 로봇 탐사 및 frontier 기반 탐색
+        ├── ros2_mpu6050_driver/                        # MPU6050 IMU 드라이버
+        ├── teleop_twist_keyboard/                      # 키보드로 모터 조작 (Heuristic 제어)
+        └── ydlidar_ros2_driver/                        # YDLiDAR 드라이버
 
 ```
 
