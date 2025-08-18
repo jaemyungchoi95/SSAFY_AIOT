@@ -52,6 +52,7 @@ const Map = () => {
       y: pointer.y - mousePointTo.y * newScale,
     };
     setPosition(newPos);
+    console.log('newScale : ', newScale);
   };
 
   return (
