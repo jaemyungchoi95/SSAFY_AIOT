@@ -49,10 +49,12 @@ cd S13P11A202
 **3. 백엔드 실행**
 ```bash
 cd server 
-mvn spring-boot:run 
-# 또는 패키징 후 실행
-mvn clean package -DskipTests
-java -jar target/*-SNAPSHOT.jar
+
+# 의존성 설치
+./mvnw clean package
+
+# 프로젝트 실행
+./mvnw spring-boot:run
 ```
 
 **4. 프론트엔드 설정**
@@ -61,8 +63,12 @@ java -jar target/*-SNAPSHOT.jar
 **5. 프론트엔드 실행**
 ```bash
 cd frontend
-npm i
-npm run dev
+
+# 의존성 설치 
+npm install 
+
+# 프로젝트 실행  
+npm run dev 
 ```
 
 **6. 임베디드** 
@@ -116,7 +122,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     - 로봇이 업로드한 맵을 저장하고 활성 버전을 관리 
 
 ## 개발 환경 
-
+**임베디드**
 - 로봇 플랫폼: Jetson Orin Nano, Raspberry Pi 5
 
 - 센서: YDLiDAR X4 Pro, MPU6050 IMU, 열화상 카메라, Pi Camera
@@ -131,11 +137,40 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 - OS & 런타임: Ubuntu 22.04 LTS, Python 3.10.11, Java 21, Node 18+
 
+**프론트엔드**
+- Node.js 20
+- React 19.1.0
+- Zustand 5.0.6
+- PWA
+- Prettier 3.6.2
+- VS Code
+
+**백엔드**
+- JDK 21.0.7 LTS
+- Spring Boot 3.5.4 (Web, Security, WebSocket)
+- MyBatis 3.0.3 + MySQL 8.x (Connector/J)
+- MQTT (Eclipse Paho 1.2.5)
+- AWS SDK for S3 v2.24.12 (presigned URL)
+- Jackson (JSR-310)
+- Lombok 1.18.30, DevTools
+- BouncyCastle (PEM/TLS)
+- IntelliJ: IntelliJ IDEA 2023.3.8 (Ultimate Edition)
+- Cursor: 1.4.5
+
+**DB**
+- MySQL 8.0.37
+
+**Infra**
+- Docker 28.3.2 (Docker Engine - Community)
+- AWS EC2 22.04.4 LTS
+- Jenkins jenkins:lts
+- Nginx nginx/1.18.0 (Ubuntu)
+
 ## 아키텍처 
 
 ## 기술 스택 
 - Embedded: Ubuntu 22.04 LTS, ROS2 Humble, Python 3.10.11, Cartographer, Navigation2
-- Frontend: JavaScript, React, Zustand, Tailwind 
+- Frontend: JavaScript, React 19.1.0, Zustand 5.0.6, Tailwind 4.1.11
 - Backend: Python 3.10.11, Java 21, Spring Boot 3.5.3, Spring Security 6, MyBatis, Lombok, WebSocket(STOMP)
 - DB: MySQL 8.0.37
 - Storage: AWS S3 (presigned URL)
