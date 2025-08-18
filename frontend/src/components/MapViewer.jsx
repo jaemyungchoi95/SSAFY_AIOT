@@ -142,6 +142,31 @@ const MapViewer = ({
             {Array.isArray(racks) &&
               racks.map((rack) => {
                 const center = getCenter(rack);
+
+                // --- 최종 로직 ---
+                // 1. 랙 자체의 크기를 기반으로 한 '기본 폰트 크기'를 계산합니다.
+                const rackWidth =
+                  Math.max(rack.x1, rack.x2, rack.x3, rack.x4) -
+                  Math.min(rack.x1, rack.x2, rack.x3, rack.x4);
+                const rackHeight =
+                  Math.max(rack.y1, rack.y2, rack.y3, rack.y4) -
+                  Math.min(rack.y1, rack.y2, rack.y3, rack.y4);
+
+                const baseSizeFromRack = Math.min(rackWidth, rackHeight) * 0.03; // 랙 크기에 비례
+                const minBaseSize = 3; // 최소 기본 크기
+                const maxBaseSize = 10; // 최대 기본 크기
+                const clampedBaseSize = Math.max(
+                  minBaseSize,
+                  Math.min(baseSizeFromRack, maxBaseSize),
+                );
+
+                // 2. 줌(scale)에 따라 추가될 '증가량'을 계산합니다.
+                const growthFactor = 0.2;
+                const growth = clampedBaseSize * growthFactor;
+
+                // 3. 최종 폰트 크기 = (랙별 기본 크기) + (줌 증가량)
+                const dynamicFontSize = clampedBaseSize + growth;
+
                 return (
                   <Fragment key={rack.rackId}>
                     <Line
@@ -166,12 +191,18 @@ const MapViewer = ({
                       x={center.x}
                       y={center.y}
                       text={`Rack - ${rack.rackId}`}
-                      fontSize={14 / scale}
-                      fill="black"
+                      fontSize={dynamicFontSize}
+                      // fontSize={14 / scale}
+                      fontWeight="600"
+                      fill="white"
                       align="center"
                       verticalAlign="middle"
-                      offsetX={(`Rack - ${rack.rackId}`.length * 3.5) / scale}
-                      offsetY={7 / scale}
+                      // offsetX={(`Rack - ${rack.rackId}`.length * 3.5) / scale}
+                      // offsetY={7 / scale}
+                      offsetX={
+                        (`Rack - ${rack.rackId}`.length * dynamicFontSize) / 4.5
+                      }
+                      offsetY={dynamicFontSize / 2}
                     />
                   </Fragment>
                 );
