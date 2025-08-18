@@ -88,71 +88,7 @@ function App() {
 
   //
   useEffect(() => {
-    // 서비스워커 등록
-    // function registerServiceWorker() {
-    //   if (typeof window !== 'undefined') {
-    //     if ('serviceWorker' in navigator) {
-    //       navigator.serviceWorker
-    //         .register('/firebase-messaging-sw.js')
-    //         .then((registration) => {
-    //           console.log('Service Worker Registered');
-    //           console.dir(registration);
-    //         });
-    //     }
-    //   }
-    // }
-
-    // 권한 요청
-    // const requestPermission = async () => {
-    //   const messagingResolve = await messaging();
-    //   if (!('Notification' in window)) {
-    //     console.warn('This browser does not support notifications.');
-    //     return;
-    //   }
-    //   // if (messagingResolve) {
-    //   //   const token = await getToken(messagingResolve);
-    //   //   console.log('token : ', token);
-    //   // }
-
-    //   // 권한 요청
-    //   const permission = await Notification.requestPermission();
-    //   console.log('Notification permission:', permission);
-
-    //   if (permission === 'granted' && messagingResolve) {
-    //     const token = await getToken(messagingResolve);
-    //     console.log('✅ FCM Token:', token);
-    //   }
-    // };
-
-    // 메시지 수신 리스너
-    // const onMessageListener = async () => {
-    //   const messagingResolve = await messaging();
-    //   if (messagingResolve) {
-    //     onMessage(messagingResolve, (payload) => {
-    //       console.log('payload : ', payload);
-    //       if (!('Notification' in window)) {
-    //         return;
-    //       }
-    //       const permission = Notification.permission;
-    //       const title = payload.data?.title;
-    //       const body = payload.data?.body;
-    //       if (permission === 'granted') {
-    //         // console.log("payload", payload);
-    //         if (payload.data) {
-    //           const notification = new Notification(title, {
-    //             body,
-    //             icon: '/favicon.ico',
-    //           });
-    //           notification.onclick = () => {
-    //             window.open(payload.data.redirectUri, '_blank')?.focus();
-    //           };
-    //         }
-    //       }
-    //     });
-    //   }
-    // };
     registerServiceWorker();
-
     setupOnMessageListener();
   }, []);
 
