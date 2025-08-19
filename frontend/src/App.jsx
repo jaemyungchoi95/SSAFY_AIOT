@@ -27,8 +27,8 @@ function App() {
       navigator.serviceWorker
         .register('/firebase-messaging-sw.js')
         .then((registration) => {
-          console.log('✅ Service Worker Registered');
-          console.dir(registration);
+          // console.log('✅ Service Worker Registered');
+          // console.dir(registration);
         })
         .catch((err) =>
           console.error('Service Worker registration failed', err),
@@ -44,7 +44,7 @@ function App() {
     // 1. 현재 권한 확인
     const permission = Notification.permission;
 
-    console.log('permission 확인 : ', permission);
+    // console.log('permission 확인 : ', permission);
     // 권한이 'granted'이면서 토큰이 이미 RDB에 있으면 발급 X
     if (permission === 'granted') {
       const token = await getToken(messagingResolve);
@@ -71,7 +71,7 @@ function App() {
     if (!messagingResolve) return;
 
     onMessage(messagingResolve, (payload) => {
-      console.log('📩 payload received:', payload);
+      // console.log('📩 payload received:', payload);
       if (Notification.permission !== 'granted') return;
 
       const title = payload.data?.title || '알림';
@@ -93,7 +93,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('🟢 selectedWarehouseId changed:', selectedWarehouseId);
+    // console.log('🟢 selectedWarehouseId changed:', selectedWarehouseId);
     initFcm();
   }, [selectedWarehouseId]);
 

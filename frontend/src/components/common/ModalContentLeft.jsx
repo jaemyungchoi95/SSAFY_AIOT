@@ -9,7 +9,6 @@ const Modal_Content_Left = () => {
 
   // 2. 마우스 휠 이벤트를 처리할 핸들러 함수
   const handleWheel = (e) => {
-    e.preventDefault(); // 휠을 움직일 때 페이지 전체가 스크롤되는 기본 동작을 막는다
     e.stopPropagation(); // 이벤트가 부모로 전파되는 것을 막는다
 
     // 휠을 올리면(e.deltaY < 0) 값이 증가, 내리면(e.deltaY > 0) 감소

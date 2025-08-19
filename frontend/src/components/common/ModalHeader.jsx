@@ -24,12 +24,12 @@ const ModalHeader = () => {
 
   return (
     <div className="ModalHeader flex justify-between py-3.5 px-7 border-b-2 border-[#424242]">
-      <div className="ModalHeader_Left flex gap-5 items-center">
-        <div className="Modal_Spot font-bold text-2xl">
+      <div className="ModalHeader_Left flex gap-5 items-center truncate">
+        <div className="Modal_Spot font-bold text-2xl truncate">
           {' '}
           Rack {selectedAlert.rackId} - {selectedAlert.spotId}
         </div>
-        <div className="IssueItem_StatusGroup">
+        <div className="IssueItem_StatusGroup truncate">
           {selectedAlert.danger && <Status text="위험" type="Danger" />}
           <Status text={isCompleteText} type={isCompleteType} />
         </div>

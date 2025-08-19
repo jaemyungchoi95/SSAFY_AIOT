@@ -31,7 +31,7 @@ const SidebarList = () => {
   }, [alerts, selectedWarehouseId, selectedStatus, selectedTime]);
 
   return (
-    <div className="SidebarList flex flex-col w-[100%]">
+    <div className="SidebarList flex flex-col w-[100%] truncate">
       {filteredAlerts.map((alert) => (
         <SidebarItem
           key={alert.alertId}

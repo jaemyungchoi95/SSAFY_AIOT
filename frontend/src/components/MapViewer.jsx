@@ -80,13 +80,13 @@ const MapViewer = ({
       const commandId = uuidv4();
       try {
         await moveRobotTo(robotId, spotId, commandId);
-        alert(
-          `로봇 ${robotId}에게 스팟 (${spotId})으로 이동 명령을 전송했습니다. (명령ID: ${commandId})`,
-        );
+        // alert(
+        //   `로봇 ${robotId}에게 스팟 (${spotId})으로 이동 명령을 전송했습니다. (명령ID: ${commandId})`,
+        // );
       } catch (err) {
-        alert(
-          `로봇 이동 명령 실패: ${robotError || err.message || '알 수 없는 오류'}`,
-        );
+        // alert(
+        //   `로봇 이동 명령 실패: ${robotError || err.message || '알 수 없는 오류'}`,
+        // );
       }
     },
     500,
