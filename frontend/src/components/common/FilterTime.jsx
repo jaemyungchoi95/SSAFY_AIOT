@@ -20,7 +20,7 @@ const FilterTime = () => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <img src={FilterTimeIcon} className="text-sm" alt="" />
-        <span className="Label">{selectedTime}</span>
+        <span className="Label truncate">{selectedTime}</span>
         <img src={FilterDropIcon} alt="" className="text-xs ml-auto" />
       </button>
       {isOpen && (

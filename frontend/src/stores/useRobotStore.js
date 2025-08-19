@@ -29,12 +29,13 @@ export const useRobotStore = create(
         const selectedWarehouseId = useAppStore.getState().selectedWarehouseId;
 
         if (!selectedWarehouseId) {
-          throw new Error('선택된 창고 ID가 없습니다.');
+          // throw new Error('선택된 창고 ID가 없습니다.');
         }
 
-        console.log(
-          `[ROBOT STORE] 로봇 ${robotId}에게 ${spotId} 스팟으로 (명령ID: ${commandId})로 이동 명령 전송`,
-        );
+        console
+          .log
+          // `[ROBOT STORE] 로봇 ${robotId}에게 ${spotId} 스팟으로 (명령ID: ${commandId})로 이동 명령 전송`,
+          ();
         await api.sendMoveCommand(
           selectedWarehouseId,
           robotId,
@@ -44,7 +45,7 @@ export const useRobotStore = create(
         set({ moving: false });
         // 명령 후 위치 갱신
       } catch (err) {
-        console.error('[ROBOT STORE] 이동 명령 실패:', err);
+        // console.error('[ROBOT STORE] 이동 명령 실패:', err);
         set({ error: err.message || '로봇 이동 명령 실패', moving: false });
         throw err; // 에러를 다시 던져 UI에서 catch할 수 있도록 합니다.
       }

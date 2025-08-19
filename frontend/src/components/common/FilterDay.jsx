@@ -22,7 +22,7 @@ const FilterDay = () => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <img src={CalenderIcon} className="Icon" alt="" />
-        <span className="Label">{selectedDay}</span>
+        <span className="Label truncate">{selectedDay}</span>
         <img src={FilterDropIcon} alt="" className="text-xs ml-auto" />
       </button>
 
