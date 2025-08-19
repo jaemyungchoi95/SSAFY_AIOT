@@ -35,8 +35,8 @@ public class NotificationService {
                     ApiFuture<String> apiFuture = FirebaseMessaging.getInstance().sendAsync(
                             Message.builder()
                                     .putData("redirectUri", "/")
-                                    .putData("title", String.valueOf(createdAlertEvent.getRackId()))
-                                    .putData("body", String.valueOf(createdAlertEvent.getSpotId()))
+                                    .putData("title",  "비정상 온도 감지")
+                                    .putData("body", String.valueOf(createdAlertEvent.getRackId()) + "번 Rack " String.valueOf(createdAlertEvent.getSpotId()) + "Spot")
                                     // .setNotification(
                                     // Notification.builder()
                                     // .setTitle(event.getAskerName())
@@ -69,8 +69,8 @@ public class NotificationService {
                     ApiFuture<String> apiFuture = FirebaseMessaging.getInstance().sendAsync(
                             Message.builder()
                                     .putData("redirectUri", "/")
-                                    .putData("title", String.valueOf(createdMapEvent.getWarehouseId()))
-                                    .putData("body", String.valueOf(createdMapEvent.getCreatedAt()))
+                                    .putData("title", "맵 생성 완료!"))
+                                    .putData("body",  String.valueOf(createdMapEvent.getWarehouseId() + "번 창고의 맵이 생성되었습니다")
                                     // .setNotification(
                                     // Notification.builder()
                                     // .setTitle(event.getAskerName())
