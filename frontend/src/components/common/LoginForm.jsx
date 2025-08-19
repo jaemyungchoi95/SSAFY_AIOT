@@ -12,11 +12,11 @@ const LoginForm = () => {
   const nav = useNavigate();
 
   const handleLoginClick = async () => {
-    console.log('로그인 버튼 클릭');
+    // console.log('로그인 버튼 클릭');
 
     try {
       await login();
-      console.log('로그인 완료');
+      // console.log('로그인 완료');
     } catch (error) {
       console.error('login 함수 실행 중 에러:', error);
     }

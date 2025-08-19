@@ -111,9 +111,9 @@ export const sendMoveCommand = (warehouseId, robotId, spotId, commandId) => {
     spotId: spotId,
     commandId: commandId,
   };
-  console.log(
-    `[API] 로봇 이동 명령 전송 페이로드: ${JSON.stringify(payload)} warehouseId: ${warehouseId}`,
-  );
+  // console.log(
+  //   `[API] 로봇 이동 명령 전송 페이로드: ${JSON.stringify(payload)} warehouseId: ${warehouseId}`,
+  // );
 
   return axios
     .post(`/api/warehouses/${warehouseId}/robots/${robotId}`, payload)
@@ -122,5 +122,5 @@ export const sendMoveCommand = (warehouseId, robotId, spotId, commandId) => {
 
 // 번외. Fcm 토큰 저장
 export const saveFcmToken = (token) => {
-  return axios.post('/api/notification/token', token).then(getResponseData)
-}
+  return axios.post('/api/notification/token', token).then(getResponseData);
+};
