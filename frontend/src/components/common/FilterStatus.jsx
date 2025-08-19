@@ -19,7 +19,7 @@ const FilterStatus = () => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <img src={FilterStatusIcon} className="Icon" alt="" />
-        <span className="Label">{selectedStatus}</span>
+        <span className="Label truncate">{selectedStatus}</span>
         <img src={FilterDropIcon} alt="" className="text-xs ml-auto" />
       </button>
 

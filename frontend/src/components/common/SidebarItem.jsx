@@ -7,9 +7,12 @@ const SidebarItem = ({ alert, onClick }) => {
   const isCompleteType = alert.status === 'DONE' ? 'Complete' : 'Caution';
 
   return (
-    <button className="SidebarItem flex flex-col px-2.5 py-2.5 border-b-[3px] h-32 border-[#33333c] hover:bg-[#444653] cursor-pointer" onClick={onClick}>
+    <button
+      className="SidebarItem flex flex-col px-2.5 py-2.5 border-b-[3px] h-32 border-[#33333c] hover:bg-[#444653] cursor-pointer"
+      onClick={onClick}
+    >
       <div className="SidebarItem_Header flex justify-between items-center text-base mb-2">
-        <div className="SidebarItem_Spot font-bold text-xl">
+        <div className="SidebarItem_Spot font-bold text-xl truncate">
           Rack {alert.rackId} - {alert.spotId}
         </div>
 
@@ -21,12 +24,14 @@ const SidebarItem = ({ alert, onClick }) => {
 
       <div className="SidebarItem_Temp flex justify-between text-[#c2c2c2]">
         <TempInfo temperature={alert.temperature} />
-                <div className="SidebarItem_Date">
+        <div className="SidebarItem_Date">
           {new Date(alert.createdAt).toLocaleDateString()}
         </div>
       </div>
 
-      <div className="SidebarItem_Message flex mt-2.5 text-left line-clamp-3">{alert.comment || ''}</div>
+      <div className="SidebarItem_Message flex mt-2.5 text-left line-clamp-3">
+        {alert.comment || ''}
+      </div>
     </button>
   );
 };

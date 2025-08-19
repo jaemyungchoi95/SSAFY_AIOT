@@ -29,7 +29,7 @@ export const useAppStore = create(
       try {
         // 1. 가장 먼저 전체 창고 목록을 가져옵니다.
         const warehouseRes = await api.fetchWarehouses();
-        console.log('warehouseRes:', warehouseRes);
+        // console.log('warehouseRes:', warehouseRes);
 
         if (Array.isArray(warehouseRes) && warehouseRes.length > 0) {
           const warehousesData = warehouseRes.map((w) => ({
@@ -77,12 +77,12 @@ export const useAppStore = create(
           ]);
 
         // 1. API에서 받아온 원본 데이터를 확인합니다.
-        console.log('[STORE] API 원본 데이터:', {
-          mapInfo: mapInfoRes,
-          rackList: rackListRes,
-          alerts: alertsRes,
-          robots: robotRes,
-        });
+        // console.log('[STORE] API 원본 데이터:', {
+        //   mapInfo: mapInfoRes,
+        //   rackList: rackListRes,
+        //   alerts: alertsRes,
+        //   robots: robotRes,
+        // });
 
         const imageUrl = mapInfoRes.filePath;
         const rackList = rackListRes;
@@ -92,7 +92,7 @@ export const useAppStore = create(
         // spot별 최신 알람만 남도록 맵 선언하여 데이터 담기 설정
         const latestAlertOnSpot = new Map();
 
-        alertsData.content.forEach(alert => {
+        alertsData.content.forEach((alert) => {
           // 임시 고유키 지정
           const spotKey = `${alert.rackId}-${alert.spotId}`;
           const existingAlert = latestAlertOnSpot.get(spotKey);
@@ -100,17 +100,17 @@ export const useAppStore = create(
           if (!existingAlert || alert.alertId > existingAlert.alertId) {
             latestAlertOnSpot.set(spotKey, alert);
           }
-        })
+        });
 
         // Map에 저장된 값들(최신 알림 객체들)만 추출하여 새로운 배열로 만듭니다.
         const uniqueLatestAlerts = Array.from(latestAlertOnSpot.values());
 
         // rackList나 issuesData가 비어있는지 확인합니다.
         if (!rackList || rackList.length === 0) {
-          console.warn('[STORE] rackList 데이터가 비어있습니다!');
+          // console.warn('[STORE] rackList 데이터가 비어있습니다!');
         }
         if (!alertsData || alertsData.length === 0) {
-          console.warn('[STORE] alertsData(alerts) 데이터가 비어있습니다!');
+          // console.warn('[STORE] alertsData(alerts) 데이터가 비어있습니다!');
         }
 
         const allSpots = [];
@@ -128,10 +128,10 @@ export const useAppStore = create(
         });
 
         // 2. 랙과 스팟 정보가 잘 가공되었는지 확인합니다.
-        console.log('[STORE] 가공된 데이터:', {
-          processedRacks,
-          allSpots,
-        });
+        // console.log('[STORE] 가공된 데이터:', {
+        //   processedRacks,
+        //   allSpots,
+        // });
 
         // 2. 이슈 데이터를 기반으로 spots의 상태를 업데이트(병합)합니다.
         const mergedSpots = allSpots.map((spot) => {
@@ -140,7 +140,7 @@ export const useAppStore = create(
               alert.rackId === spot.rackId && alert.spotId === spot.spotId,
           );
           if (alertOnThisSpot) {
-            console.log('초기 로딩 데이터 - alertOnThisSpot:', alertOnThisSpot);
+            // console.log('초기 로딩 데이터 - alertOnThisSpot:', alertOnThisSpot);
 
             return {
               ...spot,
@@ -159,11 +159,11 @@ export const useAppStore = create(
         }));
 
         // 3. 최종적으로 상태에 저장될 데이터를 확인합니다.
-        console.log('[STORE] 최종 상태 데이터 (set 직전):', {
-          racks: processedRacks,
-          spots: mergedSpots,
-          alerts: processedAlerts,
-        });
+        // console.log('[STORE] 최종 상태 데이터 (set 직전):', {
+        //   racks: processedRacks,
+        //   spots: mergedSpots,
+        //   alerts: processedAlerts,
+        // });
 
         set({
           imageUrl: imageUrl,
@@ -182,7 +182,7 @@ export const useAppStore = create(
     // 새로운 위험 알림 데이터 수신에 대한 액션
     updateAlertDataFromSocket: (newAlert) => {
       const { selectedWarehouseId, alertDetail } = get();
-      
+
       const processedAlert = {
         ...newAlert,
         warehouseId: selectedWarehouseId,
@@ -192,44 +192,48 @@ export const useAppStore = create(
       const state = get();
       // 만약 지금 상세 정보를 보고 있고, 그 정보가 방금 들어온 알림과 동일한 것이라면
       if (alertDetail && alertDetail.alertId === processedAlert.alertId) {
-        console.log(
-          `[STORE] 현재 보고 있는 알림(${processedAlert.alertId})에 대한 업데이트 수신. 상세 정보를 다시 불러옵니다.`,
-        );
+        // console.log(
+        //   `[STORE] 현재 보고 있는 알림(${processedAlert.alertId})에 대한 업데이트 수신. 상세 정보를 다시 불러옵니다.`,
+        // );
         // 상세 정보를 다시 불러오는 액션을 호출합니다.
         state.fetchDetailAlert(processedAlert.alertId);
       }
-                set((state) => {
-            const newAlertsArray = [
-              processedAlert,
-              ...state.alerts.filter(
-                (alert) => !(alert.rackId === processedAlert.rackId && alert.spotId === processedAlert.spotId)
+      set((state) => {
+        const newAlertsArray = [
+          processedAlert,
+          ...state.alerts.filter(
+            (alert) =>
+              !(
+                alert.rackId === processedAlert.rackId &&
+                alert.spotId === processedAlert.spotId
               ),
-            ];
-   
-            // --- 디버깅용 로그 ---
-            console.log('[DEBUG] 수신된 새 알림:', processedAlert);
-            console.log('[DEBUG] 변경 전 alerts 배열:', state.alerts);
-            console.log('[DEBUG] 변경 후 alerts 배열:', newAlertsArray);
-            // --------------------
-   
-            return {
-              spots: state.spots.map((spot) => {
-                if (
-                  spot.rackId == processedAlert.rackId &&
-                  spot.spotId === processedAlert.spotId
-                ) {
-                  return {
-                    ...spot,
-                    status: processedAlert.status,
-                    alertId: processedAlert.alertId,
-                    temperature: processedAlert.temperature,
-                  };
-                }
-                return spot;
-              }),
-              alerts: newAlertsArray,
-            };
-          });
+          ),
+        ];
+
+        // --- 디버깅용 로그 ---
+        // console.log('[DEBUG] 수신된 새 알림:', processedAlert);
+        // console.log('[DEBUG] 변경 전 alerts 배열:', state.alerts);
+        // console.log('[DEBUG] 변경 후 alerts 배열:', newAlertsArray);
+        // --------------------
+
+        return {
+          spots: state.spots.map((spot) => {
+            if (
+              spot.rackId == processedAlert.rackId &&
+              spot.spotId === processedAlert.spotId
+            ) {
+              return {
+                ...spot,
+                status: processedAlert.status,
+                alertId: processedAlert.alertId,
+                temperature: processedAlert.temperature,
+              };
+            }
+            return spot;
+          }),
+          alerts: newAlertsArray,
+        };
+      });
     },
 
     // 새로운 맵데이터 알림 수신에 대한 액션
@@ -241,20 +245,21 @@ export const useAppStore = create(
       const newMapWarehouseId = newMapData.warehouseId;
 
       if (newMapWarehouseId !== currentWarehouseId) {
-        console.log(`[STORE] 수신된 맵 데이터는 현재 선택된 창고(${currentWarehouseId})의 데이터가 아닙니다. (
-       ${newMapWarehouseId})`);
+        //   console.log(`[STORE] 수신된 맵 데이터는 현재 선택된 창고(${currentWarehouseId})의 데이터가 아닙니다. (
+        //  ${newMapWarehouseId})`);
         return;
       }
 
       if (currentImageUrl !== newImageUrl) {
-        console.log(
-          `[STORE] 새로운 맵 데이터 수신! URL 변경 감지: ${currentImageUrl} -> ${newImageUrl}`,
-        );
+        console
+          .log
+          // `[STORE] 새로운 맵 데이터 수신! URL 변경 감지: ${currentImageUrl} -> ${newImageUrl}`,
+          ();
         get().fetchInitialData(currentWarehouseId);
       } else {
-        console.log(
-          `[STORE] 수신된 맵 데이터는 기존 맵과 동일합니다. (${newImageUrl})`,
-        );
+        // console.log(
+        //   `[STORE] 수신된 맵 데이터는 기존 맵과 동일합니다. (${newImageUrl})`,
+        // );
       }
     },
 
@@ -269,10 +274,10 @@ export const useAppStore = create(
       set({ loading: true, error: null, selectedAlertId: alertId });
       try {
         const alertDetailRes = await api.fetchMonoAlertDetail(alertId); // 5번
-        console.log(
-          `[DEBUG] 서버가 ID ${alertId}에 대해 응답한 데이터:`,
-          alertDetailRes,
-        );
+        // console.log(
+        //   `[DEBUG] 서버가 ID ${alertId}에 대해 응답한 데이터:`,
+        //   alertDetailRes,
+        // );
         const processedAlertDetail = {
           ...alertDetailRes,
           temperature: Number(alertDetailRes.temperature.toFixed(1)),
@@ -339,7 +344,7 @@ export const useAppStore = create(
         });
         return { alerts: updatedAlerts };
       });
-      console.log('📦 fullReportData', fullReportData);
+      // console.log('📦 fullReportData', fullReportData);
 
       api.updateAlertReport(alertId, fullReportData);
     }, // updateAlertReport 액션 끝
@@ -394,7 +399,7 @@ export const useAppStore = create(
 
         const latestAlertOnSpot = new Map();
 
-        alertsContent.forEach(alert => {
+        alertsContent.forEach((alert) => {
           const spotKey = `${alert.warehouseId}-${alert.rackId}-${alert.spotId}`;
           const existingAlert = latestAlertOnSpot.get(spotKey);
 

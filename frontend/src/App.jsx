@@ -27,8 +27,8 @@ function App() {
       navigator.serviceWorker
         .register('/firebase-messaging-sw.js')
         .then((registration) => {
-          console.log('✅ Service Worker Registered');
-          console.dir(registration);
+          // console.log('✅ Service Worker Registered');
+          // console.dir(registration);
         })
         .catch((err) =>
           console.error('Service Worker registration failed', err),
@@ -44,7 +44,7 @@ function App() {
     // 1. 현재 권한 확인
     const permission = Notification.permission;
 
-    console.log('permission 확인 : ', permission);
+    // console.log('permission 확인 : ', permission);
     // 권한이 'granted'이면서 토큰이 이미 RDB에 있으면 발급 X
     if (permission === 'granted') {
       const token = await getToken(messagingResolve);
@@ -71,7 +71,7 @@ function App() {
     if (!messagingResolve) return;
 
     onMessage(messagingResolve, (payload) => {
-      console.log('📩 payload received:', payload);
+      // console.log('📩 payload received:', payload);
       if (Notification.permission !== 'granted') return;
 
       const title = payload.data?.title || '알림';
@@ -88,76 +88,12 @@ function App() {
 
   //
   useEffect(() => {
-    // 서비스워커 등록
-    // function registerServiceWorker() {
-    //   if (typeof window !== 'undefined') {
-    //     if ('serviceWorker' in navigator) {
-    //       navigator.serviceWorker
-    //         .register('/firebase-messaging-sw.js')
-    //         .then((registration) => {
-    //           console.log('Service Worker Registered');
-    //           console.dir(registration);
-    //         });
-    //     }
-    //   }
-    // }
-
-    // 권한 요청
-    // const requestPermission = async () => {
-    //   const messagingResolve = await messaging();
-    //   if (!('Notification' in window)) {
-    //     console.warn('This browser does not support notifications.');
-    //     return;
-    //   }
-    //   // if (messagingResolve) {
-    //   //   const token = await getToken(messagingResolve);
-    //   //   console.log('token : ', token);
-    //   // }
-
-    //   // 권한 요청
-    //   const permission = await Notification.requestPermission();
-    //   console.log('Notification permission:', permission);
-
-    //   if (permission === 'granted' && messagingResolve) {
-    //     const token = await getToken(messagingResolve);
-    //     console.log('✅ FCM Token:', token);
-    //   }
-    // };
-
-    // 메시지 수신 리스너
-    // const onMessageListener = async () => {
-    //   const messagingResolve = await messaging();
-    //   if (messagingResolve) {
-    //     onMessage(messagingResolve, (payload) => {
-    //       console.log('payload : ', payload);
-    //       if (!('Notification' in window)) {
-    //         return;
-    //       }
-    //       const permission = Notification.permission;
-    //       const title = payload.data?.title;
-    //       const body = payload.data?.body;
-    //       if (permission === 'granted') {
-    //         // console.log("payload", payload);
-    //         if (payload.data) {
-    //           const notification = new Notification(title, {
-    //             body,
-    //             icon: '/favicon.ico',
-    //           });
-    //           notification.onclick = () => {
-    //             window.open(payload.data.redirectUri, '_blank')?.focus();
-    //           };
-    //         }
-    //       }
-    //     });
-    //   }
-    // };
     registerServiceWorker();
-
     setupOnMessageListener();
   }, []);
 
   useEffect(() => {
-    console.log('🟢 selectedWarehouseId changed:', selectedWarehouseId);
+    // console.log('🟢 selectedWarehouseId changed:', selectedWarehouseId);
     initFcm();
   }, [selectedWarehouseId]);
 
