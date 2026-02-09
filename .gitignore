@@ -541,4 +541,5 @@ pyrightconfig.json
 # firebase 환경변수
 firebase-key.json
 
-# End of https://www.toptal.com/developers/gitignore/api/python
+# End of https://www.toptal.com/developers/gitignore/api/pythonbackend/.env.prod
+exec/.env
