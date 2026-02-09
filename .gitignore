@@ -543,3 +543,5 @@ firebase-key.json
 
 # End of https://www.toptal.com/developers/gitignore/api/pythonbackend/.env.prod
 exec/.env
+backend/.env.prod
+exec/.env
